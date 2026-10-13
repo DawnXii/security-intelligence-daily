@@ -28,34 +28,46 @@ def main():
     items.sort(key=lambda a: -a.get("score", 0))
     col = json.load(open(col_path)) if os.path.exists(col_path) else {}
 
-    lines = [f"# 安全情报日报 · {run_date}", ""]
-    if items:
-        top = max(items, key=lambda a: a.get("score", 0))
-        lines += [f"**今日焦点**：{top['title_zh']}", ""]
+    def esc(s):
+        return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+    lines = []
+    top_score = max((a.get("score", 0) for a in items), default=0)
     for cat in ("vuln", "supplychain", "crypto-infra", "ttp", "phishing", "incident"):
         sel = [a for a in items if a.get("category") == cat]
         if not sel:
             continue
-        lines += [f"## {CATS[cat]}", ""]
+        lines += [f'<p class="section-label">{CATS[cat]}</p>', ""]
         for a in sel:
             ev = [e for e in a.get("evidence", []) if str(e).startswith("http")]
             link = ev[0] if ev else ""
+            is_focus = a.get("score", 0) == top_score and items
+            cls = "intel focus" if is_focus else "intel"
+            tag = "今日焦点" if is_focus else ""
             lines += [
-                f"### {a['title_zh']}",
-                f"评分 {a.get('score','?')} · 置信度 {a.get('confidence','?')}",
+                f'<div class="{cls}">',
+                f'<div class="intel-head"><span class="chip">{tag or CATS[cat]}</span>'
+                f'<span class="score">CONF {esc(a.get("confidence","?"))}<i>{esc(a.get("score","?"))}</i></span></div>',
+                '<div class="intel-body">',
+                f'<h3>{esc(a["title_zh"])}</h3>',
+                f'<p class="sum">{esc(a.get("summary_zh",""))}</p>',
+                '<div class="intel-grid">',
+                f'<div class="cell"><b>Impact</b><p>{esc(a.get("impact",""))}</p></div>',
+                f'<div class="cell"><b>Action</b><p>{esc(a.get("action",""))}</p></div>',
+                '</div>',
+                '</div>',
+                f'<div class="intel-foot"><span>{esc(run_date)} · SID ANALYSIS</span>'
+                + (f'<a href="{link}" target="_blank" rel="noopener">SOURCE ↗</a>' if link else "<span>SOURCE N/A</span>")
+                + '</div>',
+                '</div>',
                 "",
-                a.get("summary_zh", ""), "",
-                f"**影响**：{a.get('impact','')}", "",
-                f"**建议**：{a.get('action','')}", "",
             ]
-            if link:
-                lines += [f"来源：{link}", ""]
     if not items:
-        lines += ["今日无达到发布标准的条目（宁缺毋滥）。", ""]
+        lines += ['<div class="empty">今日无达到发布标准的条目 · 宁缺毋滥</div>', ""]
 
     fails = col.get("sources_fail", [])
     if fails:
-        lines += ["> ⚠️ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。", ""]
+        lines += ['<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>', ""]
 
     fm = f"""---
 layout: post

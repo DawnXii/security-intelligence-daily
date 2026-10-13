@@ -1,0 +1,32 @@
+---
+layout: default
+title: 首页
+---
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">Security Intelligence · Every 09:00 CST</p>
+    <h1>每天 5 分钟<br>掌握安全情报脉搏</h1>
+    <hr class="rule">
+    <p class="lead">自动聚合 12 个一线安全信源 —— 漏洞披露、在野利用、供应链攻击、重大安全事件。候选条目经启发式初筛与评分，由 AI 分析后逐条机械校验：证据可溯源、禁止虚构，通不过就不发布。</p>
+    <div class="stats">
+      <div class="stat"><b>12</b><span>Sources</span></div>
+      <div class="stat"><b>~200</b><span>Items / Day</span></div>
+      <div class="stat"><b>100%</b><span>Machine-verified</span></div>
+      <div class="stat"><b>09:00</b><span>Daily Drop</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+<p class="section-label" id="issues">Latest Issues</p>
+{% for post in site.posts %}
+<a class="issue" href="{{ post.url | relative_url }}">
+  <span class="no">{% if forloop.first %}01{% else %}{{ post.date | date: '%m·%d' }}{% endif %}</span>
+  <span class="meta">
+    <span class="date">{{ post.date | date: "%Y-%m-%d" }} · Issue {{ forloop.index | plus: 0 }}</span>
+    <span class="t">{{ post.title }}</span>
+  </span>
+  <span class="go">→</span>
+</a>
+{% endfor %}
+</div>
