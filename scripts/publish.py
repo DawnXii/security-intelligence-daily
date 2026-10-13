@@ -53,11 +53,16 @@ def main():
     if not pushed:
         st["push_error"] = (p.stderr or p.stdout)[-400:]
 
-    # 同步站点内容到 gh-pages 并触发传统 Pages 构建
+    # 同步站点内容到 gh-pages 并触发传统 Pages 构建（主题+首页+posts 全量）
     pages_pushed = False
     PAGES = ROOT / "pages"
     if pushed and PAGES.exists():
-        shutil.copytree(ROOT / "site" / "_posts", PAGES / "_posts", dirs_exist_ok=True)
+        for sub in ("_posts", "_layouts"):
+            shutil.copytree(ROOT / "site" / sub, PAGES / sub, dirs_exist_ok=True)
+        for f in ("index.md", "_config.yml"):
+            src = ROOT / "site" / f
+            if src.exists():
+                shutil.copy2(src, PAGES / f)
         sh(["git", "-C", str(PAGES), "add", "-A"])
         pc = sh(["git", "-C", str(PAGES), "commit", "-m", f"site update {run_date}"])
         nothing = "nothing to commit" in (pc.stdout + pc.stderr)
