@@ -1,0 +1,5 @@
+title: 安全情报日报 Security Intelligence Daily
+description: 每日基础设施与供应链安全情报（中文）
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-sitemap

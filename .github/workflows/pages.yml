@@ -1,0 +1,54 @@
+name: build-and-deploy-pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 轻量校验（frontmatter 与密钥泄漏检查）
+        run: |
+          set -e
+          for f in site/_posts/*.md; do
+            head -1 "$f" | grep -q '^---$' || { echo "missing frontmatter: $f"; exit 1; }
+          done
+          if grep -rEil '(BEGIN (RSA|OPENSSH) PRIVATE KEY|ghp_[A-Za-z0-9]{36}|AKIA[0-9A-Z]{16})' site/ ; then
+            echo "SECRET LEAK DETECTED"; exit 1
+          fi
+          echo "checks ok"
+
+  build:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+        with:
+          source: ./site
+      - uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./site
+          destination: ./_site
+      - uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.out.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: out
+        uses: actions/deploy-pages@v4
