@@ -1,22 +1,46 @@
 #!/usr/bin/env python3
-"""publish.py <run_date> — Git 提交 + 推送 main + 同步 gh-pages 站点（幂等、含待发布队列）。
+"""publish.py <run_date> — Git 提交 + 推送 main，由 GitHub Actions 部署 Pages（幂等）。
 
 纪律：
 - 只有 validate 通过的日期才允许提交发布（硬门槛）。
 - 推送失败 → pending_publish，本地成果不丢；daily.sh 自动重试队列。
 - 不 force push；被拒先 fetch+rebase，仍失败则标记人工处理。
-- Pages 采用传统 gh-pages 构建（无需 workflow scope）；push 后用 gh api 触发构建。
+- Pages 新版部署：push main 触发 "Deploy GitHub Pages" workflow
+  （actions/jekyll-build-pages 构建 site/ + actions/deploy-pages 部署），
+  本脚本轮询该 commit 的 run 结果作为发布确认。
 """
-import json, os, subprocess, sys, datetime, pathlib, shutil
+import json, os, subprocess, sys, datetime, pathlib, time
 
 ROOT = pathlib.Path.home() / "security-intelligence"
 REPO = "DawnXii/security-intelligence-daily"
 GIT = ["git", "-C", str(ROOT)]
+WF = "Deploy GitHub Pages"
 
 def sh(args, timeout=180):
     env = dict(os.environ, https_proxy="http://127.0.0.1:2080",
                http_proxy="http://127.0.0.1:2080")
     return subprocess.run(args, capture_output=True, text=True, timeout=timeout, env=env)
+
+def gh_api(args, timeout=60):
+    return sh(["gh", "api"] + args, timeout=timeout)
+
+def wait_deploy(sha, max_wait=420):
+    """轮询 sha 对应的 workflow run，返回 (conclusion, run_id)。"""
+    deadline = time.time() + max_wait
+    run_id = None
+    while time.time() < deadline:
+        r = gh_api([f"repos/{REPO}/actions/workflows",
+                    "--jq", ".workflows[] | select(.name==\"%s\") | .id" % WF])
+        wid = r.stdout.strip().splitlines()[0] if r.returncode == 0 and r.stdout.strip() else None
+        if wid:
+            r = gh_api([f"repos/{REPO}/actions/workflows/{wid}/runs",
+                        "--jq", "([.workflow_runs[] | select(.head_sha==\"%s\")][0]) | \"\\(.id) \\(.status) \\(.conclusion)\"" % sha])
+            if r.returncode == 0 and r.stdout.strip() and r.stdout.strip() != "null null null":
+                run_id, status, conclusion = r.stdout.strip().split(" ", 2)
+                if status == "completed":
+                    return conclusion, run_id
+        time.sleep(15)
+    return "timeout", run_id
 
 def main():
     run_date = sys.argv[1]
@@ -53,43 +77,37 @@ def main():
     if not pushed:
         st["push_error"] = (p.stderr or p.stdout)[-400:]
 
-    # 同步站点内容到 gh-pages 并触发传统 Pages 构建（主题+首页+posts 全量）
-    pages_pushed = False
-    PAGES = ROOT / "pages"
-    if pushed and PAGES.exists():
-        for sub in ("_posts", "_layouts"):
-            shutil.copytree(ROOT / "site" / sub, PAGES / sub, dirs_exist_ok=True)
-        for f in ("index.md", "_config.yml"):
-            src = ROOT / "site" / f
-            if src.exists():
-                shutil.copy2(src, PAGES / f)
-        sh(["git", "-C", str(PAGES), "add", "-A"])
-        pc = sh(["git", "-C", str(PAGES), "commit", "-m", f"site update {run_date}"])
-        nothing = "nothing to commit" in (pc.stdout + pc.stderr)
-        pp = sh(["git", "-C", str(PAGES), "push",
-                 f"https://github.com/{REPO}.git", "gh-pages:gh-pages"])
-        pages_pushed = nothing or pp.returncode == 0
-        if pages_pushed and not nothing:
-            subprocess.run(["gh", "api", "-X", "POST",
-                            f"repos/{REPO}/pages/builds", "--jq", ".status"],
-                           capture_output=True, text=True, timeout=60,
-                           env=dict(os.environ,
-                                    https_proxy="http://127.0.0.1:2080",
-                                    http_proxy="http://127.0.0.1:2080"))
-    st["pages_pushed"] = pages_pushed
+    # 等待 Actions 部署结果（新版 Pages）
+    deployed = False
+    if pushed:
+        head = sh(GIT + ["rev-parse", "HEAD"]).stdout.strip()
+        has_new = committed
+        if not has_new:
+            # 无新提交也确认 HEAD 的最近一次部署结论
+            r = gh_api([f"repos/{REPO}/actions/runs?head_sha={head}", "--jq",
+                        "[.workflow_runs[] | select(.name==\"%s\")][0] | \"\\(.status) \\(.conclusion)\"" % WF])
+            has_new = "completed success" not in (r.stdout or "")
+        if has_new:
+            conclusion, run_id = wait_deploy(head)
+            deployed = conclusion == "success"
+            st["deploy_run_id"] = run_id
+            st["deploy_conclusion"] = conclusion
+        else:
+            deployed = True
+    st["pages_deployed"] = deployed
     st["published_at"] = datetime.datetime.now().astimezone().isoformat()
     status_path.write_text(json.dumps(st, ensure_ascii=False, indent=1))
 
     if run:
         run["git_committed"] = committed
         run["git_pushed"] = pushed
-        run["pages_pushed"] = pages_pushed
+        run["pages_deployed"] = deployed
         run["pending_publish"] = st["pending_publish"]
         run_path.write_text(json.dumps(run, ensure_ascii=False, indent=1))
-    print(json.dumps({"ok": pushed and pages_pushed, "committed": committed,
-                      "pushed": pushed, "pages_pushed": pages_pushed,
-                      "run_date": run_date}))
-    sys.exit(0 if (pushed and pages_pushed) else 1)
+    ok = pushed and deployed
+    print(json.dumps({"ok": ok, "committed": committed, "pushed": pushed,
+                      "pages_deployed": deployed, "run_date": run_date}))
+    sys.exit(0 if ok else 1)
 
 if __name__ == "__main__":
     main()

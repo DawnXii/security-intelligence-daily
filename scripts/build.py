@@ -3,7 +3,7 @@
 输入: data/analysis/<date>.json (已通过 validate) + data/status/<date>.json
 输出: site/_posts/<date>.md, data/runs/<date>/run.json
 状态分级：analysis_done / saved_local / git_committed / site_built / site_deployed 分开记录。"""
-import json, os, sys
+import json, os, sys, zlib
 from datetime import datetime, timezone, timedelta
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,19 +33,36 @@ def main():
 
     lines = []
     top_score = max((a.get("score", 0) for a in items), default=0)
-    for cat in ("vuln", "supplychain", "crypto-infra", "ttp", "phishing", "incident"):
+    cats_present = [c for c in ("vuln", "supplychain", "crypto-infra", "ttp", "phishing", "incident")
+                    if any(a.get("category") == c for a in items)]
+
+    # 目录（TOC）
+    if items:
+        toc = ['<nav class="toc">', '<h2>目录 Contents</h2>', '<ol>']
+        for cat in cats_present:
+            sel = [a for a in items if a.get("category") == cat]
+            for a in sel:
+                aid = f"{cat}-{zlib.crc32(a['title_zh'].encode()) % 100000:05d}"
+                a["__aid"] = aid
+                focus = "★" if a.get("score", 0) == top_score else ""
+                toc.append(f'<li><a href="#{aid}"><span class="tc">{focus or "·"}</span>'
+                           f'<span class="tt">{esc(a["title_zh"])}</span>'
+                           f'<span class="tg">{CATS[cat]}</span></a></li>')
+        toc += ['</ol>', '</nav>', ""]
+        lines += toc
+
+    for ci, cat in enumerate(cats_present, 1):
         sel = [a for a in items if a.get("category") == cat]
-        if not sel:
-            continue
-        lines += [f'<p class="section-label">{CATS[cat]}</p>', ""]
+        lines += [f'<p class="section-label" id="sec-{cat}"><span class="n">{ci:02d}</span>{CATS[cat]}</p>', ""]
         for a in sel:
             ev = [e for e in a.get("evidence", []) if str(e).startswith("http")]
             link = ev[0] if ev else ""
             is_focus = a.get("score", 0) == top_score and items
             cls = "intel focus" if is_focus else "intel"
             tag = "今日焦点" if is_focus else ""
+            aid = a.get("__aid", f"{cat}-x")
             lines += [
-                f'<div class="{cls}">',
+                f'<div class="{cls}" id="{aid}">',
                 f'<div class="intel-head"><span class="chip">{tag or CATS[cat]}</span>'
                 f'<span class="score">CONF {esc(a.get("confidence","?"))}<i>{esc(a.get("score","?"))}</i></span></div>',
                 '<div class="intel-body">',
@@ -63,7 +80,7 @@ def main():
                 "",
             ]
     if not items:
-        lines += ['<div class="empty">今日无达到发布标准的条目 · 宁缺毋滥</div>', ""]
+        lines += ['<div class="empty">今日无达到发布标准的条目，请查阅往期。</div>', ""]
 
     fails = col.get("sources_fail", [])
     if fails:

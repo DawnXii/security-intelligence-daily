@@ -9,8 +9,8 @@
 :root{
   --bg:#FAFAF8; --paper:#FFFFFF; --ink:#0A0A0A;
   --amber:#FDB913; --amber-soft:#FCE08A; --gray:#5C5C57; --hairline:#D8D8D2;
-  --f-serif:Georgia,'Times New Roman','Songti SC','STSong','SimSun',serif;
-  --f-mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,Consolas,'Courier New','PingFang SC','Microsoft YaHei',monospace;
+  --f-serif:Georgia,'Times New Roman','Songti SC','Noto Serif CJK SC','Source Han Serif SC','STSong','SimSun','PingFang SC','Microsoft YaHei',serif;
+  --f-mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,Consolas,'Courier New','Noto Sans CJK SC','Source Han Sans SC','PingFang SC','Microsoft YaHei',monospace;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -52,6 +52,19 @@ nav a.cta:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
 /* ── section label ── */
 .section-label{display:flex;align-items:center;gap:16px;margin:58px 0 22px;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gray)}
 .section-label::after{content:"";flex:1;border-top:1px solid var(--hairline)}
+.section-label .n{font-family:var(--f-serif);letter-spacing:0;text-transform:none;font-size:13px;color:var(--ink);background:var(--amber);border:2px solid var(--ink);padding:0 8px;line-height:1.5}
+
+/* ── toc ── */
+.toc{background:var(--paper);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);margin:34px 0 10px}
+.toc h2{font-size:11px;letter-spacing:.26em;text-transform:uppercase;margin:0;padding:10px 18px;border-bottom:2px solid var(--ink);font-family:var(--f-mono);font-weight:700}
+.toc ol{list-style:none;margin:0;padding:8px 18px 14px;display:grid;grid-template-columns:1fr 1fr;gap:2px 26px}
+.toc li{font-size:13px;padding:4px 0;border-bottom:1px dotted var(--hairline)}
+.toc a{display:flex;gap:10px;align-items:baseline}
+.toc a:hover{background:var(--amber)}
+.toc .tc{font-family:var(--f-serif);font-size:15px;color:var(--gray);flex:none;min-width:24px}
+.toc .tt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toc .tg{margin-left:auto;flex:none;font-size:9px;letter-spacing:.14em;color:var(--gray);text-transform:uppercase}
+@media (max-width:640px){.toc ol{grid-template-columns:1fr}}
 
 /* ── issue list card ── */
 .issue{display:flex;align-items:center;gap:20px;background:var(--paper);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:18px 22px;margin-bottom:24px;transition:transform .1s ease,box-shadow .1s ease}
@@ -115,7 +128,7 @@ footer.site{margin-top:80px;border-top:2px solid var(--ink);background:var(--pap
 </head>
 <body>
 
-<div class="ticker"><div class="wrap"><span class="dot"></span>每天 09:00 自动发布 · 全部条目经机械校验 · 宁缺毋滥 · SECURITY INTELLIGENCE DAILY</div></div>
+<div class="ticker"><div class="wrap"><span class="dot"></span>每天 09:00 自动发布 · 全部条目经机械校验 · SECURITY INTELLIGENCE DAILY</div></div>
 
 <header class="site">
   <div class="wrap hd">
