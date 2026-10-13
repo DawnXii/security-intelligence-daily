@@ -65,7 +65,7 @@ date: {run_date}
 
 """
     os.makedirs(os.path.join(SITE, "_posts"), exist_ok=True)
-    post = os.path.join(SITE, "_posts", f"{run_date}.md")
+    post = os.path.join(SITE, "_posts", f"{run_date}-report.md")
     tmp = post + ".tmp"
     open(tmp, "w").write(fm + "\n".join(lines))
     os.replace(tmp, post)
