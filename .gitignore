@@ -2,3 +2,4 @@ data/
 docs/
 *.log
 __pycache__/
+.github/workflows/
