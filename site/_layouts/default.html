@@ -14,9 +14,10 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-mono);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-mono);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 h1,h2,h3{font-family:var(--f-serif);font-weight:400}
+h3,.sum,.cell p{overflow-wrap:anywhere}
 .wrap{max-width:880px;margin:0 auto;padding:0 22px}
 ::selection{background:var(--amber);color:var(--ink)}
 
@@ -54,17 +55,36 @@ nav a.cta:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
 .section-label::after{content:"";flex:1;border-top:1px solid var(--hairline)}
 .section-label .n{font-family:var(--f-serif);letter-spacing:0;text-transform:none;font-size:13px;color:var(--ink);background:var(--amber);border:2px solid var(--ink);padding:0 8px;line-height:1.5}
 
+/* ── risk/exploit chips ── */
+.rp{font-style:normal;font-weight:700;font-size:9px;letter-spacing:.1em;border:1.5px solid var(--ink);padding:1px 6px;line-height:1.4}
+.rp0{background:var(--ink);color:#FF5B4A}
+.rp1{background:var(--amber);color:var(--ink)}
+.rp2{background:var(--paper);color:var(--gray)}
+.xs{font-style:normal;font-size:9px;letter-spacing:.12em;padding:2px 8px;border:1.5px solid var(--ink);line-height:1.4;white-space:nowrap}
+.xw{background:#FF5B4A;color:var(--paper)}
+.xp{background:var(--amber-soft);color:var(--ink)}
+.xn{background:var(--paper);color:var(--gray);border-style:dashed}
+.intel-head{flex-wrap:wrap}
+.intel-head .xs{margin-left:8px}
+
 /* ── toc ── */
 .toc{background:var(--paper);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);margin:34px 0 10px}
 .toc h2{font-size:11px;letter-spacing:.26em;text-transform:uppercase;margin:0;padding:10px 18px;border-bottom:2px solid var(--ink);font-family:var(--f-mono);font-weight:700}
-.toc ol{list-style:none;margin:0;padding:8px 18px 14px;display:grid;grid-template-columns:1fr 1fr;gap:2px 26px}
-.toc li{font-size:13px;padding:4px 0;border-bottom:1px dotted var(--hairline)}
-.toc a{display:flex;gap:10px;align-items:baseline}
+.toc .legend{margin:0;padding:8px 18px;border-bottom:1px solid var(--hairline);font-size:10px;color:var(--gray);line-height:1.7}
+.toc .legend b{font-style:normal;padding:0 5px;border:1px solid var(--ink);margin:0 2px;font-size:9px;color:var(--ink)}
+.toc .grp{padding:6px 18px 4px}
+.toc .grp + .grp{border-top:1px dotted var(--hairline)}
+.toc .tg-h{display:flex;align-items:center;gap:10px;margin:2px 0 6px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray)}
+.toc .tg-h a:hover{color:var(--ink);background:var(--amber)}
+.toc .tg-c{border:1px solid var(--ink);padding:0 6px;font-size:9px;letter-spacing:.1em}
+.toc ol{list-style:none;margin:0;padding:0 0 6px 4px}
+.toc li{font-size:13px;padding:3px 0;min-width:0}
+.toc li + li{border-top:1px dotted var(--hairline)}
+.toc a{display:flex;gap:10px;align-items:baseline;min-width:0}
 .toc a:hover{background:var(--amber)}
-.toc .tc{font-family:var(--f-serif);font-size:15px;color:var(--gray);flex:none;min-width:24px}
-.toc .tt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.toc .tg{margin-left:auto;flex:none;font-size:9px;letter-spacing:.14em;color:var(--gray);text-transform:uppercase}
-@media (max-width:640px){.toc ol{grid-template-columns:1fr}}
+.toc .tc{font-family:var(--f-serif);font-size:15px;color:var(--gray);flex:none;width:16px;text-align:center}
+.toc .tt{flex:1 1 auto;min-width:0;line-height:1.5}
+.toc .meta{margin-left:auto;flex:none;display:flex;gap:6px;align-items:baseline}
 
 /* ── issue list card ── */
 .issue{display:flex;align-items:center;gap:20px;background:var(--paper);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:18px 22px;margin-bottom:24px;transition:transform .1s ease,box-shadow .1s ease}
@@ -115,6 +135,8 @@ footer.site{margin-top:80px;border-top:2px solid var(--ink);background:var(--pap
 .fd a:hover{color:var(--ink);border-bottom:2px solid var(--amber)}
 
 @media (max-width:640px){
+  .toc a{flex-wrap:wrap;gap:4px 10px}
+  .toc .meta{margin-left:26px}
   .hd{flex-direction:column;align-items:flex-start;gap:10px}
   .stats{flex-wrap:wrap}
   .stat{flex:1 1 45%;border-bottom:2px solid var(--ink)}

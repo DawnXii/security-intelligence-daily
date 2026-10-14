@@ -3,7 +3,7 @@
 输入: data/analysis/<date>.json (已通过 validate) + data/status/<date>.json
 输出: site/_posts/<date>.md, data/runs/<date>/run.json
 状态分级：analysis_done / saved_local / git_committed / site_built / site_deployed 分开记录。"""
-import json, os, sys, zlib
+import json, os, sys, zlib, re
 from datetime import datetime, timezone, timedelta
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,19 +36,45 @@ def main():
     cats_present = [c for c in ("vuln", "supplychain", "crypto-infra", "ttp", "phishing", "incident")
                     if any(a.get("category") == c for a in items)]
 
-    # 目录（TOC）
+    IN_WILD = re.compile(r"已在野|在野利用|主动利用|遭[^，。]{0,10}利用|被[^，。]{0,10}利用|正在利用|利用尝试|零日|列入 KEV|加入 KEV|KEV 目录|exploited", re.I)
+    POC = re.compile(r"\bPoC\b|概念验证|proof[- ]of[- ]concept|利用代码已公开", re.I)
+
+    def exploit_tag(a):
+        text = " ".join([a.get("title_zh", ""), a.get("summary_zh", "") or "", a.get("impact", "") or ""])
+        if IN_WILD.search(text):
+            return ("在野利用", "xw")
+        if POC.search(text):
+            return ("PoC 公开", "xp")
+        return ("未公开利用", "xn")
+
+    def risk_tier(a):
+        s = a.get("score", 0)
+        return "P0" if s >= 85 else ("P1" if s >= 75 else "P2")
+
+    # 目录（TOC）：按分节分组 + 图例
     if items:
-        toc = ['<nav class="toc">', '<h2>目录 Contents</h2>', '<ol>']
+        toc = ['<nav class="toc" id="toc">', '<h2>目录 Contents</h2>',
+               '<p class="legend">利用状态：<b class="xw">在野利用</b> 已确认在野/KEV · '
+               '<b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无公开利用情报　'
+               '处置优先级：<b class="rp0">P0</b> ≥85 紧急 · <b class="rp1">P1</b> 75–84 尽快 · <b class="rp2">P2</b> &lt;75 计划</p>']
         for cat in cats_present:
             sel = [a for a in items if a.get("category") == cat]
+            toc.append(f'<div class="grp"><p class="tg-h"><a href="#sec-{cat}">'
+                       f'{CATS[cat]}</a><span class="tg-c">{len(sel)} 条</span></p><ol>')
             for a in sel:
                 aid = f"{cat}-{zlib.crc32(a['title_zh'].encode()) % 100000:05d}"
                 a["__aid"] = aid
                 focus = "★" if a.get("score", 0) == top_score else ""
+                xlab, xcls = (exploit_tag(a) if cat == "vuln" else ("", ""))
+                rt = risk_tier(a)
                 toc.append(f'<li><a href="#{aid}"><span class="tc">{focus or "·"}</span>'
                            f'<span class="tt">{esc(a["title_zh"])}</span>'
-                           f'<span class="tg">{CATS[cat]}</span></a></li>')
-        toc += ['</ol>', '</nav>', ""]
+                           f'<span class="meta"><i class="rp {rt.lower()}">{rt}</i>'
+                           + (f'<i class="xs {xcls}">{xlab}</i>' if xlab else "")
+                           + '</span></a></li>')
+            toc.append('</ol></div>')
+        toc.append('</nav>')
+        toc.append("")
         lines += toc
 
     for ci, cat in enumerate(cats_present, 1):
@@ -61,10 +87,15 @@ def main():
             cls = "intel focus" if is_focus else "intel"
             tag = "今日焦点" if is_focus else ""
             aid = a.get("__aid", f"{cat}-x")
+            rt = risk_tier(a)
+            xchip = ""
+            if cat == "vuln":
+                xlab, xcls = exploit_tag(a)
+                xchip = f'<i class="xs {xcls}">{xlab}</i>'
             lines += [
                 f'<div class="{cls}" id="{aid}">',
-                f'<div class="intel-head"><span class="chip">{tag or CATS[cat]}</span>'
-                f'<span class="score">CONF {esc(a.get("confidence","?"))}<i>{esc(a.get("score","?"))}</i></span></div>',
+                f'<div class="intel-head"><span class="chip">{tag or CATS[cat]}</span>{xchip}'
+                f'<span class="score">处置 <i class="rp {rt.lower()}">{rt}</i> · CONF {esc(a.get("confidence","?"))}<i>{esc(a.get("score","?"))}</i></span></div>',
                 '<div class="intel-body">',
                 f'<h3>{esc(a["title_zh"])}</h3>',
                 f'<p class="sum">{esc(a.get("summary_zh",""))}</p>',
