@@ -1,4 +1,7 @@
 title: 安全情报日报 Security Intelligence Daily
+# 日报按北京时间(TZ=Asia/Shanghai)命名，而 Actions 构建机为 UTC；
+# 不加此行时，每日 00:00-08:00 UTC 之间的构建会把当日帖子当"未来帖"排除(404)。
+future: true
 description: 每日基础设施与供应链安全情报（中文）
 plugins:
   - jekyll-sitemap
