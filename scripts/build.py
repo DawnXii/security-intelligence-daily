@@ -94,7 +94,11 @@ date: {run_date}
 
 """
     os.makedirs(os.path.join(SITE, "_posts"), exist_ok=True)
-    post = os.path.join(SITE, "_posts", f"{run_date}-report.md")
+    # 输出 .html：Jekyll 不跑 markdown 处理器，卡片 HTML 原样渲染（URL 不变 /YYYY/MM/DD/report.html）
+    post = os.path.join(SITE, "_posts", f"{run_date}-report.html")
+    old_md = os.path.join(SITE, "_posts", f"{run_date}-report.md")
+    if os.path.exists(old_md):
+        os.remove(old_md)
     tmp = post + ".tmp"
     open(tmp, "w").write(fm + "\n".join(lines))
     os.replace(tmp, post)
