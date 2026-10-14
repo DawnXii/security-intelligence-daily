@@ -10,7 +10,7 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(BASE, "data")
 CST = timezone(timedelta(hours=8))
 FIELDS = ["hash", "include", "score", "category", "title_zh", "summary_zh", "impact", "action", "confidence", "evidence"]
-CATEGORIES = {"vuln", "supplychain", "ttp", "phishing", "incident", "crypto-infra"}
+CATEGORIES = {"vuln", "supplychain", "ransomware", "malware", "ttp", "phishing", "incident", "crypto-infra"}
 CONF = {"high", "medium", "low"}
 
 def norm(s):

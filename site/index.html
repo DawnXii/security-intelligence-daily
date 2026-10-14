@@ -7,23 +7,47 @@ title: 首页
     <p class="kicker">Security Intelligence · Every 09:00 CST</p>
     <h1>每天 5 分钟<br>掌握安全情报脉搏</h1>
     <hr class="rule">
-    <p class="lead">自动聚合 12 个一线安全信源 —— 漏洞披露、在野利用、供应链攻击、重大安全事件。候选条目经启发式初筛与评分，由 AI 分析后逐条机械校验，确保证据可溯源；未通过校验的条目不予发布。</p>
+    <p class="lead">自动聚合 16 个一线安全媒体/厂商 RSS 与 3 个结构化情报接口（CISA KEV、GitHub Advisory、RansomLook）—— 漏洞与在野利用、供应链、勒索软件、恶意软件、攻击战术、钓鱼、重大事件、区块链基础设施八大类。候选条目经启发式初筛与评分，由 AI 分析后逐条机械校验，确保证据可溯源；未通过校验的条目不予发布。</p>
     <div class="stats">
-      <div class="stat"><b>12</b><span>Sources</span></div>
-      <div class="stat"><b>~200</b><span>Items / Day</span></div>
-      <div class="stat"><b>100%</b><span>Machine-verified</span></div>
-      <div class="stat"><b>09:00</b><span>Daily Drop</span></div>
+      <div class="stat"><b>19</b><span>Sources</span></div>
+      <div class="stat"><b>~300</b><span>Items / Day</span></div>
+      <div class="stat"><b>8</b><span>Categories</span></div>
+      <div class="stat"><b>100%</b><span>Verified</span></div>
+      <div class="stat"><b>09:00</b><span>Daily</span></div>
     </div>
   </div>
 </section>
 
 <div class="wrap">
+<p class="section-label" id="sources"><span class="n">S</span>Information Sources</p>
+<div class="srcgrid">
+  <span class="srcchip"><i>RSS</i>The Hacker News</span>
+  <span class="srcchip"><i>RSS</i>Security Affairs</span>
+  <span class="srcchip"><i>RSS</i>PortSwigger Research</span>
+  <span class="srcchip"><i>RSS</i>The Register</span>
+  <span class="srcchip"><i>RSS</i>BleepingComputer</span>
+  <span class="srcchip"><i>RSS</i>NetSec Learn</span>
+  <span class="srcchip"><i>RSS</i>CISA Advisories</span>
+  <span class="srcchip"><i>RSS</i>Cloudflare Blog</span>
+  <span class="srcchip"><i>RSS</i>AWS Security</span>
+  <span class="srcchip"><i>RSS</i>GitHub Security</span>
+  <span class="srcchip"><i>RSS</i>SANS ISC</span>
+  <span class="srcchip"><i>RSS</i>KrebsOnSecurity</span>
+  <span class="srcchip"><i>RSS</i>Google Safety</span>
+  <span class="srcchip"><i>RSS</i>Trail of Bits</span>
+  <span class="srcchip"><i>RSS</i>Chainalysis</span>
+  <span class="srcchip"><i>RSS</i>Ransomware.live</span>
+  <span class="srcchip"><i>API</i>CISA KEV</span>
+  <span class="srcchip"><i>API</i>GitHub Advisory</span>
+  <span class="srcchip"><i>API</i>RansomLook</span>
+</div>
+
 <p class="section-label" id="issues">Latest Issues</p>
 {% for post in site.posts %}
-<a class="issue" href="{{ post.url | relative_url }}">
-  <span class="no">{% if forloop.first %}01{% else %}{{ post.date | date: '%m·%d' }}{% endif %}</span>
+<a class="issue reveal" href="{{ post.url | relative_url }}">
+  <span class="no">{{ post.date | date: '%m·%d' }}</span>
   <span class="meta">
-    <span class="date">{{ post.date | date: "%Y-%m-%d" }} · Issue {{ forloop.index | plus: 0 }}</span>
+    <span class="date">{{ post.date | date: "%Y-%m-%d" }} · Issue {{ forloop.index }}</span>
     <span class="t">{{ post.title }}</span>
   </span>
   <span class="go">→</span>

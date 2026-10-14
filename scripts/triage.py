@@ -11,13 +11,16 @@ MAX_ITEMS = 40
 
 SRC_W = {"cisa": 8, "ghsec": 6, "trailofbits": 5, "cloudflare": 4, "aws": 4, "google": 4,
          "bleo": 3, "thn": 3, "secaff": 3, "register": 3, "krebs": 3, "isc": 2, "chainalysis": 2, "netsec": 2,
-         "kev": 9, "ghsa": 5}
+         "kev": 9, "ghsa": 5, "rwlive": 4, "ransomlook": 6}
 PAT = [
-    (r"cve-\d{4}-\d+|exploit(ed|ing)?|in the wild|active(ly)? exploit|zero.?day|ransomware", 10, "vuln"),
+    (r"cve-\d{4}-\d+|exploit(ed|ing)?|in the wild|active(ly)? exploit|zero.?day", 10, "vuln"),
     (r"remote code execution|\brce\b|unauthenticated|privilege escalation|code execution|memory corruption|use-after-free|sandbox escape|vm escape", 9, "vuln"),
     (r"cvss (?:v[234]? )?(?:10|9\.\d|8\.\d)|maximum.severity|critical vulnerability|cvss 10", 8, "vuln"),
     (r"patches|advisory|vulnerab|flaw|security update", 4, "vuln"),
     (r"supply.?chain|typosquat|malicious (?:package|dependency|extension|npm|pypi)|backdoor|trojan(ed)? (?:npm|package|library)", 10, "supplychain"),
+    (r"ransomware|ransom[- ]?(?:ware|look|attack)|lockbit|blackcat|akira|qilin|alpharoot|cl0p|play group|wicked|empress|sidewinder|leak.s?ite|data leak|double extortion|extortion", 10, "ransomware"),
+    (r"malware|botnet|trojan|rootkit|stealer|loader|infostealer|cryptomin|worm|rat\b|malicious (?:app|extension|browser)|c2 server|command.and.control", 8, "malware"),
+    (r"ttp|tactics|techniques|att\.ck|mitre att&ck|post[- ]?exploitation|lateral movement|persistence|living off the land|detection (?:evasion|rules)|ioc\b|yara|threat hunt", 7, "ttp"),
     (r"breach|hack(ed|ers|ing)?|attack(er|s|ing)?|compromis|data theft|stolen", 6, "incident"),
     (r"phish|credential|social engineer|mfa bypass|session hijack|oauth", 6, "phishing"),
     (r"blockchain|wallet|validator|rpc|cryptograph|private key|exchange", 6, "crypto-infra"),
@@ -53,20 +56,34 @@ def main():
         scored.append((s, cats, it))
     scored.sort(key=lambda x: -x[0])
     # 来源配额：防止单一来源（如 CISA ICS 批量通告）挤占版面
-    CAPS = {"cisa": 8, "kev": 5, "ghsa": 8}
-    sel, per_src = [], {}
-    for s, cats, it in scored:
-        src = it["source"]
-        cap = CAPS.get(src, MAX_ITEMS)
-        if per_src.get(src, 0) >= cap:
-            continue
-        if len(sel) >= MAX_ITEMS:
-            break
-        per_src[src] = per_src.get(src, 0) + 1
-        sel.append({"hash": it["hash"], "source": src, "source_name": it["source_name"],
+    CAPS = {"cisa": 8, "kev": 5, "ghsa": 8, "ransomlook": 4, "rwlive": 4}
+    MINQ = {"ransomlook": 2}  # 关键新类保底：勒索聚合情报至少进分析集 2 条，保证类别覆盖
+    sel, per_src, chosen = [], {}, set()
+    def add(s, cats, it):
+        chosen.add(it["hash"])
+        per_src[it["source"]] = per_src.get(it["source"], 0) + 1
+        sel.append({"hash": it["hash"], "source": it["source"], "source_name": it["source_name"],
                     "title": it["title"], "link": it["link"], "date": it["date"],
                     "summary": it["summary"][:W], "heuristic_score": s,
                     "heuristic_cats": sorted(cats)})
+    # 先为保底来源预留高分槽位
+    for src, need in MINQ.items():
+        taken = 0
+        for s, cats, it in scored:
+            if taken >= need:
+                break
+            if it["source"] == src and it["hash"] not in chosen:
+                add(s, cats, it); taken += 1
+    # 其余槽位按分数与配额填充
+    for s, cats, it in scored:
+        src = it["source"]
+        if it["hash"] in chosen:
+            continue
+        if per_src.get(src, 0) >= CAPS.get(src, MAX_ITEMS):
+            continue
+        if len(sel) >= MAX_ITEMS:
+            break
+        add(s, cats, it)
     out = os.path.join(DATA, "candidates", run_date, "analysis-input.json")
     tmp = out + ".tmp"
     json.dump({"run_date": run_date, "triage_from": len(items), "count": len(sel),

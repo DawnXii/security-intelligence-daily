@@ -4,299 +4,171 @@ title: "安全情报日报 2026-10-14"
 date: 2026-10-14
 ---
 
-<nav class="toc" id="toc">
-<h2>目录 Contents</h2>
-<p class="legend">利用状态：<b class="xw">在野利用</b> 已确认在野/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无公开利用情报　处置优先级：<b class="rp0">P0</b> ≥85 紧急 · <b class="rp1">P1</b> 75–84 尽快 · <b class="rp2">P2</b> &lt;75 计划</p>
-<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">17 条</span></p><ol>
-<li><a href="#vuln-25391"><span class="tc">★</span><span class="tt">CISA：Ivanti Connect Secure 认证绕过零日 CVE-2026-104935 已在野利用，列入 KEV</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
-<li><a href="#vuln-53128"><span class="tc">·</span><span class="tt">GitLab 修复 CVSS 10.0 最高危漏洞 CVE-2026-97229，未认证可致服务器代码执行</span><span class="meta"><i class="rp p0">P0</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-46561"><span class="tc">·</span><span class="tt">Volexity：攻击者链式利用 Ivanti Connect Secure 三个零日获取 root，第三个补丁仍未发布</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a href="#vuln-69872"><span class="tc">·</span><span class="tt">SonicWall SMA 1000 严重漏洞 CVE-2026-102255（CVSS 10.0）披露数日即遭在野利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a href="#vuln-81905"><span class="tc">·</span><span class="tt">WordPress 插件 Bricksforge CVSS 10.0 漏洞 CVE-2026-85097 遭在野利用，未认证 RCE</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a href="#vuln-76898"><span class="tc">·</span><span class="tt">vm2 沙箱逃逸漏洞 CVE-2026-93605（CVSS 10.0），3.12.1 前版本可逃逸</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-51155"><span class="tc">·</span><span class="tt">CISA/ICS 通告：MikroTik RouterOS 预认证整数下溢 CVE-2026-84411（CVSS 9.8）可致 RCE</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-01784"><span class="tc">·</span><span class="tt">AnyDesk Linux 预认证 RCE 完整利用代码公开，6 月已修复但暴露面大</span><span class="meta"><i class="rp p1">P1</i><i class="xs xp">PoC 公开</i></span></a></li>
-<li><a href="#vuln-61385"><span class="tc">·</span><span class="tt">SAP Cloud SDK for Python 缺陷可把 OAuth2 客户端凭据发往攻击者控制的服务器</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-19688"><span class="tc">·</span><span class="tt">AhsayCBS 备份系统漏洞遭在野利用：部署 Webshell 与 XMRig 挖矿</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a href="#vuln-97560"><span class="tc">·</span><span class="tt">LMCache 关键漏洞未修复：未认证可远程执行代码（影响 vLLM 等推理栈）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-32357"><span class="tc">·</span><span class="tt">Ghost 博客平台书签卡片图片处理漏洞可致 RCE（CVE-2026-105642，CVSS 8.8）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-47947"><span class="tc">·</span><span class="tt">Flowise CSV/Airtable Agent 校验绕过可从提示注入升至 RCE/SSRF（CVE-2026-73487）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-99440"><span class="tc">·</span><span class="tt">Payload CMS 表单构建插件存在 RCE（CVE-2026-105857，CVSS 10.0）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-80380"><span class="tc">·</span><span class="tt">CISA KEV：Windows CVE-2026-96951 命令注入漏洞已确认在野利用</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
-<li><a href="#vuln-40343"><span class="tc">·</span><span class="tt">PraisonAI（LLM Agent 框架）多个高危缺陷：插件自动加载执行任意 Python、AgentOS 默认无认证暴露</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-15591"><span class="tc">·</span><span class="tt">Nginx UI 未认证请求体暂存可耗尽临时存储（CVE-2026-107805，CVSS 7.5）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
+<li><a class="toc-link" href="#vuln-93499"><span class="tc">★</span><span class="tt">Ivanti VPN 零日认证绕过遭在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-42090"><span class="tc">·</span><span class="tt">Ivanti 三枚零日被链式利用取 Root</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-23124"><span class="tc">·</span><span class="tt">GitLab 修复 CVSS 10 未授权 RCE</span><span class="meta"><i class="rp p0">P0</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-35277"><span class="tc">·</span><span class="tt">SonicWall SMA 1000 满分漏洞已现攻击</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-75852"><span class="tc">·</span><span class="tt">Windows 高危漏洞确认在野利用入 KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-67504"><span class="tc">·</span><span class="tt">SAP Python SDK 满分漏洞可窃 OAuth2 凭据</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
 </ol></div>
-<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链/CI-CD</a><span class="tg-c">2 条</span></p><ol>
-<li><a href="#supplychain-50539"><span class="tc">·</span><span class="tt">npm 包 tensorlake 遭 ChainDrop/Shai-Hulud 供应链攻击投毒（0.5.144）</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
-<li><a href="#supplychain-60908"><span class="tc">·</span><span class="tt">Docker Hub 修复存在两年的越权缺陷：可以另一用户身份推送/拉取/删除镜像</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-61503"><span class="tc">·</span><span class="tt">tensorlake npm 遭投毒传播 Shai-Hulud</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
 </ol></div>
-<div class="grp"><p class="tg-h"><a href="#sec-incident">重大事件</a><span class="tg-c">1 条</span></p><ol>
-<li><a href="#incident-95207"><span class="tc">·</span><span class="tt">CISA/AA26-281A：中国背景威胁组织结合自动化扫描、僵尸网络与手工渗透窃取敏感数据</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-67865"><span class="tc">·</span><span class="tt">勒索团伙 n0n 一周新增 59 名受害者</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">活跃攻击</i></span></a></li>
 </ol></div>
-</nav>
+<div class="grp"><p class="tg-h"><a href="#sec-malware">恶意软件与僵尸网络</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#malware-58188"><span class="tc">·</span><span class="tt">P7 DarkSword iOS 套件新增钱包窃密</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ttp">攻击战术与技术</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ttp-07127"><span class="tc">·</span><span class="tt">CISA：中国关联团伙自动化加人工入侵窃密</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+</ol></div>
+</div></nav>
 
+<div class="feed-col">
 <p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
 
-<div class="intel focus" id="vuln-25391">
+<div class="intel focus reveal" id="vuln-93499">
 <div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>92</i></span></div>
 <div class="intel-body">
-<h3>CISA：Ivanti Connect Secure 认证绕过零日 CVE-2026-104935 已在野利用，列入 KEV</h3>
-<p class="sum">CISA 确认 Ivanti 披露的 CVE-2026-104935 正被威胁行为者主动利用，影响 Ivanti Connect Secure 25.1.1.1 及更早、25.1.2.2 及更早、22.8R2.4 及更早版本。该零日认证绕过漏洞允许远程未认证攻击者执行任意命令，被用于凭据窃取和数据外泄。CISA 已于 2026 年 10 月 13 日将其加入 KEV 目录，并敦促受影响组织立即升级至最新版本。</p>
+<h3>Ivanti VPN 零日认证绕过遭在野利用</h3>
+<p class="sum">CISA 确认 CVE-2026-104935（Ivanti Connect Secure 认证绕过零日）已遭在野利用，影响 25.1.1.1、25.1.2.2 及 22.8R2.4 之前的版本。攻击者可未经认证远程执行任意命令，用于凭据窃取与数据外泄，该 CVE 已于 10 月 13 日列入 KEV 目录。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>VPN 集中入口被未认证 RCE 打通后，攻击者可直接窃取凭据并外传内部数据，等于绕过整个边界防线；对以 ICS 做远程接入的企业构成即时失陷风险。</p></div>
-<div class="cell"><b>Action</b><p>立即将 Ivanti Connect Secure 升级到最新受支持版本并核对 Ivanti 官方安全通告；无法马上打补丁的实例应临时收敛暴露面，并审计凭据窃取与数据外泄迹象。</p></div>
+<div class="cell"><b>Impact</b><p>面向公网的 VPN 网关被直接攻陷，等同于内网入口失守，须按 KEV 与 BOD 26-04 时限完成处置。</p></div>
+<div class="cell"><b>Action</b><p>立即升级至厂商修复版本；无法打补丁的资产断开公网暴露，并排查凭据外泄与入侵迹象。</p></div>
 </div>
 </div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/alerts/2026-10-13/cisa-urges-patching-newly-exploited-vulnerability-ivanti-connect-secure" target="_blank" rel="noopener">SOURCE ↗</a></div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/alerts/2026/10/13/cisa-urges-patching-newly-exploited-vulnerability-ivanti-connect-secure" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-53128">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
+<div class="intel reveal" id="vuln-42090">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>90</i></span></div>
 <div class="intel-body">
-<h3>GitLab 修复 CVSS 10.0 最高危漏洞 CVE-2026-97229，未认证可致服务器代码执行</h3>
-<p class="sum">GitLab 修复了编号 CVE-2026-97229、CVSS 满分 10.0 的最高危漏洞，未认证攻击者可在其服务器（CE/EE）上执行任意代码。GitLab 已发布补丁并敦促用户尽快升级。</p>
+<h3>Ivanti 三枚零日被链式利用取 Root</h3>
+<p class="sum">Volexity 披露攻击者将 Ivanti Connect Secure 中三枚零日漏洞链式组合，在未认证情况下以 root 权限执行命令。Ivanti 已修复其中两枚，第三枚补丁仍未发布，官方要求受影响版本客户立即行动。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>GitLab 是大量企业代码托管与 CI/CD 核心，未认证 RCE 直接威胁源码、令牌与构建管线；暴露实例可一步沦陷为供应链投毒跳板。</p></div>
-<div class="cell"><b>Action</b><p>立即升级 GitLab 至官方修复版本；对外暴露实例核查升级前后访问日志异常；轮换实例内 CI/Deploy Token，复核项目 webhook 完整性。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://securityaffairs.com/200868/security/gitlab-patches-max-severity-vulnerability-cve-2026-97229.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-46561">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
-<div class="intel-body">
-<h3>Volexity：攻击者链式利用 Ivanti Connect Secure 三个零日获取 root，第三个补丁仍未发布</h3>
-<p class="sum">Volexity 于 10 月 13 日披露，有攻击者将 Ivanti Connect Secure VPN 设备上的三个零日漏洞链式利用，实现未登录以 root 执行命令。Ivanti 已修复其中两个漏洞并敦促受影响版本客户立即行动，但第三个漏洞的补丁仍未发布。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>root 级未认证命令执行意味着 VPN 边界可被完全接管；未修复的第三个零日使单纯打补丁不足以止血，已入侵设备可能保留隐藏后门。</p></div>
-<div class="cell"><b>Action</b><p>对 ICS 设备立即应用现有补丁、持续跟踪第三个漏洞的修复发布；高危环境建议重置设备、轮换所有经由 VPN 的凭据，并做完整性核查而非仅看版本号。</p></div>
+<div class="cell"><b>Impact</b><p>打了部分补丁仍可能被完整攻陷，未修复的第三枚零日构成长期暴露面。</p></div>
+<div class="cell"><b>Action</b><p>部署现有两枚修复并持续跟踪第三枚补丁；高危环境临时收敛 VPN 暴露面、强化监控。</p></div>
 </div>
 </div>
 <div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attacker-chains-three-ivanti-connect.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-69872">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>82</i></span></div>
+<div class="intel reveal" id="vuln-23124">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
 <div class="intel-body">
-<h3>SonicWall SMA 1000 严重漏洞 CVE-2026-102255（CVSS 10.0）披露数日即遭在野利用</h3>
-<p class="sum">威胁行为者在 SonicWall Secure Mobile Access (SMA) 1000 关键漏洞公开披露后数天内即开始利用。该漏洞编号 CVE-2026-102255，CVSS 10.0，为预认证服务器端请求伪造（SSRF），可迫使设备按攻击者意图发出请求。</p>
+<h3>GitLab 修复 CVSS 10 未授权 RCE</h3>
+<p class="sum">GitLab 修复满分漏洞 CVE-2026-97229（CVSS 10.0），未认证攻击者可在其服务器上执行代码，影响 Community Edition 等版本。来源未提及在野利用，但自托管且暴露网络的 GitLab 风险极高。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>SMA 1000 是远程访问入口，预认证 SSRF 可被用于打穿内网管理服务与横向探测；披露到利用的窗口极短，暴露中的 SSL VPN 设备面临即时风险。</p></div>
-<div class="cell"><b>Action</b><p>尽快升级 SonicWall SMA 1000 固件至修复版本；修复前收敛管理接口暴露、审查设备异常出站请求日志，并对经由 SMA 的账户强制重置凭据。</p></div>
+<div class="cell"><b>Impact</b><p>代码托管平台被攻陷意味着仓库、CI 凭据与源码资产整体失窃风险。</p></div>
+<div class="cell"><b>Action</b><p>立即升级 GitLab 至修复版本；审计近期异常作业、令牌与对外暴露面。</p></div>
 </div>
 </div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/critical-sonicwall-sma-1000-flaw.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://securityaffairs.com/200868/security/gitlab-patches-max-severity-vulnerability-cve-2026-97229.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-81905">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel reveal" id="vuln-35277">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
 <div class="intel-body">
-<h3>WordPress 插件 Bricksforge CVSS 10.0 漏洞 CVE-2026-85097 遭在野利用，未认证 RCE</h3>
-<p class="sum">Patchstack 报告 WordPress 插件 Bricksforge 的最高危漏洞 CVE-2026-85097（CVSS 10.0）已在野被主动利用，未认证攻击者可上传并执行任意 PHP 代码，导致远程代码执行。</p>
+<h3>SonicWall SMA 1000 满分漏洞已现攻击</h3>
+<p class="sum">SonicWall SMA 1000 的 CVE-2026-102255（CVSS 10.0，无需登录的 SSRF）公开披露仅数天即出现利用攻击，SonicWall 已发布补丁。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>WordPress 承载大量企业官网与电商，未认证上传执行 PHP 意味着即时 Webshell 落地，站点可被用于挂马、钓鱼和凭据窃取，共享主机的横向风险也高。</p></div>
-<div class="cell"><b>Action</b><p>立即升级 Bricksforge 至修复版本或临时停用该插件；对站点做 webshell 与异常管理员账户排查，检查上传目录与文件哈希基线，回滚可疑改动并轮换站点凭据。</p></div>
+<div class="cell"><b>Impact</b><p>SSL VPN 集中器属高价值入口，SSRF 无需凭据即可触发，未打补丁设备面临现实攻陷风险。</p></div>
+<div class="cell"><b>Action</b><p>立即升级 SMA 1000 固件；无法即时修复的设备限制管理面暴露并回查入侵迹象。</p></div>
 </div>
 </div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-cvss-100-bricksforge.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://securityaffairs.com/200816/hacking/sonicwall-patches-cvss-10-0-ssrf-flaw-as-attacks-begin.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-76898">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>77</i></span></div>
+<div class="intel reveal" id="vuln-75852">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>82</i></span></div>
 <div class="intel-body">
-<h3>vm2 沙箱逃逸漏洞 CVE-2026-93605（CVSS 10.0），3.12.1 前版本可逃逸</h3>
-<p class="sum">GHSA 通告 vm2 NodeVM 3.12.1 之前版本 DANGEROUS_BUILTINS 黑名单遗漏 child_process，沙箱内代码可借此逃逸执行任意命令，CVSS 10.0，修复版本 3.12.1。</p>
+<h3>Windows 高危漏洞确认在野利用入 KEV</h3>
+<p class="sum">CISA 将 CVE-2026-96951（Microsoft Windows）于 10 月 13 日列入 KEV 目录，确认存在在野利用，要求按 BOD 26-04 与取证排查要求处置。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>vm2 被大量 BFF/低代码/SaaS 插件宿主用于运行不可信 JS；沙箱逃逸等于宿主进程（含密钥与内网访问权）沦陷，Node 生态受影响面广。</p></div>
-<div class="cell"><b>Action</b><p>升级 vm2 至 3.12.1；自查沙箱策略黑名单完整性，长期考虑迁移到 isolate/worker 级隔离；对插件类应用复核租户代码执行审计。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-pq68-rvw4-xp4r" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-51155">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
-<div class="intel-body">
-<h3>CISA/ICS 通告：MikroTik RouterOS 预认证整数下溢 CVE-2026-84411（CVSS 9.8）可致 RCE</h3>
-<p class="sum">CISA 通告 MikroTik RouterOS 7.24 之前版本存在 CVE-2026-84411，CVSS v3 9.8。其 web 管理服务的 HTTP 请求体处理存在整数下溢，可在认证前被远程触发，利用后可实现任意代码执行或拒绝服务，涉及通信与信息技术关键基础设施部门。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>RouterOS 广泛用于 ISP、机房和小企业边界网络，管理面预认证 RCE 等于把整个网络出口交给攻击者；自建节点与小型 IDC 的网络边界风险尤甚。</p></div>
-<div class="cell"><b>Action</b><p>升级 RouterOS 至 7.24 及以上；无法立即升级时禁用面向公网的 web 管理服务、改用 IP 白名单或隧道化管理，并核查设备配置是否被篡改。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-272-06" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-01784">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
-<div class="intel-body">
-<h3>AnyDesk Linux 预认证 RCE 完整利用代码公开，6 月已修复但暴露面大</h3>
-<p class="sum">研究人员公开了 AnyDesk Linux 预认证 RCE 漏洞的完整可用 exploit，可在无人批准连接的情况下取得 root。AnyDesk 已于 6 月 8.0.3 版本修复。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>预认证+root+公开 PoC 意味着扫描-利用流水线即刻可用；运维人员桌面与堡垒旁路通道首当其冲，未升级终端等于开门。</p></div>
-<div class="cell"><b>Action</b><p>确认所有 AnyDesk Linux 终端 ≥8.0.3；无法升级的主机禁用 AnyDesk 服务；审计异常入站连接与持久化。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/researchers-publish-working-exploit-for.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-61385">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>75</i></span></div>
-<div class="intel-body">
-<h3>SAP Cloud SDK for Python 缺陷可把 OAuth2 客户端凭据发往攻击者控制的服务器</h3>
-<p class="sum">SAP 于 10 月 13 日发布安全通告：Cloud SDK for Python 存在缺陷，可将应用的 OAuth2 客户端凭据发送至攻击者控制的服务器。受影响对象为使用 SAP Business Technology Platform (BTP) 的多租户应用，攻击前提是其能控制租户子域。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>OAuth2 client credentials 一旦外泄即等同机器身份失窃，可静默访问 BTP 服务与下游 API；对把云平台凭据托管在 SDK 中的企业是源头级风险。</p></div>
-<div class="cell"><b>Action</b><p>按 SAP 安全通告升级 Cloud SDK for Python；审计多租户应用中的租户子域来源与异常出站目标，轮换受影响应用的 OAuth2 客户端凭据，并对子域输入做校验加固。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/sap-discloses-critical-cvss-10-flaw-in.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-19688">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>74</i></span></div>
-<div class="intel-body">
-<h3>AhsayCBS 备份系统漏洞遭在野利用：部署 Webshell 与 XMRig 挖矿</h3>
-<p class="sum">威胁行为者正利用 AhsayCBS 备份工具近期披露的两个缺陷夺取设备控制权，部署 webshell 和 XMRig 加密货币挖矿程序。已知细节含 CVE-2026-105133（CVSS v4 5.5），为 checkSysPwd() 函数中的不当认证漏洞。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>备份系统是运维基础设施的核心资产，掌握备份节点即掌握大量历史数据副本；webshell 驻留意味着攻击者长期潜伏在备份网络内，横向可威胁生产与密钥存储。</p></div>
-<div class="cell"><b>Action</b><p>升级 AhsayCBS 修复 CVE-2026-105133 等披露缺陷；排查备份服务器上异常 webshell、计划任务与 XMRig 进程，收敛备份管理端口的公网暴露并启用强认证。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-ahsaycbs-flaws-to.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-97560">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>73</i></span></div>
-<div class="intel-body">
-<h3>LMCache 关键漏洞未修复：未认证可远程执行代码（影响 vLLM 等推理栈）</h3>
-<p class="sum">LMCache（为 vLLM 等 LLM 服务器加速的开源缓存软件）存在关键漏洞，攻击者无需登录即可在缓存服务器上执行代码，且暂无修复版本发布。漏洞位于其 multiprocess 分发处理路径。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>LMCache/vLLM 组合被大量 AI 服务与内部推理平台使用，无补丁的未认证 RCE 意味着只能靠暴露面收敛止血，AI 基础设施供应链风险直接上升。</p></div>
-<div class="cell"><b>Action</b><p>在官方修复发布前：将 LMCache 服务端口限制到可信网络、禁用公网暴露；评估临时下线该组件的影响；跟踪上游公告。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/unpatched-critical-lmcache-flaw-lets.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-32357">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
-<div class="intel-body">
-<h3>Ghost 博客平台书签卡片图片处理漏洞可致 RCE（CVE-2026-105642，CVSS 8.8）</h3>
-<p class="sum">GHSA 通告 Ghost 6.67.0 之前版本捆绑的图片处理库在 SVG 处理上存在缺陷，Staff 用户（含 Contributor 角色）可借书签卡片图片触发远程代码执行。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>Ghost 承载大量内容站与营销基础设施；低权限角色即可打到服务器代码执行，意味着投稿/编辑流程可被武器化。</p></div>
-<div class="cell"><b>Action</b><p>升级 Ghost 至 6.67.0；收紧 Contributor 角色书签/图片功能使用；对内容基础设施服务器做完整性核查。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-788w-68h3-cvxp" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-47947">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>71</i></span></div>
-<div class="intel-body">
-<h3>Flowise CSV/Airtable Agent 校验绕过可从提示注入升至 RCE/SSRF（CVE-2026-73487）</h3>
-<p class="sum">GHSA 通告 Flowise ≤3.1.2 的 CSV Agent 与 Airtable Agent 节点使用正则黑名单校验，可被绕过，导致提示注入升级为远程代码执行与 SSRF，修复版本 3.1.3。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>Flowise 是流行 LLM 编排工具，自托管实例常挂在内网且持有各类 API Key；RCE+SSRF 组合使单个 workflow 沦为内网侦察与凭据窃取入口。</p></div>
-<div class="cell"><b>Action</b><p>升级 Flowise 至 3.1.3；审查 agent 节点可用工具面与出网策略；轮换编排实例持有的模型与集成凭据。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-w7x8-q2gp-5cgg" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-99440">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>70</i></span></div>
-<div class="intel-body">
-<h3>Payload CMS 表单构建插件存在 RCE（CVE-2026-105857，CVSS 10.0）</h3>
-<p class="sum">GHSA 通告 @payloadcms/plugin-form-builder 存在远程代码执行问题，CVSS 10.0，修复版本 3.90.0 / 4.0.0-canary.34。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>Payload 常用于快速搭建带表单的 BFF/官网，表单入口即暴露面；满分评分意味着未认证可达的可能性高，站点服务器可被直接接管。</p></div>
-<div class="cell"><b>Action</b><p>升级 plugin-form-builder 至修复版本；对表单提交路径做输入审计与 WAF 规则加固；核查站点近期文件变更。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-r488-j9vj-wx3q" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
-
-<div class="intel" id="vuln-80380">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
-<div class="intel-body">
-<h3>CISA KEV：Windows CVE-2026-96951 命令注入漏洞已确认在野利用</h3>
-<p class="sum">CISA 于 2026-10-13 将 CVE-2026-96951（Microsoft Windows 命令注入）列入 KEV 目录，要求按 BOD 26-04 依厂商指引处置。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>Windows 命令注入类漏洞进 KEV 通常伴随钓鱼或执行链利用，终端与服务器集群都需要关注补丁节奏。</p></div>
-<div class="cell"><b>Action</b><p>按微软月度安全更新核查 CVE-2026-96951 对应补丁并纳入本周期更新环；联邦环境遵守 BOD 时限。</p></div>
+<div class="cell"><b>Impact</b><p>Windows 基础组件漏洞被利用将波及海量终端与服务器，横向移动风险高。</p></div>
+<div class="cell"><b>Action</b><p>按 KEV 时限完成 Windows 补丁；对未更新资产加密监控与隔离。</p></div>
 </div>
 </div>
 <div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-96951" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-40343">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>66</i></span></div>
+<div class="intel reveal" id="vuln-67504">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
 <div class="intel-body">
-<h3>PraisonAI（LLM Agent 框架）多个高危缺陷：插件自动加载执行任意 Python、AgentOS 默认无认证暴露</h3>
-<p class="sum">GHSA 通告显示 PraisonAI 组件存在多个高危问题：plugin manager 从 .praisonai/plugins/ 加载并执行未校验的任意 .py 文件（CVE-2026-61446，CVSS 8.4）；其 AgentOS（npm）默认以 network-exposed no-auth 模式运行，允许未认证调用 agent 并泄露指令（CVE-2026-61426）。修复版本分别为 1.6.78 与 1.7.3。</p>
+<h3>SAP Python SDK 满分漏洞可窃 OAuth2 凭据</h3>
+<p class="sum">SAP Cloud SDK for Python（BTP 官方 Python 客户端）存在 CVSS 10.0 缺陷：攻击者可利用租户子域控制，使应用的 OAuth2 客户端凭据被发送到其控制的服务器，影响 BTP 上使用 SDK 的多租户应用。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>LLM Agent 框架通常持有模型密钥、工具凭据与内网数据访问权，默认无认证暴露加任意文件执行组合等于把 agent 运行时交给网络攻击者，属于 AI 运维基础设施新爆点。</p></div>
-<div class="cell"><b>Action</b><p>升级 praisonaiagents 1.6.78 / praisonai 1.7.3；审计 AgentOS 监听地址与认证配置，禁止默认公网暴露；轮换框架持有的模型与工具凭据。</p></div>
+<div class="cell"><b>Impact</b><p>云平台机器身份凭据外泄，可能被用于冒用应用身份访问 BTP 服务。</p></div>
+<div class="cell"><b>Action</b><p>升级 Cloud SDK for Python 至修复版本；审查租户域名校验逻辑与 OAuth2 令牌日志。</p></div>
 </div>
 </div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-m6wp-h223-4c8g" target="_blank" rel="noopener">SOURCE ↗</a></div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/sap-discloses-critical-cvss-10-flaw-in.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-15591">
-<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>63</i></span></div>
-<div class="intel-body">
-<h3>Nginx UI 未认证请求体暂存可耗尽临时存储（CVE-2026-107805，CVSS 7.5）</h3>
-<p class="sum">GHSA 通告 Nginx UI 2.5.x 的 node-signature 机制中，未认证攻击者可借签名请求体暂存耗尽临时存储空间；同组件另有一处未认证高危缺陷（CVE-2026-107806）。修复于 1.9.10 起的关联版本。</p>
-<div class="intel-grid">
-<div class="cell"><b>Impact</b><p>Nginx UI 常用于轻量服务器/边缘节点的面板管理，DoS 型缺陷影响面板可用性，配合另一高危问题的存在使管理面风险上升。</p></div>
-<div class="cell"><b>Action</b><p>升级 Nginx UI 至修复版本；限制面板端口暴露并为管理面加认证/白名单。</p></div>
-</div>
-</div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-j3hg-9rp3-5hw9" target="_blank" rel="noopener">SOURCE ↗</a></div>
-</div>
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
 
-<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链/CI-CD</p>
-
-<div class="intel" id="supplychain-50539">
-<div class="intel-head"><span class="chip">供应链/CI-CD</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>86</i></span></div>
+<div class="intel reveal" id="supplychain-61503">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
 <div class="intel-body">
-<h3>npm 包 tensorlake 遭 ChainDrop/Shai-Hulud 供应链攻击投毒（0.5.144）</h3>
-<p class="sum">Tensorlake 官方 TypeScript SDK 的 npm 包 "tensorlake" 在 ChainDrop / Shai-Hulud 供应链攻击中被入侵，恶意版本 0.5.144 包含混淆恶意软件，可收割凭据、外泄密钥、建立持久化并执行远程下发的代码（Socket 披露）。</p>
+<h3>tensorlake npm 遭投毒传播 Shai-Hulud</h3>
+<p class="sum">npm 包 tensorlake（Tensorlake 平台 TypeScript SDK）遭 ChainDrop / Shai-Hulud 供应链攻击投毒，恶意版本 0.5.144 内含混淆恶意代码，可收集凭据、外泄密钥、建立持久化并执行远程下发的代码。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>该 SDK 面向沙箱与云服务开发，被 CI/CD、开发机和容器构建拉取后，凭据与密钥会随构建环境批量泄露，形成蠕虫式二次扩散；使用它的云/加密基础设施项目风险尤其高。</p></div>
-<div class="cell"><b>Action</b><p>排查所有依赖 tensorlake 的项目，移除 0.5.144 并更新至安全版本；对 CI runner 与开发机做凭据轮换（npm/GitHub token、云密钥），并检查持久化与远程代码执行痕迹。</p></div>
+<div class="cell"><b>Impact</b><p>使用受影响版本的项目与 CI 环境中令牌、密钥可能已被批量窃取。</p></div>
+<div class="cell"><b>Action</b><p>回滚 tensorlake 至未受影响版本；全量轮换可能暴露的 npm/cloud 凭据；排查依赖树异常。</p></div>
 </div>
 </div>
 <div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/tensorlake-npm-package-compromised-to.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="supplychain-60908">
-<div class="intel-head"><span class="chip">供应链/CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-67865">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><i class="xs xw">活跃攻击</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>74</i></span></div>
 <div class="intel-body">
-<h3>Docker Hub 修复存在两年的越权缺陷：可以另一用户身份推送/拉取/删除镜像</h3>
-<p class="sum">Docker Hub 存在一处缺陷，允许一个用户以另一个用户的身份推送、拉取或删除镜像。Docker 已于 9 月 30 日修复，并表示没有证据显示该缺陷被利用；缺陷位于把个人账户转换为组织账户的功能中，Docker 在 10 月 12 日的安全通告中做了说明。</p>
+<h3>勒索团伙 n0n 一周新增 59 名受害者</h3>
+<p class="sum">RansomLook 跟踪数据显示，勒索团伙 n0n 近 7 天在泄密站发布 59 条受害者帖子，最新发现于 10 月 14 日。受害者集中在航运、港口、物流与大宗商品领域，如 Apical Group、Asyaport、BNCT 等。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>镜像仓库是容器与节点软件分发链的根信任点，若被利用可造成镜像投毒或删除；本案已修复且未见利用，但暴露了低频账户转换路径缺乏审计的结构性问题。</p></div>
-<div class="cell"><b>Action</b><p>对使用 Docker Hub 组织账户的仓库复核近期推送/删除审计日志与镜像摘要一致性；CI 中固定基础镜像 digest，关键镜像启用签名校验，避免依赖可变 tag。</p></div>
+<div class="cell"><b>Impact</b><p>该团伙对航运/物流供应链展开规模化攻击，行业性风险明显上升。</p></div>
+<div class="cell"><b>Action</b><p>航运、港口与物流企业核查备份可用性与网络分段，关注该团伙 TTP 与勒索信特征。</p></div>
 </div>
 </div>
-<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/docker-fixes-critical-two-year-old-hub.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/n0n" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<p class="section-label" id="sec-incident"><span class="n">03</span>重大事件</p>
+<p class="section-label" id="sec-malware"><span class="n">04</span>恶意软件与僵尸网络</p>
 
-<div class="intel" id="incident-95207">
-<div class="intel-head"><span class="chip">重大事件</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel reveal" id="malware-58188">
+<div class="intel-head"><span class="chip">恶意软件与僵尸网络</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>70</i></span></div>
 <div class="intel-body">
-<h3>CISA/AA26-281A：中国背景威胁组织结合自动化扫描、僵尸网络与手工渗透窃取敏感数据</h3>
-<p class="sum">CISA 通告：受 Integrity Technology Group 支持的中国政府背景威胁行为者，正结合自动化扫描工具、大规模僵尸网络和手工渗透技术，针对全球组织（含美国关键基础设施部门）窃取敏感数据。其手法包括漏洞利用、跨站脚本攻击、对 Microsoft Exchange 服务器密码喷洒，通过 VPN 软件建立持久化，并用脚本外传邮件和凭据。</p>
+<h3>P7 DarkSword iOS 套件新增钱包窃密</h3>
+<p class="sum">iVerify 披露 DarkSword iOS 漏洞利用工具包新变体 P7 DarkSword：缩减设备端足迹，新增钥匙串与加密钱包数据窃取，并加入与攻击者基础设施的双向 C2 通信。</p>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>该 TTP 组合（扫描+僵尸网络+密码喷洒+VPN 持久化）直接针对企业边界与邮件/VPN 基础设施，属于高容量、低门槛的批量入侵模式，任何暴露 Exchange 与 VPN 的机构都在打击范围内。</p></div>
-<div class="cell"><b>Action</b><p>按通告排查 Exchange 密码喷洒迹象与异常访问；对 VPN 接入全面启用强 MFA 并审计可疑持久化；部署对自动化扫描流量的检测，收敛面向互联网服务的暴露面。</p></div>
+<div class="cell"><b>Impact</b><p>移动设备上加密资产凭据面临定向窃取，企业 iOS 环境也可能成为渗透入口。</p></div>
+<div class="cell"><b>Action</b><p>关注 iVerify 报告 IOC；对高价值岗位设备检查异常配置描述文件与越狱迹象。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/p7-darksword-ios-exploit-kit-adds.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ttp"><span class="n">05</span>攻击战术与技术</p>
+
+<div class="intel reveal" id="ttp-07127">
+<div class="intel-head"><span class="chip">攻击战术与技术</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
+<div class="intel-body">
+<h3>CISA：中国关联团伙自动化加人工入侵窃密</h3>
+<p class="sum">CISA 发布通告：依托 Integrity Technology Group 的中国政府关联威胁组织，结合自动化扫描工具、大规模僵尸网络与人工渗透手法，针对全球组织（含美国关键基础设施）窃取敏感数据。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>覆盖多行业的系统性窃密活动，自动化与人工手法混合，传统单点检测难以发现。</p></div>
+<div class="cell"><b>Action</b><p>对照通告 IOC 回溯排查；收敛边界设备与已知漏洞资产；加强出站流量与凭据异常监控。</p></div>
 </div>
 </div>
 <div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-281a" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
 </div>

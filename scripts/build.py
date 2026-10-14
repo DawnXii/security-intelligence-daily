@@ -9,8 +9,9 @@ from datetime import datetime, timezone, timedelta
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA, SITE = os.path.join(BASE, "data"), os.path.join(BASE, "site")
 CST = timezone(timedelta(hours=8))
-CATS = {"vuln": "漏洞与在野利用", "supplychain": "供应链/CI-CD", "ttp": "攻击战术与恶意软件",
-        "phishing": "钓鱼与社工", "incident": "重大事件", "crypto-infra": "区块链基础设施"}
+CATS = {"vuln": "漏洞与在野利用", "supplychain": "供应链 / CI-CD", "ransomware": "勒索软件与数据泄露",
+        "malware": "恶意软件与僵尸网络", "ttp": "攻击战术与技术", "phishing": "钓鱼与社工",
+        "incident": "重大安全事件", "crypto-infra": "区块链基础设施"}
 
 def main():
     run_date = sys.argv[1] if len(sys.argv) > 1 else datetime.now(CST).strftime("%Y-%m-%d")
@@ -33,7 +34,7 @@ def main():
 
     lines = []
     top_score = max((a.get("score", 0) for a in items), default=0)
-    cats_present = [c for c in ("vuln", "supplychain", "crypto-infra", "ttp", "phishing", "incident")
+    cats_present = [c for c in ("vuln", "supplychain", "ransomware", "malware", "ttp", "phishing", "incident", "crypto-infra")
                     if any(a.get("category") == c for a in items)]
 
     IN_WILD = re.compile(r"已在野|在野利用|主动利用|遭[^，。]{0,10}利用|被[^，。]{0,10}利用|正在利用|利用尝试|零日|列入 KEV|加入 KEV|KEV 目录|exploited", re.I)
@@ -74,31 +75,48 @@ def main():
         s = a.get("score", 0)
         return "P0" if s >= 85 else ("P1" if s >= 75 else "P2")
 
-    # 目录（TOC）：按分节分组 + 图例
+    def exploit_chip(a, cat):
+        """漏洞类完整利用标签；勒索类只在活跃攻击时打标签。"""
+        if cat == "vuln":
+            return exploit_tag(a)
+        if cat == "ransomware":
+            return ("活跃攻击", "xw") if a.get("exploit") == "wild" else ("", "")
+        return ("", "")
+
+    # 目录（TOC）：侧边栏导航，按分节分组 + 图例
     if items:
-        toc = ['<nav class="toc" id="toc">', '<h2>目录 Contents</h2>',
-               '<p class="legend">利用状态：<b class="xw">在野利用</b> 已确认在野/KEV · '
-               '<b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无公开利用情报　'
-               '处置优先级：<b class="rp0">P0</b> ≥85 紧急 · <b class="rp1">P1</b> 75–84 尽快 · <b class="rp2">P2</b> &lt;75 计划</p>']
+        toc = ['<nav class="toc" id="toc" aria-label="目录">', '<h2>目录 <span>Contents</span></h2>',
+               '<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · '
+               '<b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>'
+               '优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>',
+               '<div class="toc-scroll">']
         for cat in cats_present:
             sel = [a for a in items if a.get("category") == cat]
             toc.append(f'<div class="grp"><p class="tg-h"><a href="#sec-{cat}">'
-                       f'{CATS[cat]}</a><span class="tg-c">{len(sel)} 条</span></p><ol>')
+                       f'{CATS[cat]}</a><span class="tg-c">{len(sel)}</span></p><ol>')
             for a in sel:
                 aid = f"{cat}-{zlib.crc32(a['title_zh'].encode()) % 100000:05d}"
                 a["__aid"] = aid
                 focus = "★" if a.get("score", 0) == top_score else ""
-                xlab, xcls = (exploit_tag(a) if cat == "vuln" else ("", ""))
+                xlab, xcls = exploit_chip(a, cat)
                 rt = risk_tier(a)
-                toc.append(f'<li><a href="#{aid}"><span class="tc">{focus or "·"}</span>'
+                toc.append(f'<li><a class="toc-link" href="#{aid}"><span class="tc">{focus or "·"}</span>'
                            f'<span class="tt">{esc(a["title_zh"])}</span>'
                            f'<span class="meta"><i class="rp {rt.lower()}">{rt}</i>'
                            + (f'<i class="xs {xcls}">{xlab}</i>' if xlab else "")
                            + '</span></a></li>')
             toc.append('</ol></div>')
-        toc.append('</nav>')
+        toc.append('</div></nav>')
         toc.append("")
         lines += toc
+
+    if items:
+        lines.append('<div class="feed-col">')  # open feed-col
+        fails = col.get("sources_fail", [])
+        if fails:
+            lines += ['<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>', ""]
+    else:
+        fails = col.get("sources_fail", [])
 
     for ci, cat in enumerate(cats_present, 1):
         sel = [a for a in items if a.get("category") == cat]
@@ -112,11 +130,11 @@ def main():
             aid = a.get("__aid", f"{cat}-x")
             rt = risk_tier(a)
             xchip = ""
-            if cat == "vuln":
-                xlab, xcls = exploit_tag(a)
+            xlab, xcls = exploit_chip(a, cat)
+            if xlab:
                 xchip = f'<i class="xs {xcls}">{xlab}</i>'
             lines += [
-                f'<div class="{cls}" id="{aid}">',
+                f'<div class="{cls} reveal" id="{aid}">',
                 f'<div class="intel-head"><span class="chip">{tag or CATS[cat]}</span>{xchip}'
                 f'<span class="score">处置 <i class="rp {rt.lower()}">{rt}</i> · CONF {esc(a.get("confidence","?"))}<i>{esc(a.get("score","?"))}</i></span></div>',
                 '<div class="intel-body">',
@@ -136,9 +154,8 @@ def main():
     if not items:
         lines += ['<div class="empty">今日无达到发布标准的条目，请查阅往期。</div>', ""]
 
-    fails = col.get("sources_fail", [])
-    if fails:
-        lines += ['<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>', ""]
+    if items:
+        lines.append('</div>')  # /feed-col
 
     fm = f"""---
 layout: post
@@ -160,7 +177,7 @@ date: {run_date}
     run_log = {"run_id": f"{run_date}-{int(datetime.now(CST).timestamp())}",
                "machine": "tencentbj-1", "role": "primary",
                "run_date": run_date,
-               "prompt_version": "analyze-v1.1",
+               "prompt_version": "analyze-v1.2",
                "sources_total": col.get("sources_total"), "sources_ok": col.get("sources_ok"),
                "sources_fail_n": len(fails),
                "collected": col.get("total_items"), "published_items": len(items),

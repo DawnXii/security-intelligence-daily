@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """SID collect — 采集 RSS 来源，规范化、去重、持久化。幂等：按 run_date + item hash 去重。
 退出码：0=成功(含部分来源失败) 2=无任何来源成功(硬失败)。stdout 最后一行输出 JSON 摘要。"""
-import hashlib, json, os, re, sys, time, urllib.request, xml.etree.ElementTree as ET
+import hashlib, json, os, re, sys, time, urllib.parse, urllib.request, xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 
@@ -25,6 +25,7 @@ FEEDS = [
     {"id": "google", "name": "Google Safety", "url": "https://blog.google/technology/safety-security/rss/", "tags": ["general"]},
     {"id": "trailofbits", "name": "Trail of Bits", "url": "https://blog.trailofbits.com/index.xml", "tags": ["research", "supplychain"]},
     {"id": "chainalysis", "name": "Chainalysis Blog", "url": "https://www.chainalysis.com/blog/feed/", "tags": ["crypto", "web3"]},
+    {"id": "rwlive", "name": "Ransomware.live", "url": "https://api.ransomware.live/rss", "tags": ["ransomware", "incident"]},
 ]
 
 KEV_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
@@ -33,6 +34,12 @@ KEV_REF_DAYS = 60      # 写入参考索引（供 build 判定 KEV 在野）的�
 
 GHSA_URL = "https://api.github.com/advisories?per_page=100&sort=published&type=reviewed&severity={sev}"
 GHSA_SEVS = ("critical", "high")
+
+# RansomLook（CERT-AG）勒索团伙跟踪 API：近 N 天新增受害者帖 → 按团伙聚合为结构化候选
+RL_POSTS_URL = "https://www.ransomlook.io/api/posts?days={days}"
+RL_GROUP_URL = "https://www.ransomlook.io/group/{name}"
+RL_WINDOW_DAYS = 7
+RL_MIN_VICTIMS = 3     # 聚合后团伙 7 天受害者数达到该阈值才生成候选（避免单条噪音淹没版面）
 GHSA_WINDOW_DAYS = 7   # 只收近期发布的 advisory
 GHSA_ECO = {"npm", "pip", "go", "maven", "rubygems", "rust", "composer", "nuget", "swift",
             "pub", "hex", "erlang", "actions", "terraform"}  # API 小写生态名
@@ -248,6 +255,51 @@ def main():
         ghsa_status = "fail"
         results.append({"source": "ghsa", "status": "fail", "error": str(e)[:200]})
 
+    # RansomLook 结构化补充：近 7 天受害者帖按团伙聚合 → 活跃团伙情报候选 + 当日参考索引
+    rl_status = "skip"
+    try:
+        rl_posts = json.loads(fetch(RL_POSTS_URL.format(days=RL_WINDOW_DAYS), timeout=30).decode("utf-8", "replace")).get("posts", [])
+        by_group = {}
+        for p in rl_posts:
+            g = (p.get("group_name") or "").strip().lower()
+            if not g:
+                continue
+            by_group.setdefault(g, []).append(p)
+        added_rl = 0
+        rl_index = {}
+        for g, posts in sorted(by_group.items(), key=lambda kv: -len(kv[1])):
+            victims = sorted({(p.get("post_title") or "").strip() for p in posts if p.get("post_title")})
+            latest = max((p.get("discovered") or "" for p in posts), default="")
+            rl_index[g] = {"posts_7d": len(posts), "victims": len(victims),
+                           "sample": victims[:5], "latest": latest}
+            if len(victims) < RL_MIN_VICTIMS:
+                continue
+            link = RL_GROUP_URL.format(name=urllib.parse.quote(g))
+            h = hashlib.sha256(f"ransomlook|{g}|{run_date}".encode()).hexdigest()[:16]
+            if h in seen:
+                continue
+            seen[h] = True
+            added_rl += 1
+            title = f"RansomLook: 团伙 {g} 7 天内新增 {len(victims)} 名受害者"
+            summary = (f"RansomLook 跟踪数据显示，勒索团伙 {g} 近 {RL_WINDOW_DAYS} 天在泄密站发布 {len(posts)} 条帖子，"
+                       f"涉及受害者 {len(victims)} 家，最新发现时间 {latest}。"
+                       f"受害者样例：{', '.join(victims[:8])}").strip()[:800]
+            new_items.append({"title": title, "link": link, "date": latest or run_date,
+                              "summary": strip_html(summary), "hash": h, "source": "ransomlook",
+                              "source_name": "RansomLook", "tags": ["ransomware"],
+                              "collected_at": datetime.now(CST).isoformat()})
+        rl_status = "ok"
+        ref_file = os.path.join(DATA, "status", f"{run_date}-ransomlook-index.json")
+        json.dump({"asof": datetime.now(CST).isoformat(), "window_days": RL_WINDOW_DAYS,
+                   "total_posts": len(rl_posts), "groups": rl_index},
+                  open(ref_file + ".tmp", "w"), ensure_ascii=False, indent=1)
+        os.replace(ref_file + ".tmp", ref_file)
+        results.append({"source": "ransomlook", "status": "ok", "count": added_rl, "total_feed": len(rl_posts)})
+        cooldown.pop("ransomlook", None)
+    except Exception as e:
+        rl_status = "fail"
+        results.append({"source": "ransomlook", "status": "fail", "error": str(e)[:200]})
+
     all_items = existing + new_items
     tmp = cand_file + ".tmp"
     json.dump({"run_id": run_id, "run_date": run_date, "count": len(all_items), "items": all_items},
@@ -256,10 +308,10 @@ def main():
     json.dump(cooldown, open(cooldown_file, "w"), indent=1)
 
     ok = sum(1 for r in results if r["status"] == "ok")
-    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa"))
+    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook"))
     hard_fail = ok == 0
     status = {"run_id": run_id, "run_date": run_date, "stage": "collect",
-              "sources_total": len(FEEDS) + 2, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0),
+              "sources_total": len(FEEDS) + 3, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0),
               "sources_fail": [r for r in results if r["status"] not in ("ok",)],
               "new_items": len(new_items), "total_items": len(all_items),
               "finished_at": datetime.now(CST).isoformat()}
