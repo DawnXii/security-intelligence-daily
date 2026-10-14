@@ -4,32 +4,34 @@ title: "安全情报日报 2026-10-13"
 date: 2026-10-13
 ---
 
-<nav class="toc" id="toc">
-<h2>目录 Contents</h2>
-<p class="legend">利用状态：<b class="xw">在野利用</b> 已确认在野/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无公开利用情报　处置优先级：<b class="rp0">P0</b> ≥85 紧急 · <b class="rp1">P1</b> 75–84 尽快 · <b class="rp2">P2</b> &lt;75 计划</p>
-<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">5 条</span></p><ol>
-<li><a href="#vuln-23406"><span class="tc">★</span><span class="tt">CISA 通告：Citrix NetScaler ADC/Gateway 在野利用的严重零日漏洞</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a href="#vuln-78822"><span class="tc">·</span><span class="tt">SonicWall SMA 1000 关键漏洞 CVE-2026-102255（CVSS 10.0）补丁发布后仍遭 135 次利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a href="#vuln-41133"><span class="tc">·</span><span class="tt">CISA：MikroTik RouterOS 整数下溢漏洞（CVE-2026-84411，CVSS 9.8）可致远程代码执行</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
-<li><a href="#vuln-24062"><span class="tc">·</span><span class="tt">WordPress Bricksforge 插件 CVSS 10.0 漏洞遭在野利用（未认证 RCE）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a href="#vuln-85773"><span class="tc">·</span><span class="tt">AhsayCBS 备份系统两漏洞遭利用：部署 WebShell 与伪装的 XMRig 挖矿</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">5</span></p><ol>
+<li><a class="toc-link" href="#vuln-23406"><span class="tc">★</span><span class="tt">CISA 通告：Citrix NetScaler ADC/Gateway 在野利用的严重零日漏洞</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-78822"><span class="tc">·</span><span class="tt">SonicWall SMA 1000 关键漏洞 CVE-2026-102255（CVSS 10.0）补丁发布后仍遭 135 次利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-41133"><span class="tc">·</span><span class="tt">CISA：MikroTik RouterOS 整数下溢漏洞（CVE-2026-84411，CVSS 9.8）可致远程代码执行</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-24062"><span class="tc">·</span><span class="tt">WordPress Bricksforge 插件 CVSS 10.0 漏洞遭在野利用（未认证 RCE）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-85773"><span class="tc">·</span><span class="tt">AhsayCBS 备份系统两漏洞遭利用：部署 WebShell 与伪装的 XMRig 挖矿</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
 </ol></div>
-<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链/CI-CD</a><span class="tg-c">3 条</span></p><ol>
-<li><a href="#supplychain-78926"><span class="tc">★</span><span class="tt">GitHub Actions 配置缺陷被武器化：trivy-action 泄密后门植入 LiteLLM（PyPI）</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
-<li><a href="#supplychain-76746"><span class="tc">·</span><span class="tt">Tensorlake npm SDK 被 ChainDrop/Shai-Hulud 供应链攻击攻陷</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
-<li><a href="#supplychain-35657"><span class="tc">·</span><span class="tt">MALFEX：8 个恶意 npm 包累计下载 40,767 次，投放 Overlord RAT 与信息窃取器</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">3</span></p><ol>
+<li><a class="toc-link" href="#supplychain-78926"><span class="tc">★</span><span class="tt">GitHub Actions 配置缺陷被武器化：trivy-action 泄密后门植入 LiteLLM（PyPI）</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+<li><a class="toc-link" href="#supplychain-76746"><span class="tc">·</span><span class="tt">Tensorlake npm SDK 被 ChainDrop/Shai-Hulud 供应链攻击攻陷</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+<li><a class="toc-link" href="#supplychain-35657"><span class="tc">·</span><span class="tt">MALFEX：8 个恶意 npm 包累计下载 40,767 次，投放 Overlord RAT 与信息窃取器</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
 </ol></div>
-<div class="grp"><p class="tg-h"><a href="#sec-ttp">攻击战术与恶意软件</a><span class="tg-c">1 条</span></p><ol>
-<li><a href="#ttp-77767"><span class="tc">·</span><span class="tt">CISA 联合通告：中国背景威胁行为者以自动化工具与人工入侵组合窃取敏感数据</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<div class="grp"><p class="tg-h"><a href="#sec-ttp">攻击战术与技术</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ttp-77767"><span class="tc">·</span><span class="tt">CISA 联合通告：中国背景威胁行为者以自动化工具与人工入侵组合窃取敏感数据</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
 </ol></div>
-<div class="grp"><p class="tg-h"><a href="#sec-phishing">钓鱼与社工</a><span class="tg-c">1 条</span></p><ol>
-<li><a href="#phishing-09537"><span class="tc">·</span><span class="tt">FBI/USSS 警告：FortiBleed 凭据收割活动仍在活跃，已积累 86,644 台 Fortinet 设备凭据</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+<div class="grp"><p class="tg-h"><a href="#sec-phishing">钓鱼与社工</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#phishing-09537"><span class="tc">·</span><span class="tt">FBI/USSS 警告：FortiBleed 凭据收割活动仍在活跃，已积累 86,644 台 Fortinet 设备凭据</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
 </ol></div>
-</nav>
+</div></nav>
 
+<div class="feed-col">
 <p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
 
-<div class="intel focus" id="vuln-23406">
+<div class="intel focus reveal" id="vuln-23406">
 <div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
 <div class="intel-body">
 <h3>CISA 通告：Citrix NetScaler ADC/Gateway 在野利用的严重零日漏洞</h3>
@@ -42,7 +44,7 @@ date: 2026-10-13
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/alerts/2026/09/27/critical-zero-day-vulnerabilities-exploited-citrix-netscaler-adc-gateway" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-78822">
+<div class="intel reveal" id="vuln-78822">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>82</i></span></div>
 <div class="intel-body">
 <h3>SonicWall SMA 1000 关键漏洞 CVE-2026-102255（CVSS 10.0）补丁发布后仍遭 135 次利用</h3>
@@ -55,7 +57,7 @@ date: 2026-10-13
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/critical-sonicwall-sma-1000-flaw.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-41133">
+<div class="intel reveal" id="vuln-41133">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
 <div class="intel-body">
 <h3>CISA：MikroTik RouterOS 整数下溢漏洞（CVE-2026-84411，CVSS 9.8）可致远程代码执行</h3>
@@ -68,7 +70,7 @@ date: 2026-10-13
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-272-06" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-24062">
+<div class="intel reveal" id="vuln-24062">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
 <div class="intel-body">
 <h3>WordPress Bricksforge 插件 CVSS 10.0 漏洞遭在野利用（未认证 RCE）</h3>
@@ -81,7 +83,7 @@ date: 2026-10-13
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-cvss-100-bricksforge.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="vuln-85773">
+<div class="intel reveal" id="vuln-85773">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>66</i></span></div>
 <div class="intel-body">
 <h3>AhsayCBS 备份系统两漏洞遭利用：部署 WebShell 与伪装的 XMRig 挖矿</h3>
@@ -94,9 +96,9 @@ date: 2026-10-13
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-ahsaycbs-flaws-to.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链/CI-CD</p>
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
 
-<div class="intel focus" id="supplychain-78926">
+<div class="intel focus reveal" id="supplychain-78926">
 <div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
 <div class="intel-body">
 <h3>GitHub Actions 配置缺陷被武器化：trivy-action 泄密后门植入 LiteLLM（PyPI）</h3>
@@ -109,8 +111,8 @@ date: 2026-10-13
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://blog.trailofbits.com/2026/05/22/we-hardened-zizmors-github-actions-static-analyzer/" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="supplychain-76746">
-<div class="intel-head"><span class="chip">供应链/CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel reveal" id="supplychain-76746">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
 <div class="intel-body">
 <h3>Tensorlake npm SDK 被 ChainDrop/Shai-Hulud 供应链攻击攻陷</h3>
 <p class="sum">npm 包 tensorlake（TypeScript SDK）0.5.144 恶意版本在 ChainDrop / Shai-Hulud 供应链攻击中被分发，包含混淆恶意代码：收割凭据、外泄密钥、建立持久化并执行远程命令。</p>
@@ -122,8 +124,8 @@ date: 2026-10-13
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/tensorlake-npm-package-compromised-to.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel" id="supplychain-35657">
-<div class="intel-head"><span class="chip">供应链/CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
+<div class="intel reveal" id="supplychain-35657">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
 <div class="intel-body">
 <h3>MALFEX：8 个恶意 npm 包累计下载 40,767 次，投放 Overlord RAT 与信息窃取器</h3>
 <p class="sum">CloudSEK 与 Checkmarx 命名的 MALFEX 长期 npm 供应链活动中，单一攻击者自 2023 年 8 月起发布 12 个包，其中 8 个恶意包被下载 40,767 次，投放信息窃取器与 Overlord RAT。</p>
@@ -135,10 +137,10 @@ date: 2026-10-13
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/eight-malicious-npm-packages-downloaded.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<p class="section-label" id="sec-ttp"><span class="n">03</span>攻击战术与恶意软件</p>
+<p class="section-label" id="sec-ttp"><span class="n">03</span>攻击战术与技术</p>
 
-<div class="intel" id="ttp-77767">
-<div class="intel-head"><span class="chip">攻击战术与恶意软件</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel reveal" id="ttp-77767">
+<div class="intel-head"><span class="chip">攻击战术与技术</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
 <div class="intel-body">
 <h3>CISA 联合通告：中国背景威胁行为者以自动化工具与人工入侵组合窃取敏感数据</h3>
 <p class="sum">CISA（AA26-281A，10 月 8 日原文）指 Integrity Technology Group 支撑的中国政府关联威胁行为者，正结合自动化扫描工具、大规模僵尸网络与手工入侵手法窃取敏感数据。</p>
@@ -152,7 +154,7 @@ date: 2026-10-13
 
 <p class="section-label" id="sec-phishing"><span class="n">04</span>钓鱼与社工</p>
 
-<div class="intel" id="phishing-09537">
+<div class="intel reveal" id="phishing-09537">
 <div class="intel-head"><span class="chip">钓鱼与社工</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>75</i></span></div>
 <div class="intel-body">
 <h3>FBI/USSS 警告：FortiBleed 凭据收割活动仍在活跃，已积累 86,644 台 Fortinet 设备凭据</h3>
@@ -163,4 +165,6 @@ date: 2026-10-13
 </div>
 </div>
 <div class="intel-foot"><span>2026-10-13 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/fbi-warns-fortibleed-remains-active.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
 </div>
