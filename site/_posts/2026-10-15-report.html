@@ -1,0 +1,124 @@
+---
+layout: post
+title: "安全情报日报 2026-10-15"
+date: 2026-10-15
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">5</span></p><ol>
+<li><a class="toc-link" href="#vuln-81108"><span class="tc">★</span><span class="tt">Cisco 邮件网关漏洞遭在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-80651"><span class="tc">·</span><span class="tt">PAN-OS 漏洞入 KEV 确认在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-70356"><span class="tc">·</span><span class="tt">微软修复 1413 个漏洞创纪录</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-49055"><span class="tc">·</span><span class="tt">Nextcloud 服务器遭植入网页后门</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-21247"><span class="tc">·</span><span class="tt">备份软件 AhsayCBS 漏洞确认在野利用</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-86138"><span class="tc">·</span><span class="tt">多数包管理器不校验仓库注入代码</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-29280"><span class="tc">·</span><span class="tt">byod 团伙泄密站公布 Gate 交易所等</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-81108">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>90</i></span></div>
+<div class="intel-body">
+<h3>Cisco 邮件网关漏洞遭在野利用</h3>
+<p class="sum">Cisco 通告称攻击者正利用 Secure Email Gateway 一个严重缺陷：无需登录的发件人即可向设备操作系统写入文件。攻击者向网关发送带特制附件的邮件，成功后可进一步以 root 权限执行命令。该漏洞今日已被 CISA 列入 KEV 目录。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>邮件安全网关处于通信边界且以高权限处理全量邮件，被 root 级攻陷等同于整个邮件通道失守。</p></div>
+<div class="cell"><b>Action</b><p>立即按 Cisco 通告升级至修复版本；回查网关异常文件与外联，并重置设备凭据。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-15 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/cisco-warns-of-active-attacks.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-80651">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
+<div class="intel-body">
+<h3>PAN-OS 漏洞入 KEV 确认在野利用</h3>
+<p class="sum">CISA 将 Palo Alto Networks PAN-OS 的 CVE-2026-0322 于 10 月 14 日列入 KEV 目录，确认存在在野利用，要求按厂商指引与 BOD 26-04 完成缓解，若无法缓解应停用；各资产暴露面需自行评估。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>PAN-OS 承载企业边界防火墙与 VPN，被在野利用的缺陷直接威胁网络入口完整性，波及海量存量设备。</p></div>
+<div class="cell"><b>Action</b><p>立即比对 PAN-OS 修复版本清单并升级；回查管理面异常登录、配置变更与外联流量。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-15 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-0322" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-70356">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>84</i></span></div>
+<div class="intel-body">
+<h3>微软修复 1413 个漏洞创纪录</h3>
+<p class="sum">微软本月 Patch Tuesday 修复 1413 个漏洞，创自家纪录，其中包含一个官方确认已遭在野利用的 Windows Shell 缺陷。总量含 Windows 1102 个、Office 134 个，670 余个为提权类、300 余个为远程代码执行类。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>补丁面覆盖海量 Windows 终端与服务器，在野利用 bug 与大量提权/RCE 组合放大横向移动风险。</p></div>
+<div class="cell"><b>Action</b><p>优先处置已在野利用条目并按 WSUS/Intune 全量分发本月补丁；未及更新资产加强监控与隔离。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-15 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/microsoft-patches-record-1413-flaws.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-49055">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>78</i></span></div>
+<div class="intel-body">
+<h3>Nextcloud 服务器遭植入网页后门</h3>
+<p class="sum">攻击者利用 Nextcloud 可选应用 Collabora Online - Built-in CODE Server 中的缺陷，在 Nextcloud 服务器上植入 webshell 获得 web 服务账号权限。三名管理员在 GitHub 报告了该问题，首次记录的攻击发生在 9 月 10 日。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>自托管协作/文件平台被长期驻留后门，附件预览组件成为面向公网的新入口，波及部署 Built-in CODE Server 的机构。</p></div>
+<div class="cell"><b>Action</b><p>排查 Nextcloud 应用目录中的异常 webshell 文件与 Collabora 组件版本；按厂商通告更新或禁用 Built-in CODE Server。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-15 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/hackers-backdoor-nextcloud-servers.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-21247">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3>备份软件 AhsayCBS 漏洞确认在野利用</h3>
+<p class="sum">CISA 将 AhsayCBS 的 CVE-2026-105134 于 10 月 14 日列入 KEV 目录，确认存在在野利用，要求按厂商指引与 BOD 26-04 处置，无法缓解时停用产品。同日 Ahsay 另一 CVE 亦入选 KEV。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>客户端备份服务器常被勒索团伙作为加密与数据窃取的前置跳板，在野利用意味着存量部署已面临现实威胁。</p></div>
+<div class="cell"><b>Action</b><p>核查 AhsayCBS 版本与暴露面，按厂商公告升级；对备份服务器做完整性与异常进程排查。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-15 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-105134" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-86138">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3>多数包管理器不校验仓库注入代码</h3>
+<p class="sum">Trail of Bits 测试了 25 种主流包管理器，检查其能否发现被攻陷的软件包仓库向合法包注入恶意代码。结果中不到一半默认使用可检测篡改的 lockfile，仅两个会对下载的全部软件包验证完整性。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>镜像仓库一旦被入侵即可静默投毒，构建系统与 CI/CD 将无差别拉入恶意代码，属系统性供应链缺口。</p></div>
+<div class="cell"><b>Action</b><p>默认启用带完整性校验的 lockfile/签名验证；对镜像源与私有仓库出站内容做哈希一致性审计。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-15 · SID ANALYSIS</span><a href="https://blog.trailofbits.com/2026-10-14/package-managers-have-an-integrity-problem/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-29280">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>60</i></span></div>
+<div class="intel-body">
+<h3>byod 团伙泄密站公布 Gate 交易所等</h3>
+<p class="sum">RansomLook 数据显示勒索团伙 byod 近 7 天在泄密站发布 4 条受害者帖子，最新发现于 10 月 13 日。受害者样例中包含加密交易所 Gate 与电信商 T-Mobile。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>加密交易所与电信运营商被勒索团伙点名公布，面向加密行业的运维环境面临数据泄露与二次勒索风险。</p></div>
+<div class="cell"><b>Action</b><p>涉密行业核查备份与出口日志，关注 byod 团伙 TTP；对外沟通中警惕以受害者数据为话术的钓鱼。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-15 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/byod" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
