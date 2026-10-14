@@ -7,14 +7,24 @@ date: 2026-10-14
 <nav class="toc" id="toc">
 <h2>目录 Contents</h2>
 <p class="legend">利用状态：<b class="xw">在野利用</b> 已确认在野/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无公开利用情报　处置优先级：<b class="rp0">P0</b> ≥85 紧急 · <b class="rp1">P1</b> 75–84 尽快 · <b class="rp2">P2</b> &lt;75 计划</p>
-<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">7 条</span></p><ol>
-<li><a href="#vuln-25391"><span class="tc">★</span><span class="tt">CISA：Ivanti Connect Secure 认证绕过零日 CVE-2026-104935 已在野利用，列入 KEV</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">17 条</span></p><ol>
+<li><a href="#vuln-25391"><span class="tc">★</span><span class="tt">CISA：Ivanti Connect Secure 认证绕过零日 CVE-2026-104935 已在野利用，列入 KEV</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a href="#vuln-53128"><span class="tc">·</span><span class="tt">GitLab 修复 CVSS 10.0 最高危漏洞 CVE-2026-97229，未认证可致服务器代码执行</span><span class="meta"><i class="rp p0">P0</i><i class="xs xn">未公开利用</i></span></a></li>
 <li><a href="#vuln-46561"><span class="tc">·</span><span class="tt">Volexity：攻击者链式利用 Ivanti Connect Secure 三个零日获取 root，第三个补丁仍未发布</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
 <li><a href="#vuln-69872"><span class="tc">·</span><span class="tt">SonicWall SMA 1000 严重漏洞 CVE-2026-102255（CVSS 10.0）披露数日即遭在野利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
 <li><a href="#vuln-81905"><span class="tc">·</span><span class="tt">WordPress 插件 Bricksforge CVSS 10.0 漏洞 CVE-2026-85097 遭在野利用，未认证 RCE</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a href="#vuln-76898"><span class="tc">·</span><span class="tt">vm2 沙箱逃逸漏洞 CVE-2026-93605（CVSS 10.0），3.12.1 前版本可逃逸</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
 <li><a href="#vuln-51155"><span class="tc">·</span><span class="tt">CISA/ICS 通告：MikroTik RouterOS 预认证整数下溢 CVE-2026-84411（CVSS 9.8）可致 RCE</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a href="#vuln-01784"><span class="tc">·</span><span class="tt">AnyDesk Linux 预认证 RCE 完整利用代码公开，6 月已修复但暴露面大</span><span class="meta"><i class="rp p1">P1</i><i class="xs xp">PoC 公开</i></span></a></li>
 <li><a href="#vuln-61385"><span class="tc">·</span><span class="tt">SAP Cloud SDK for Python 缺陷可把 OAuth2 客户端凭据发往攻击者控制的服务器</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
 <li><a href="#vuln-19688"><span class="tc">·</span><span class="tt">AhsayCBS 备份系统漏洞遭在野利用：部署 Webshell 与 XMRig 挖矿</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a href="#vuln-97560"><span class="tc">·</span><span class="tt">LMCache 关键漏洞未修复：未认证可远程执行代码（影响 vLLM 等推理栈）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a href="#vuln-32357"><span class="tc">·</span><span class="tt">Ghost 博客平台书签卡片图片处理漏洞可致 RCE（CVE-2026-105642，CVSS 8.8）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a href="#vuln-47947"><span class="tc">·</span><span class="tt">Flowise CSV/Airtable Agent 校验绕过可从提示注入升至 RCE/SSRF（CVE-2026-73487）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a href="#vuln-99440"><span class="tc">·</span><span class="tt">Payload CMS 表单构建插件存在 RCE（CVE-2026-105857，CVSS 10.0）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a href="#vuln-80380"><span class="tc">·</span><span class="tt">CISA KEV：Windows CVE-2026-96951 命令注入漏洞已确认在野利用</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a href="#vuln-40343"><span class="tc">·</span><span class="tt">PraisonAI（LLM Agent 框架）多个高危缺陷：插件自动加载执行任意 Python、AgentOS 默认无认证暴露</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a href="#vuln-15591"><span class="tc">·</span><span class="tt">Nginx UI 未认证请求体暂存可耗尽临时存储（CVE-2026-107805，CVSS 7.5）</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
 </ol></div>
 <div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链/CI-CD</a><span class="tg-c">2 条</span></p><ol>
 <li><a href="#supplychain-50539"><span class="tc">·</span><span class="tt">npm 包 tensorlake 遭 ChainDrop/Shai-Hulud 供应链攻击投毒（0.5.144）</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
@@ -28,7 +38,7 @@ date: 2026-10-14
 <p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
 
 <div class="intel focus" id="vuln-25391">
-<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>92</i></span></div>
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>92</i></span></div>
 <div class="intel-body">
 <h3>CISA：Ivanti Connect Secure 认证绕过零日 CVE-2026-104935 已在野利用，列入 KEV</h3>
 <p class="sum">CISA 确认 Ivanti 披露的 CVE-2026-104935 正被威胁行为者主动利用，影响 Ivanti Connect Secure 25.1.1.1 及更早、25.1.2.2 及更早、22.8R2.4 及更早版本。该零日认证绕过漏洞允许远程未认证攻击者执行任意命令，被用于凭据窃取和数据外泄。CISA 已于 2026 年 10 月 13 日将其加入 KEV 目录，并敦促受影响组织立即升级至最新版本。</p>
@@ -38,6 +48,19 @@ date: 2026-10-14
 </div>
 </div>
 <div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/alerts/2026-10-13/cisa-urges-patching-newly-exploited-vulnerability-ivanti-connect-secure" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-53128">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
+<div class="intel-body">
+<h3>GitLab 修复 CVSS 10.0 最高危漏洞 CVE-2026-97229，未认证可致服务器代码执行</h3>
+<p class="sum">GitLab 修复了编号 CVE-2026-97229、CVSS 满分 10.0 的最高危漏洞，未认证攻击者可在其服务器（CE/EE）上执行任意代码。GitLab 已发布补丁并敦促用户尽快升级。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>GitLab 是大量企业代码托管与 CI/CD 核心，未认证 RCE 直接威胁源码、令牌与构建管线；暴露实例可一步沦陷为供应链投毒跳板。</p></div>
+<div class="cell"><b>Action</b><p>立即升级 GitLab 至官方修复版本；对外暴露实例核查升级前后访问日志异常；轮换实例内 CI/Deploy Token，复核项目 webhook 完整性。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://securityaffairs.com/200868/security/gitlab-patches-max-severity-vulnerability-cve-2026-97229.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
 <div class="intel" id="vuln-46561">
@@ -79,6 +102,19 @@ date: 2026-10-14
 <div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-cvss-100-bricksforge.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
+<div class="intel" id="vuln-76898">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>77</i></span></div>
+<div class="intel-body">
+<h3>vm2 沙箱逃逸漏洞 CVE-2026-93605（CVSS 10.0），3.12.1 前版本可逃逸</h3>
+<p class="sum">GHSA 通告 vm2 NodeVM 3.12.1 之前版本 DANGEROUS_BUILTINS 黑名单遗漏 child_process，沙箱内代码可借此逃逸执行任意命令，CVSS 10.0，修复版本 3.12.1。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>vm2 被大量 BFF/低代码/SaaS 插件宿主用于运行不可信 JS；沙箱逃逸等于宿主进程（含密钥与内网访问权）沦陷，Node 生态受影响面广。</p></div>
+<div class="cell"><b>Action</b><p>升级 vm2 至 3.12.1；自查沙箱策略黑名单完整性，长期考虑迁移到 isolate/worker 级隔离；对插件类应用复核租户代码执行审计。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-pq68-rvw4-xp4r" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
 <div class="intel" id="vuln-51155">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
 <div class="intel-body">
@@ -90,6 +126,19 @@ date: 2026-10-14
 </div>
 </div>
 <div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-272-06" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-01784">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>AnyDesk Linux 预认证 RCE 完整利用代码公开，6 月已修复但暴露面大</h3>
+<p class="sum">研究人员公开了 AnyDesk Linux 预认证 RCE 漏洞的完整可用 exploit，可在无人批准连接的情况下取得 root。AnyDesk 已于 6 月 8.0.3 版本修复。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>预认证+root+公开 PoC 意味着扫描-利用流水线即刻可用；运维人员桌面与堡垒旁路通道首当其冲，未升级终端等于开门。</p></div>
+<div class="cell"><b>Action</b><p>确认所有 AnyDesk Linux 终端 ≥8.0.3；无法升级的主机禁用 AnyDesk 服务；审计异常入站连接与持久化。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/researchers-publish-working-exploit-for.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
 <div class="intel" id="vuln-61385">
@@ -116,6 +165,97 @@ date: 2026-10-14
 </div>
 </div>
 <div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-ahsaycbs-flaws-to.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-97560">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>73</i></span></div>
+<div class="intel-body">
+<h3>LMCache 关键漏洞未修复：未认证可远程执行代码（影响 vLLM 等推理栈）</h3>
+<p class="sum">LMCache（为 vLLM 等 LLM 服务器加速的开源缓存软件）存在关键漏洞，攻击者无需登录即可在缓存服务器上执行代码，且暂无修复版本发布。漏洞位于其 multiprocess 分发处理路径。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>LMCache/vLLM 组合被大量 AI 服务与内部推理平台使用，无补丁的未认证 RCE 意味着只能靠暴露面收敛止血，AI 基础设施供应链风险直接上升。</p></div>
+<div class="cell"><b>Action</b><p>在官方修复发布前：将 LMCache 服务端口限制到可信网络、禁用公网暴露；评估临时下线该组件的影响；跟踪上游公告。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/unpatched-critical-lmcache-flaw-lets.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-32357">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3>Ghost 博客平台书签卡片图片处理漏洞可致 RCE（CVE-2026-105642，CVSS 8.8）</h3>
+<p class="sum">GHSA 通告 Ghost 6.67.0 之前版本捆绑的图片处理库在 SVG 处理上存在缺陷，Staff 用户（含 Contributor 角色）可借书签卡片图片触发远程代码执行。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Ghost 承载大量内容站与营销基础设施；低权限角色即可打到服务器代码执行，意味着投稿/编辑流程可被武器化。</p></div>
+<div class="cell"><b>Action</b><p>升级 Ghost 至 6.67.0；收紧 Contributor 角色书签/图片功能使用；对内容基础设施服务器做完整性核查。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-788w-68h3-cvxp" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-47947">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>71</i></span></div>
+<div class="intel-body">
+<h3>Flowise CSV/Airtable Agent 校验绕过可从提示注入升至 RCE/SSRF（CVE-2026-73487）</h3>
+<p class="sum">GHSA 通告 Flowise ≤3.1.2 的 CSV Agent 与 Airtable Agent 节点使用正则黑名单校验，可被绕过，导致提示注入升级为远程代码执行与 SSRF，修复版本 3.1.3。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Flowise 是流行 LLM 编排工具，自托管实例常挂在内网且持有各类 API Key；RCE+SSRF 组合使单个 workflow 沦为内网侦察与凭据窃取入口。</p></div>
+<div class="cell"><b>Action</b><p>升级 Flowise 至 3.1.3；审查 agent 节点可用工具面与出网策略；轮换编排实例持有的模型与集成凭据。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-w7x8-q2gp-5cgg" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-99440">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>70</i></span></div>
+<div class="intel-body">
+<h3>Payload CMS 表单构建插件存在 RCE（CVE-2026-105857，CVSS 10.0）</h3>
+<p class="sum">GHSA 通告 @payloadcms/plugin-form-builder 存在远程代码执行问题，CVSS 10.0，修复版本 3.90.0 / 4.0.0-canary.34。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Payload 常用于快速搭建带表单的 BFF/官网，表单入口即暴露面；满分评分意味着未认证可达的可能性高，站点服务器可被直接接管。</p></div>
+<div class="cell"><b>Action</b><p>升级 plugin-form-builder 至修复版本；对表单提交路径做输入审计与 WAF 规则加固；核查站点近期文件变更。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-r488-j9vj-wx3q" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-80380">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
+<div class="intel-body">
+<h3>CISA KEV：Windows CVE-2026-96951 命令注入漏洞已确认在野利用</h3>
+<p class="sum">CISA 于 2026-10-13 将 CVE-2026-96951（Microsoft Windows 命令注入）列入 KEV 目录，要求按 BOD 26-04 依厂商指引处置。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Windows 命令注入类漏洞进 KEV 通常伴随钓鱼或执行链利用，终端与服务器集群都需要关注补丁节奏。</p></div>
+<div class="cell"><b>Action</b><p>按微软月度安全更新核查 CVE-2026-96951 对应补丁并纳入本周期更新环；联邦环境遵守 BOD 时限。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-96951" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-40343">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>66</i></span></div>
+<div class="intel-body">
+<h3>PraisonAI（LLM Agent 框架）多个高危缺陷：插件自动加载执行任意 Python、AgentOS 默认无认证暴露</h3>
+<p class="sum">GHSA 通告显示 PraisonAI 组件存在多个高危问题：plugin manager 从 .praisonai/plugins/ 加载并执行未校验的任意 .py 文件（CVE-2026-61446，CVSS 8.4）；其 AgentOS（npm）默认以 network-exposed no-auth 模式运行，允许未认证调用 agent 并泄露指令（CVE-2026-61426）。修复版本分别为 1.6.78 与 1.7.3。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>LLM Agent 框架通常持有模型密钥、工具凭据与内网数据访问权，默认无认证暴露加任意文件执行组合等于把 agent 运行时交给网络攻击者，属于 AI 运维基础设施新爆点。</p></div>
+<div class="cell"><b>Action</b><p>升级 praisonaiagents 1.6.78 / praisonai 1.7.3；审计 AgentOS 监听地址与认证配置，禁止默认公网暴露；轮换框架持有的模型与工具凭据。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-m6wp-h223-4c8g" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel" id="vuln-15591">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>63</i></span></div>
+<div class="intel-body">
+<h3>Nginx UI 未认证请求体暂存可耗尽临时存储（CVE-2026-107805，CVSS 7.5）</h3>
+<p class="sum">GHSA 通告 Nginx UI 2.5.x 的 node-signature 机制中，未认证攻击者可借签名请求体暂存耗尽临时存储空间；同组件另有一处未认证高危缺陷（CVE-2026-107806）。修复于 1.9.10 起的关联版本。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Nginx UI 常用于轻量服务器/边缘节点的面板管理，DoS 型缺陷影响面板可用性，配合另一高危问题的存在使管理面风险上升。</p></div>
+<div class="cell"><b>Action</b><p>升级 Nginx UI 至修复版本；限制面板端口暴露并为管理面加认证/白名单。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-14 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-j3hg-9rp3-5hw9" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
 <p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链/CI-CD</p>

@@ -11,6 +11,9 @@ CST = timezone(timedelta(hours=8))
 
 FEEDS = [
     {"id": "thn", "name": "The Hacker News", "url": "https://thehackernews.com/feeds/posts/default", "tags": ["general"]},
+    {"id": "secaff", "name": "Security Affairs", "url": "https://securityaffairs.com/feed", "tags": ["general", "vuln"]},
+    {"id": "porsw", "name": "PortSwigger Research", "url": "https://portswigger.net/research/rss", "tags": ["research", "vuln"]},
+    {"id": "register", "name": "The Register Security", "url": "https://www.theregister.com/security/headlines.atom", "tags": ["general", "infra"]},
     {"id": "bleo", "name": "BleepingComputer", "url": "https://www.bleepingcomputer.com/feed/", "tags": ["general", "ransomware"]},
     {"id": "netsec", "name": "NetSec Learn", "url": "https://feeds.feedburner.com/netsec", "tags": ["research"]},
     {"id": "cisa", "name": "CISA Advisories", "url": "https://www.cisa.gov/cybersecurity-advisories/all.xml", "tags": ["vuln", "gov"]},
@@ -23,6 +26,16 @@ FEEDS = [
     {"id": "trailofbits", "name": "Trail of Bits", "url": "https://blog.trailofbits.com/index.xml", "tags": ["research", "supplychain"]},
     {"id": "chainalysis", "name": "Chainalysis Blog", "url": "https://www.chainalysis.com/blog/feed/", "tags": ["crypto", "web3"]},
 ]
+
+KEV_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+KEV_WINDOW_DAYS = 7    # 生成候选项的回溯窗口
+KEV_REF_DAYS = 60      # 写入参考索引（供 build 判定 KEV 在野）的回溯窗口
+
+GHSA_URL = "https://api.github.com/advisories?per_page=100&sort=published&type=reviewed&severity={sev}"
+GHSA_SEVS = ("critical", "high")
+GHSA_WINDOW_DAYS = 7   # 只收近期发布的 advisory
+GHSA_ECO = {"npm", "pip", "go", "maven", "rubygems", "rust", "composer", "nuget", "swift",
+            "pub", "hex", "erlang", "actions", "terraform"}  # API 小写生态名
 
 UA = "Mozilla/5.0 (compatible; SID-collector/1.0)"
 
@@ -133,6 +146,108 @@ def main():
             results.append({"source": f["id"], "status": "fail", "error": str(e)[:200]})
             cooldown[f["id"]] = {"until": time.time() + 3600, "error": str(e)[:200]}
 
+    # CISA KEV 结构化补充：近 N 天新增的已确认在野利用漏洞，生成合成候选项 + 参考索引
+    kev_status = "skip"
+    try:
+        kev = json.loads(fetch(KEV_URL, timeout=30).decode("utf-8", "replace"))
+        cutoff = (datetime.now(CST) - timedelta(days=KEV_WINDOW_DAYS)).strftime("%Y-%m-%d")
+        cutoff_ref = (datetime.now(CST) - timedelta(days=KEV_REF_DAYS)).strftime("%Y-%m-%d")
+        ref = {}
+        added = 0
+        for v in kev.get("vulnerabilities", []):
+            da = v.get("dateAdded", "")
+            if da < cutoff_ref:
+                continue
+            ref[v["cveID"]] = {"dateAdded": da, "product": v.get("product", ""),
+                               "vendor": v.get("vendorProject", ""), "requiredAction": v.get("requiredAction", "")}
+            if da < cutoff:
+                continue
+            cve = v["cveID"]
+            title = f"CISA KEV: {v.get('vendorProject','')} {v.get('product','')} — {cve} 已确认在野利用"
+            link = "https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=" + cve
+            h = hashlib.sha256((link.lower() + "|" + title.lower()).encode()).hexdigest()[:16]
+            if h in seen:
+                continue
+            seen[h] = True
+            added += 1
+            summary = (f"{cve} 已被 CISA 列入已知被利用漏洞目录（KEV），dateAdded {da}。"
+                       f"厂商/产品：{v.get('vendorProject','')} {v.get('product','')}。"
+                       f"要求的处置：{v.get('requiredAction','')}。"
+                       f"备注：{v.get('notes','') or ''}".strip())[:800]
+            new_items.append({"title": title, "link": link, "date": da,
+                              "summary": strip_html(summary), "hash": h, "source": "kev",
+                              "source_name": "CISA KEV", "tags": ["vuln", "kev"],
+                              "collected_at": datetime.now(CST).isoformat()})
+        kev_status = "ok"
+        ref_file = os.path.join(DATA, "status", f"{run_date}-kev-index.json")
+        json.dump({"asof": datetime.now(CST).isoformat(), "cutoff": cutoff_ref, "entries": ref},
+                  open(ref_file + ".tmp", "w"), ensure_ascii=False, indent=1)
+        os.replace(ref_file + ".tmp", ref_file)
+        results.append({"source": "kev", "status": "ok", "count": added, "total_feed": len(kev.get("vulnerabilities", []))})
+        cooldown.pop("kev", None)
+    except Exception as e:
+        kev_status = "fail"
+        results.append({"source": "kev", "status": "fail", "error": str(e)[:200]})
+
+    # GitHub Advisory DB (GHSA)：critical/high + 近期发布 + 生态组件类（wolfSSL/Next.js 这类）
+    ghsa_status = "skip"
+    try:
+        advs_all, added_g = {}, 0
+        for sev_q in GHSA_SEVS:
+            for page in (1, 2):
+                try:
+                    advs = json.loads(fetch(GHSA_URL.format(sev=sev_q) + f"&page={page}", timeout=30).decode("utf-8", "replace"))
+                except Exception:
+                    break
+                if not isinstance(advs, list) or not advs:
+                    break
+                for a in advs:
+                    key = a.get("ghsa_id") or a.get("cve_id")
+                    if key:
+                        advs_all.setdefault(key, a)
+        cutoff_g = (datetime.now(CST) - timedelta(days=GHSA_WINDOW_DAYS)).strftime("%Y-%m-%d")
+        for a in advs_all.values():
+            pub = (a.get("published_at") or "")
+            if pub and pub < cutoff_g:
+                continue
+            summary0 = strip_html(a.get("summary") or "")
+            if summary0.startswith("Microsoft Security Advisory"):
+                continue  # MSRC 月度补丁镜像，量大噪音高
+            pkgs = {((v.get("package") or {}).get("name") or "") for v in a.get("vulnerabilities", [])}
+            pkgs.discard("")
+            ecos = {((v.get("package") or {}).get("ecosystem") or "") for v in a.get("vulnerabilities", [])}
+            if not (ecos & GHSA_ECO):
+                continue  # 只要生态组件类（npm/PyPI/Go/Maven/Actions/…）
+            cve = a.get("cve_id") or a.get("ghsa_id")
+            link = a.get("html_url") or f"https://github.com/advisories/{a.get('ghsa_id')}"
+            # 同一 CVE 的多 RID/多包变体只保留一条
+            h = hashlib.sha256(f"ghsa|{cve}".lower().encode()).hexdigest()[:16]
+            if h in seen:
+                continue
+            seen[h] = True
+            added_g += 1
+            sev = a.get("severity", "")
+            cvss = (a.get("cvss") or {}).get("score") or 0
+            detail = strip_html(a.get("description") or "")[:400]
+            fixed = sorted({str(v.get("first_patched_version")) for v in a.get("vulnerabilities", [])
+                            if v.get("first_patched_version")})[:3]
+            pkg_clean = sorted({p.split(".Runtime")[0].split(".App.Runtime")[0] for p in pkgs})
+            title = f"GHSA/{cve}: {'/'.join(pkg_clean[:2]) or 'component'} {summary0[:70]}"
+            body = (f"严重程度 {sev}（CVSS {cvss}）。受影响组件：{', '.join(pkg_clean[:4]) or '见公告'}"
+                    f"（生态 {', '.join(sorted(e for e in ecos if e)[:3])}）。"
+                    + (f"修复版本：{', '.join(fixed)}。" if fixed else "")
+                    + f"摘要：{summary0[:300]} 详情：{detail}")[:800]
+            new_items.append({"title": title, "link": link, "date": pub,
+                              "summary": strip_html(body), "hash": h, "source": "ghsa",
+                              "source_name": "GitHub Advisory", "tags": ["vuln", "supplychain"],
+                              "collected_at": datetime.now(CST).isoformat()})
+        ghsa_status = "ok"
+        results.append({"source": "ghsa", "status": "ok", "count": added_g, "total_feed": len(advs_all)})
+        cooldown.pop("ghsa", None)
+    except Exception as e:
+        ghsa_status = "fail"
+        results.append({"source": "ghsa", "status": "fail", "error": str(e)[:200]})
+
     all_items = existing + new_items
     tmp = cand_file + ".tmp"
     json.dump({"run_id": run_id, "run_date": run_date, "count": len(all_items), "items": all_items},
@@ -141,9 +256,10 @@ def main():
     json.dump(cooldown, open(cooldown_file, "w"), indent=1)
 
     ok = sum(1 for r in results if r["status"] == "ok")
+    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa"))
     hard_fail = ok == 0
     status = {"run_id": run_id, "run_date": run_date, "stage": "collect",
-              "sources_total": len(FEEDS), "sources_ok": ok,
+              "sources_total": len(FEEDS) + 2, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0),
               "sources_fail": [r for r in results if r["status"] not in ("ok",)],
               "new_items": len(new_items), "total_items": len(all_items),
               "finished_at": datetime.now(CST).isoformat()}

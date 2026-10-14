@@ -38,9 +38,32 @@ def main():
 
     IN_WILD = re.compile(r"已在野|在野利用|主动利用|遭[^，。]{0,10}利用|被[^，。]{0,10}利用|正在利用|利用尝试|零日|列入 KEV|加入 KEV|KEV 目录|exploited", re.I)
     POC = re.compile(r"\bPoC\b|概念验证|proof[- ]of[- ]concept|利用代码已公开", re.I)
+    CVE_RE = re.compile(r"CVE-\d{4}-\d{4,7}")
+    kev_index = {}
+    kev_path = os.path.join(DATA, "status", f"{run_date}-kev-index.json")
+    if os.path.exists(kev_path):
+        kev_index = json.load(open(kev_path)).get("entries", {})
+
+    EXPLOIT_LABEL = {"wild": ("在野利用", "xw"), "poc": ("PoC 公开", "xp"),
+                     "none": ("未公开利用", "xn"), "na": ("", "")}
 
     def exploit_tag(a):
+        ex = a.get("exploit")
+        if ex in EXPLOIT_LABEL and EXPLOIT_LABEL[ex][0]:
+            lab, cls = EXPLOIT_LABEL[ex]
+            # 有 KEV 索引佐证时升级标签
+            if ex == "wild":
+                for cve in CVE_RE.findall(str(a.get("title_zh", "")) + " " + str(a.get("summary_zh", ""))):
+                    if cve in kev_index:
+                        return ("在野利用·KEV", "xw")
+            return (lab, cls)
+        # 旧数据无字段 → 仅漏洞类做机械判定兜底，其他类别不打标签
+        if a.get("category") != "vuln":
+            return ("", "")
         text = " ".join([a.get("title_zh", ""), a.get("summary_zh", "") or "", a.get("impact", "") or ""])
+        for cve in CVE_RE.findall(text):
+            if cve in kev_index:
+                return ("在野利用·KEV", "xw")
         if IN_WILD.search(text):
             return ("在野利用", "xw")
         if POC.search(text):
@@ -137,7 +160,7 @@ date: {run_date}
     run_log = {"run_id": f"{run_date}-{int(datetime.now(CST).timestamp())}",
                "machine": "tencentbj-1", "role": "primary",
                "run_date": run_date,
-               "prompt_version": "analyze-v1.0",
+               "prompt_version": "analyze-v1.1",
                "sources_total": col.get("sources_total"), "sources_ok": col.get("sources_ok"),
                "sources_fail_n": len(fails),
                "collected": col.get("total_items"), "published_items": len(items),

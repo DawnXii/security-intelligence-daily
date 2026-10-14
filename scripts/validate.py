@@ -51,6 +51,9 @@ def main():
                 errors.append(f"{loc} category 非法: {a.get('category')}")
             if a.get("confidence") not in CONF:
                 errors.append(f"{loc} confidence 非法")
+            ex = a.get("exploit")
+            if ex is not None and ex not in ("wild", "poc", "none", "na"):
+                errors.append(f"{loc} exploit 非法: {ex}")
             for k in ("title_zh", "summary_zh"):
                 if not str(a.get(k, "")).strip():
                     errors.append(f"{loc} {k} 为空")

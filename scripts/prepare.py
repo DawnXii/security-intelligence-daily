@@ -20,8 +20,10 @@ KEEP = re.compile(
     r"attribution|apt|cisa|nsa|fbi|interpol|sanctions.*cyber",
     re.I,
 )
-# 明显无关（营销/招聘/活动通告）直接排除
+# 明显无关（营销/招聘/活动通告）直接排除；标题命中 DROP 无条件排除
 DROP = re.compile(r"webinar|job (listing|opening)|hiring|sponsor|conference recap|award|giveaway", re.I)
+# KEV 目录变动的元通告：结构化 KEV 源已覆盖，避免占位
+META_KEV = re.compile(r"CISA Adds (?:\d+|one|two|three|four|five|six|seven) Known Exploited Vulnerabilit", re.I)
 
 def main():
     run_date = sys.argv[1] if len(sys.argv) > 1 else datetime.now(CST).strftime("%Y-%m-%d")
@@ -33,10 +35,10 @@ def main():
     kept, dropped = [], 0
     for it in items:
         text = it["title"] + " " + it["summary"]
-        if DROP.search(text) and not KEEP.search(it["title"]):
+        if DROP.search(it["title"]) or META_KEV.search(it["title"]) or (DROP.search(text) and not KEEP.search(it["title"])):
             dropped += 1
             continue
-        if KEEP.search(text) or it["source"] in ("cisa", "netsec", "trailofbits", "ghsec"):
+        if KEEP.search(text) or it["source"] in ("cisa", "netsec", "trailofbits", "ghsec", "kev", "ghsa"):
             kept.append(it)
         else:
             dropped += 1
