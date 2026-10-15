@@ -13,9 +13,9 @@ date: 2026-10-16
 <li><a class="toc-link" href="#vuln-99373"><span class="tc">·</span><span class="tt">Cisco邮件网关高危漏洞遭在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
 <li><a class="toc-link" href="#vuln-62306"><span class="tc">·</span><span class="tt">PAN-OS管理接口RCE漏洞遭在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
 <li><a class="toc-link" href="#vuln-84792"><span class="tc">·</span><span class="tt">微软创纪录修复1413个漏洞</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a class="toc-link" href="#vuln-20245"><span class="tc">·</span><span class="tt">WordPress插件满分RCE漏洞遭在野利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
-<li><a class="toc-link" href="#vuln-22654"><span class="tc">·</span><span class="tt">Atlassian多产品漏洞入CISA KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
-<li><a class="toc-link" href="#vuln-78546"><span class="tc">·</span><span class="tt">Nextcloud服务器遭植入Webshell</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-52070"><span class="tc">·</span><span class="tt">WordPress满分RCE插件漏洞在野利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-76061"><span class="tc">·</span><span class="tt">Atlassian漏洞入选CISA KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-83598"><span class="tc">·</span><span class="tt">Nextcloud遭植入Webshell</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
 </ol></div>
 <div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
 <li><a class="toc-link" href="#supplychain-19044"><span class="tc">·</span><span class="tt">25款主流包管理器多数不校验完整性</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
@@ -83,10 +83,10 @@ date: 2026-10-16
 <div class="intel-foot"><span>2026-10-16 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/microsoft-patches-record-1413-flaws.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel reveal" id="vuln-20245">
+<div class="intel reveal" id="vuln-52070">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
 <div class="intel-body">
-<h3>WordPress插件满分RCE漏洞遭在野利用</h3>
+<h3>WordPress满分RCE插件漏洞在野利用</h3>
 <p class="sum">据 Patchstack，WordPress 插件 Bricksforge 的满分漏洞 CVE-2026-85097（CVSS 10.0）已遭在野利用：未认证攻击者可在易受攻击的 WordPress 站点上传并执行任意 PHP 代码，导致远程代码执行。</p>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>WordPress 站点基数巨大，未认证上传执行可被用于批量挂马、窃取凭据与搭建跳板。</p></div>
@@ -96,10 +96,10 @@ date: 2026-10-16
 <div class="intel-foot"><span>2026-10-16 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-cvss-100-bricksforge.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel reveal" id="vuln-22654">
+<div class="intel reveal" id="vuln-76061">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
 <div class="intel-body">
-<h3>Atlassian多产品漏洞入CISA KEV</h3>
+<h3>Atlassian漏洞入选CISA KEV</h3>
 <p class="sum">CVE-2026-21589（Atlassian 多产品）已于 2026-10-15 被 CISA 列入已知被利用漏洞目录（KEV），确认存在在野利用。CISA 要求按厂商指引实施缓解，并遵循 BOD 26-04 基于风险的补丁优先级指引；无法缓解的互联网暴露资产应考虑停用。</p>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>Atlassian 套件广泛用于企业工单、文档与协作系统，被利用可造成内部敏感信息泄露与持久化立足点。</p></div>
@@ -109,10 +109,10 @@ date: 2026-10-16
 <div class="intel-foot"><span>2026-10-16 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-21589" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
-<div class="intel reveal" id="vuln-78546">
+<div class="intel reveal" id="vuln-83598">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>75</i></span></div>
 <div class="intel-body">
-<h3>Nextcloud服务器遭植入Webshell</h3>
+<h3>Nextcloud遭植入Webshell</h3>
 <p class="sum">攻击者利用 Nextcloud 可选应用 Collabora Online - Built-in CODE Server 中的缺陷，在 Nextcloud 服务器上植入 Webshell。三名管理员在 GitHub 报告了该问题，首次记录的攻击发生在9月10日。Webshell 可按 Web 服务账户权限执行攻击者经 Web 请求发送的任意命令。</p>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>自建网盘与协作平台被远控后，存储文件、凭据可被读取，并成为内网横向跳板。</p></div>
