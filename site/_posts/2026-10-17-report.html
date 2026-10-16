@@ -18,10 +18,10 @@ date: 2026-10-17
 <li><a class="toc-link" href="#vuln-52465"><span class="tc">·</span><span class="tt">OpenBSD本地提权PoC可拿root</span><span class="meta"><i class="rp p2">P2</i><i class="xs xp">PoC 公开</i></span></a></li>
 </ol></div>
 <div class="grp"><p class="tg-h"><a href="#sec-malware">恶意软件与僵尸网络</a><span class="tg-c">1</span></p><ol>
-<li><a class="toc-link" href="#malware-90330"><span class="tc">·</span><span class="tt">FortiOS漏洞投递PEERSTITCH内存马</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+<li><a class="toc-link" href="#malware-44341"><span class="tc">·</span><span class="tt">FortiOS漏洞投递ARM64恶意软件</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
 </ol></div>
 <div class="grp"><p class="tg-h"><a href="#sec-ttp">攻击战术与技术</a><span class="tg-c">1</span></p><ol>
-<li><a class="toc-link" href="#ttp-61977"><span class="tc">·</span><span class="tt">Silent Lynx用四条感染链打CIS政府</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#ttp-97072"><span class="tc">·</span><span class="tt">Silent Lynx四条感染链袭CIS政府</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
 </ol></div>
 <div class="grp"><p class="tg-h"><a href="#sec-phishing">钓鱼与社工</a><span class="tg-c">1</span></p><ol>
 <li><a class="toc-link" href="#phishing-40015"><span class="tc">·</span><span class="tt">CISA与FBI警示选举官员遭钓鱼</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
@@ -124,10 +124,10 @@ date: 2026-10-17
 
 <p class="section-label" id="sec-malware"><span class="n">02</span>恶意软件与僵尸网络</p>
 
-<div class="intel reveal" id="malware-90330">
+<div class="intel reveal" id="malware-44341">
 <div class="intel-head"><span class="chip">恶意软件与僵尸网络</span><span class="score">处置 <i class="rp p0">P0</i> · CONF medium<i>86</i></span></div>
 <div class="intel-body">
-<h3>FortiOS漏洞投递PEERSTITCH内存马</h3>
+<h3>FortiOS漏洞投递ARM64恶意软件</h3>
 <p class="sum">The Hacker News 报道，一个疑似高级威胁组织被观测到利用 Fortinet FortiOS 的 CVE-2025-61624（CVSS 5.4，命令行解释器中的路径穿越缺陷，影响 FortiOS、FortiPAM、FortiProxy 与 FortiSwitchManager）投递此前未公开的内存驻留 ARM64 恶意软件 PEERSTITCH；报道标题指出该恶意软件可绕过对已标记 VPN 会话的检查。</p>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>目标从 x86 服务器转向 ARM 边缘设备（防火墙/PAM/代理/交换机管理面板），内存驻留使重启即清除、磁盘取证难留痕，VPN 会话检查绕过可能导致边界策略被静默穿透。</p></div>
@@ -139,10 +139,10 @@ date: 2026-10-17
 
 <p class="section-label" id="sec-ttp"><span class="n">03</span>攻击战术与技术</p>
 
-<div class="intel reveal" id="ttp-61977">
+<div class="intel reveal" id="ttp-97072">
 <div class="intel-head"><span class="chip">攻击战术与技术</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>72</i></span></div>
 <div class="intel-body">
-<h3>Silent Lynx用四条感染链打CIS政府</h3>
+<h3>Silent Lynx四条感染链袭CIS政府</h3>
 <p class="sum">The Hacker News 报道，威胁组织 Silent Lynx 被归因于针对独联体（CIS）国家政府机构的新一轮攻击，活动时间从 2025 年 6 月持续到 2026 年 8 月，包含四条不同感染链，使用带宏文档、PS2EXE 下载器、托管在 GitHub 上的 PowerShell 以及构造的 WinRAR 压缩包，最终投递反弹 shell。</p>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>政府办公网被长期控制；载荷托管在 GitHub 等可信域名使基于信誉的出站拦截失效，归档类入口可绕过常规 Office 宏阻断策略。</p></div>
