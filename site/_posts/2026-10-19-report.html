@@ -1,0 +1,176 @@
+---
+layout: post
+title: "安全情报日报 2026-10-19"
+date: 2026-10-19
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
+<li><a class="toc-link" href="#vuln-17183"><span class="tc">★</span><span class="tt">BeyondTrust远程支持漏洞在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-22831"><span class="tc">·</span><span class="tt">Ivanti安全网关零日被在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-24566"><span class="tc">·</span><span class="tt">Collabora漏洞遭在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-45981"><span class="tc">·</span><span class="tt">Cisco邮件网关漏洞遭主动攻击</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-67965"><span class="tc">·</span><span class="tt">F5修复NGINX免认证RCE漏洞</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-41526"><span class="tc">·</span><span class="tt">Drupal核心漏洞可致免登录RCE</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-74918"><span class="tc">·</span><span class="tt">npm投毒包imgdecode藏后门</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-06050"><span class="tc">·</span><span class="tt">勒索团伙n0n七天新增89名受害者</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-malware">恶意软件与僵尸网络</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#malware-79560"><span class="tc">·</span><span class="tt">FortiOS漏洞投递PEERSTITCH后门</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ttp">攻击战术与技术</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ttp-91649"><span class="tc">·</span><span class="tt">CISA通报中方团伙自动化加手工入侵</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-17183">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>92</i></span></div>
+<div class="intel-body">
+<h3>BeyondTrust远程支持漏洞在野利用</h3>
+<p class="sum">CISA 通报：BeyondTrust Remote Support（原 Bomgar）26.2.3 及更早版本存在严重认证绕过漏洞 CVE-2026-102764，已有威胁行为者利用它获取初始访问，随后建立持久化、提权并横向移动。受影响支持版本（24.3.1 及以后）已有补丁 BT26-05-RS，更旧版本必须先升级再打补丁。CISA 已于 2026-10-16 将该漏洞列入 KEV 目录。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>远程支持/特权接入通道被绕过认证即等于攻击者直接拿到进入内网的合法入口，天然跨越网络边界，适合做长驻与横移；对依赖该类工具运维的企业、MSP 与云服务商影响面尤其大，且已满足联邦机构按 BOD 26-04 限期整改的要求。</p></div>
+<div class="cell"><b>Action</b><p>立即按 BeyondTrust 通告 BT26-05 应用补丁，老旧版本先升级到受支持版本；对无法修补的自托管设备按 KEV 要求停止使用或彻底下线暴露面。同时做入侵回溯：审查会话录制与运维账号异常登录、检查持久化与提权痕迹，按 CISA 取证要求保留证据，并对经该通道访问的所有凭据做轮换。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/alerts/2026-10-16/cisa-urges-patching-critical-vulnerability-beyondtrust-remote-support" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-22831">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>90</i></span></div>
+<div class="intel-body">
+<h3>Ivanti安全网关零日被在野利用</h3>
+<p class="sum">CISA 通报 Ivanti 披露的一个新被利用漏洞 CVE-2026-104935，影响 Ivanti Connect Secure 25.1.1.1 及更早、25.1.2.2 及更早、22.8R2.4 及更早版本。该零日认证绕过漏洞可让远程未认证者执行任意命令，已被威胁行为者用于凭据窃取与数据外泄。CISA 已于 2026-10-13 将其列入 KEV 目录。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>VPN 集中入口被免认证拿下命令执行，等于攻击者站在所有远程用户与内网之间：可窃取域凭据、截获流量并外泄数据，且此类设备通常日志留存不足，入侵回溯窗口很短；联邦机构须按 BOD 26-04 限期处置。</p></div>
+<div class="cell"><b>Action</b><p>按 Ivanti 通告立即升级到最新版本；对无法升级的设备停止使用或切断对外暴露，并结合官方检测工具/完整性检查镜像排查已人侵迹象。同时轮换经过该网关的所有凭据（VPN、域账号、服务账号与令牌），启用会话与流量留存，收紧管理面与分权访问。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/alerts/2026-10-13/cisa-urges-patching-newly-exploited-vulnerability-ivanti-connect-secure" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-24566">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
+<div class="intel-body">
+<h3>Collabora漏洞遭在野利用</h3>
+<p class="sum">威胁行为者正在利用一个被追踪为 CVE-2026-110447 的严重命令执行漏洞，目标是 Nextcloud 的 Collabora Online - Built-in CODE Server 应用（richdocumentscode），用来给 Nextcloud 服务器植入后门。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Nextcloud/Collabora 常被用作企业自托管文档协作入口，一旦 RCE 成功，攻击者获得 Web 服务器权限并可植入 webshell，直接读取共享文件、凭据与内部协作内容，还可作为内网横移跳板。</p></div>
+<div class="cell"><b>Action</b><p>立即升级或停用 richdocumentscode 内置 CODE Server 组件，改由独立部署的 Collabora 服务并提供补丁；对已暴露实例做完整性核查（Web 目录新增脚本、异常 cron/进程、Nextcloud 应用清单变动），封禁该应用的对外未认证请求，并轮换受影响实例的服务凭据与用户令牌。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-collabora-rce-flaw-to-backdoor-nextcloud-servers/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-45981">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>86</i></span></div>
+<div class="intel-body">
+<h3>Cisco邮件网关漏洞遭主动攻击</h3>
+<p class="sum">Cisco 在周三发布的通告中警告，攻击者正在利用 Cisco Secure Email Gateway 的一个严重缺陷：发件人无需登录即可通过邮件向设备操作系统写入文件。攻击者向网关发送带特制附件的邮件，若成功便可进一步以 root 身份执行命令；该设备本用于过滤组织的邮件中的垃圾与恶意软件。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>邮件安全网关处在所有入站邮件的必经路径上，以未认证写入文件并升级为 root，等于攻击者可以在邮件链路上持久驻留、静默改写或窃取邮件，并把恶意消息直接投递进内网；这类“安全设备变入口”的失效比单台服务器沦陷影响面更大。</p></div>
+<div class="cell"><b>Action</b><p>立即按 Cisco 通告升级到修复版本，未修补前收少网关对外暴露并隔离管理面；对设备做入侵回溯（检查异常落盘文件、计划任务、root 级进程与日志缺口），轮换网关上的凭据与密钥；同时启用邮件侧异常附件检测与二道邮件过滤，降低单点依赖。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/cisco-warns-of-active-attacks.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-67965">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>82</i></span></div>
+<div class="intel-body">
+<h3>F5修复NGINX免认证RCE漏洞</h3>
+<p class="sum">F5 公布 NGINX 中 11 个安全问题的修复，其中包括无需认证即可利用的严重 RCE 漏洞，编号为 CVE-2026-15176 与 CVE-2026-93479，可通过构造的 HTTP 请求触发；在超出运维者控制的特定条件下可导致远程代码执行。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>NGINX 是全球主流反向代理与入口层组件，免认证 RCE 意味着单个暴露端口即可能沦陷入口节点，进而影响其后所有业务与密钥/令牌流转；修补范围覆盖 11 项问题，运维需要整体升级而非局部规避。</p></div>
+<div class="cell"><b>Action</b><p>把 NGINX 升级到 F5 公布的修复版本并回归测试配置（含模块与 HTTP 解析相关行为）；无法立刻升级的实例，先在入口做请求尺寸/方法限制与虚拟补丁（WAF 规则），并把暴露在互联网的 NGINX 版本指纹隐藏与升级窗口纳入优先级排期。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://securityaffairs.com/201106/security/f5-addressed-critical-rce-flaws-in-nginx.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-41526">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>74</i></span></div>
+<div class="intel-body">
+<h3>Drupal核心漏洞可致免登录RCE</h3>
+<p class="sum">Drupal 核心 Field UI 模块存在严重漏洞，可让攻击器在网站服务器上执行代码，修复已于 10 月 14 日随 Drupal 11.4.10、11.3.19 与 10.6.19 发布。Drupal 安全团队表示仅靠核心无法直接触达该漏洞，但存在多条通过贡献模块的利用路径，其中至少一条已知路径无需登录。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Drupal 支撑大量政府、媒体与企业站点，贡献模块在真实部署中几乎不可避免，意味着“核心不可达”的缓解假设在生产环境中站不住；未及时升级的站点面临免认证代码执行、被植入后门与数据篡改的风险。</p></div>
+<div class="cell"><b>Action</b><p>按版本矩阵升级（11.4.10 / 11.3.19 / 10.6.19），升级前先盘点站点已安装的全部贡献模块并关闭非必要模块入口；无法立即升级时，用 WAF/虚拟补丁拦截指向 Field UI 相关路由的未认证请求，并对站点文件完整性与新增管理员账号做监控。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/drupal-patches-critical-core-rce-flaw.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-74918">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>npm投毒包imgdecode藏后门</h3>
+<p class="sum">研究人员发现一个恶意 npm 包 imgdecode，属于近期被披露、代号 MALFEX 的软件供应链攻击活动，它于 2026-09-30 由用户 malfexteste8 上传到包仓库，在其 Windows 原生插件中隐藏 shellcode 加载器；截至报道时已被下载 979 次，并仍在 npm 上可用。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>同一个包名长期存活且持续被安装，意味着已有人群的开发机与 CI/CD 环境可能已加载原生 shellcode 加载器；原生插件跳出了常见 JS 行为监控，构建环境中的令牌、私钥与制品供应链直接面临泄露与篡改风险。</p></div>
+<div class="cell"><b>Action</b><p>排查所有项目与镜像/构建缓存是否引用 imgdecode（含 lockfile 传递依赖），已命中的节点按凭据泄露处理：轮换 npm token、云密钥、签名证书与 CI 变量，并从干净基础镜像重建；同时在包仓库策略上启用白名单/内部代理、固定版本与哈希校验，并对新增原生插件构建行为加告警。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/malfex-npm-package-imgdecode-hides.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-06050">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>66</i></span></div>
+<div class="intel-body">
+<h3>勒索团伙n0n七天新增89名受害者</h3>
+<p class="sum">RansomLook 跟踪数据显示，勒索团伙 n0n 近 7 天在泄密站发布 89 条帖子，涉及 89 家受害者，最新记录时间 2026-10-18。受害者样例集中在物流与港口环节，包括 Apical Group、Asyaport 集装箱码头、BKH ICD 内陆集装箱堆场、BNCT Busan New Container Terminal 等。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>单周 89 家受害属于高强度批量作案，且港口、集装箱、物流与记账/税务服务商成为主要目标；这类组织的上下游通信链一旦被攻破，会连带影响依赖其单证与账目系统的企业。</p></div>
+<div class="cell"><b>Action</b><p>供应链侧自查：核对自身与物流/代理/记账供应商是否出现在该团伙泄密站；对供应商账号做最小权限与 MFA 加固，限制跨组织远程访问，并对财务/单证邮箱启用异常登录与外发告警。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/n0n" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-malware"><span class="n">04</span>恶意软件与僵尸网络</p>
+
+<div class="intel reveal" id="malware-79560">
+<div class="intel-head"><span class="chip">恶意软件与僵尸网络</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>84</i></span></div>
+<div class="intel-body">
+<h3>FortiOS漏洞投递PEERSTITCH后门</h3>
+<p class="sum">研究人员观察到一个疑似高级威胁行为者利用 Fortinet FortiOS 的安全缺陷投递此前未公开的内存驻留 ARM64 恶意软件 PEERSTITCH。攻击利用的是 CVE-2025-61624（CVSS 5.4），一个存在于 FortiOS、FortiPAM、FortiProxy 与 FortiSwitchManager 命令行解释器中的路径穿越漏洞，可绕过对被标记 VPN 会话的检查。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>在网络安全设备本身上运行无文件 ARM64 后门，使防火墙/网关从防护层变成受害者：可长期隐蔽驻留、窃取或篡改通过 VPN 的流量，常规主机侧 EDR 看不到这类设备层威胁，且对 ARM 架构平台的检测覆盖薄弱。</p></div>
+<div class="cell"><b>Action</b><p>把 FortiOS/FortiPAM/FortiProxy/FortiSwitchManager 升级到修复 CVE-2025-61624 的版本；核查 CLI 命令日志与配置/固件完整性（官方完整性检查工具），限制对管理 CLI 的访问来源；对 VPN 会话做异常重路由监控，并按无文件后门场景准备内存/固件取证与全量重建方案。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-fortios-flaw-to.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ttp"><span class="n">05</span>攻击战术与技术</p>
+
+<div class="intel reveal" id="ttp-91649">
+<div class="intel-head"><span class="chip">攻击战术与技术</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3>CISA通报中方团伙自动化加手工入侵</h3>
+<p class="sum">CISA 等于 2026-10-08 发布联合通告（aa26-281a）：由中国政府关联、受 Integrity Technology Group 支撑的威胁行为者，把自动化扫描工具、大规模僵尸网络与手工渗透手法结合，从全球组织（含美国关键基础设施行业）窃取敏感数据。手段包括利用漏洞、跨站脚本、对 Microsoft Exchange 做密码喷洒，通过 VPN 软件维持持久化，并用脚本外泄邮件与凭据。</p>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>该组合式手法直接命中身份系统与远程接入面（Exchange、VPN），意味着凭据与邮件外泄往往先于加密勒索发生；自动化侦察+人工操作的模式很难靠单点边界检测拦住，云与自托管邮件/协作环境风险最高。</p></div>
+<div class="cell"><b>Action</b><p>按通告做对照排查：清点 Exchange 对外接口并启用薄客户端/禁用基本身份验证，VPN 强制 MFA+设备合规校验并审查历史会话；封禁已知扫描器指纹与僵尸网络 IOC，对异常 JSON-RPC/EWS 访问、可疑管理员邮箱规则与外发脚本做狩猎；关闭不必要的跨站点脚本可达面。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-281a" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
