@@ -62,10 +62,13 @@ def main():
     def add(s, cats, it):
         chosen.add(it["hash"])
         per_src[it["source"]] = per_src.get(it["source"], 0) + 1
-        sel.append({"hash": it["hash"], "source": it["source"], "source_name": it["source_name"],
+        sel_item = {"hash": it["hash"], "source": it["source"], "source_name": it["source_name"],
                     "title": it["title"], "link": it["link"], "date": it["date"],
                     "summary": it["summary"][:W], "heuristic_score": s,
-                    "heuristic_cats": sorted(cats)})
+                    "heuristic_cats": sorted(cats)}
+        if it.get("previously_reported"):
+            sel_item["previously_reported"] = it["previously_reported"]
+        sel.append(sel_item)
     # 先为保底来源预留高分槽位
     for src, need in MINQ.items():
         taken = 0

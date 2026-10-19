@@ -1,5 +1,11 @@
 # Prompt CHANGELOG
 
+## analyze v1.3 — 2026-10-19（stable）
+- 变更：新增「跨天查重」规则节。候选条目由 scripts/history.py 标注 previously_reported（同链接或同 CVE 命中已发布历史）；带标注条目默认 include=false，仅实质进展（利用状态变化/首次入 KEV/补丁发布/勒索聚合受害者数 +≥15 或距上次 ≥7 天/执法打击）可跟进，且 summary_zh 第一句须写明跟进日期与增量。上游原文未变的重复报道在 prepare 阶段已被确定性剔除（history_dropped），不进分析集。
+- 动因：10-14~19 实测同事件连推（n0n 三连推、Cisco 邮件网关三连推、包管理器研究两连推），用户要求"无新进展不重复推送"。
+- 回归（2026-10-19 全量 40 条实跑）：入选 10→6；validate 0 违规；被剔 8 条均为 REPEAT 无进展（n0n +3、CISA 中方通告第三次、PAN-OS/Atlassian/TanStack/KEDA 等）；保留跟进类 1 条（BeyondTrust 首入 KEV）；新事件 4 条正常入选。verify_sid 全绿。
+- 风险：进展判断仍在分析 AI 语义层，标注只给事实不给结论；history 匹配基于 link/CVE，跨源转载（新 URL 且无 CVE）依赖当日语义去重兜底。
+
 ## analyze v1.2 — 2026-10-14（stable）
 - 变更：
   1. category 枚举从 6 类细化为 8 类：vuln | supplychain | ransomware | malware | ttp | phishing | incident | crypto-infra。拆分原 ttp"攻击战术与恶意软件"混合类，勒索软件独立成类（配合新增 ransomware.live / RansomLook 信源）。

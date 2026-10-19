@@ -95,6 +95,14 @@ def main():
         else:
             deployed = True
     st["pages_deployed"] = deployed
+    if deployed:
+        # 发布成功才落跨天历史（record 幂等：同日重写）
+        try:
+            sys.path.insert(0, os.path.join(ROOT, "scripts"))
+            import history
+            history.record(run_date)
+        except Exception as exc:  # noqa: BLE001
+            print(f"publish: history record FAILED ({exc})", file=sys.stderr)
     st["published_at"] = datetime.datetime.now().astimezone().isoformat()
     status_path.write_text(json.dumps(st, ensure_ascii=False, indent=1))
 

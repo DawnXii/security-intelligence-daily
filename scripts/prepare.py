@@ -43,6 +43,11 @@ def main():
         else:
             dropped += 1
 
+    # 跨天历史（确定性层）：上游原文未变的重复报道直接剔除；内容有变/CVE 命中则标注交分析判断
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import history
+    kept, hist_dropped = history.annotate(run_date, kept)
+
     outdir = os.path.join(DATA, "candidates", run_date)
     batches = [kept[i:i+BATCH_SIZE] for i in range(0, len(kept), BATCH_SIZE)] or [[]]
     # 幂等：重写全部批次文件，并清理旧批次
@@ -50,7 +55,8 @@ def main():
         if re.match(r"batch-\d+\.json", f):
             os.remove(os.path.join(outdir, f))
     meta = {"run_date": run_date, "total_raw": len(items), "kept": len(kept),
-            "dropped": dropped, "batches": len(batches),
+            "dropped": dropped, "history_dropped": hist_dropped,
+            "batches": len(batches),
             "prepared_at": datetime.now(CST).isoformat()}
     for n, b in enumerate(batches, 1):
         json.dump({**meta, "batch": n, "items": b},
