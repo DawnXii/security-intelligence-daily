@@ -177,7 +177,7 @@ date: {run_date}
     run_log = {"run_id": f"{run_date}-{int(datetime.now(CST).timestamp())}",
                "machine": "tencentbj-1", "role": "primary",
                "run_date": run_date,
-               "prompt_version": "analyze-v1.2",
+               "prompt_version": "analyze-v1.3",
                "sources_total": col.get("sources_total"), "sources_ok": col.get("sources_ok"),
                "sources_fail_n": len(fails),
                "collected": col.get("total_items"), "published_items": len(items),
