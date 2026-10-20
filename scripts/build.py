@@ -133,6 +133,24 @@ def main():
             xlab, xcls = exploit_chip(a, cat)
             if xlab:
                 xchip = f'<i class="xs {xcls}">{xlab}</i>'
+            # v1.4 事实条：cve/cvss/actor/版本/多源计数（字段缺省则整条不渲染）
+            facts = ""
+            chips, vers = [], []
+            if a.get("cve"):
+                chips.append(f'<b class="fct fcve">{esc(str(a["cve"]))}</b>')
+            if a.get("cvss") not in (None, "", "null"):
+                chips.append(f'<b class="fct fcvss">CVSS {esc(str(a["cvss"]))}</b>')
+            if a.get("actor") not in (None, "", "null"):
+                chips.append(f'<b class="fct factor">{esc(str(a["actor"]))}</b>')
+            if isinstance(a.get("outlets"), int) and a["outlets"] > 1:
+                chips.append(f'<b class="fct fout">{a["outlets"]} 源报道</b>')
+            if a.get("affected") not in (None, "", "null"):
+                vers.append(f'<span class="fv"><b>受影响</b> {esc(str(a["affected"]))}</span>')
+            if a.get("fixed") not in (None, "", "null"):
+                vers.append(f'<span class="fv"><b>修复</b> {esc(str(a["fixed"]))}</span>')
+            if chips or vers:
+                facts = '<div class="intel-facts">' + ("".join(chips) if chips else "") + \
+                        (('<div class="fvers">' + "".join(vers) + '</div>') if vers else "") + '</div>'
             lines += [
                 f'<div class="{cls} reveal" id="{aid}">',
                 f'<div class="intel-head"><span class="chip">{tag or CATS[cat]}</span>{xchip}'
@@ -140,6 +158,7 @@ def main():
                 '<div class="intel-body">',
                 f'<h3>{esc(a["title_zh"])}</h3>',
                 f'<p class="sum">{esc(a.get("summary_zh",""))}</p>',
+                facts,
                 '<div class="intel-grid">',
                 f'<div class="cell"><b>Impact</b><p>{esc(a.get("impact",""))}</p></div>',
                 f'<div class="cell"><b>Action</b><p>{esc(a.get("action",""))}</p></div>',

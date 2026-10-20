@@ -34,6 +34,7 @@ date: 2026-10-19
 <div class="intel-body">
 <h3>BeyondTrust 零日入选 CISA KEV</h3>
 <p class="sum">跟进 10-18 报道：BeyondTrust Remote Support 漏洞 CVE-2026-102764 已被 CISA 列入已知被利用漏洞目录（KEV），dateAdded 2026-10-16，新增处置要求为按 BOD 26-04 完成修复或停用。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-102764</b><b class="fct fout">3 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> BeyondTrust Remote Support</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>远程支持工具在野利用意味着运维被接管通道持续存在，且已触发联邦机构强制修复时限。</p></div>
 <div class="cell"><b>Action</b><p>立即升级 BeyondTrust Remote Support 至修复版本，按厂商指引完成缓解并按 BOD 26-04 留痕。</p></div>
@@ -47,6 +48,7 @@ date: 2026-10-19
 <div class="intel-body">
 <h3>SiteGuard WAF 漏洞在野可获 root</h3>
 <p class="sum">攻击者正利用 SiteGuard Server Edition 的操作系统命令注入漏洞，在受影响服务器上以 root 或 SYSTEM 权限执行命令。该产品为韩国厂商的 WAF/服务器安全套件。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> SiteGuard Server Edition</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>安全设备自身被 RCE 即防御面被穿透，受影响服务器完全失陷。</p></div>
 <div class="cell"><b>Action</b><p>核查 SiteGuard 版本并按厂商通告修复，对暴露的管理面做访问限制并回溯入侵痕迹。</p></div>
@@ -62,6 +64,7 @@ date: 2026-10-19
 <div class="intel-body">
 <h3>ConnectWise 供应链攻击波及 M365</h3>
 <p class="sum">ConnectWise 在攻击者利用应用身份入侵其 Cloud Backup（原 SkyKick）服务并危及 Microsoft 365 租户后，已关停客户对该备份云的访问。属第三方服务信任链被滥用的重大供应链事件。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> ConnectWise Cloud Backup（原 SkyKick Cloud Backup）客户</span><span class="fv"><b>修复</b> 服务访问已关停</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>备份服务的应用身份成为跳板，M365 租户的邮件与数据通道面临批量泄露风险。</p></div>
 <div class="cell"><b>Action</b><p>使用 ConnectWise/SkyKick Cloud Backup 的组织应排查租户异常登录与 OAuth 授权，暂停受影响集成并轮换凭据。</p></div>
@@ -75,6 +78,7 @@ date: 2026-10-19
 <div class="intel-body">
 <h3>npm 投毒包 imgdecode 藏加载器</h3>
 <p class="sum">npm 包 imgdecode 属近期披露的 MALFEX 供应链攻击活动，2026-09-30 由用户 malfexteste8 上传，在 Windows 原生插件中隐藏 shellcode 加载器，已被下载 979 次且披露时仍在上架。</p>
+<div class="intel-facts"><b class="fct factor">MALFEX</b><div class="fvers"><span class="fv"><b>受影响</b> npm 包 imgdecode</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>被安装即可能执行恶意加载器，开发机与 CI 构建环境都是受害面。</p></div>
 <div class="cell"><b>Action</b><p>审计依赖是否含 imgdecode 及同期可疑包，移除并轮换构建环境凭据，启用安装期包审查与锁文件策略。</p></div>
@@ -90,6 +94,7 @@ date: 2026-10-19
 <div class="intel-body">
 <h3>勒索团伙 the gentlemen 新增37名受害者</h3>
 <p class="sum">RansomLook 数据显示，勒索团伙 the gentlemen 近 7 天在泄密站发布 37 条受害者帖子，最新发现时间 2026-10-16，受害者覆盖物流、工程与执法机构（含厄瓜多尔国家警察）。</p>
+<div class="intel-facts"><b class="fct factor">the gentlemen</b></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>新勒索组织高强度活跃，中小企业与政府机构均为攻击面，双重勒索泄密风险上升。</p></div>
 <div class="cell"><b>Action</b><p>关注该团伙 TTP 与泄密站动态；对备份与终端防护做勒索专项加固，收紧对外暴露面。</p></div>
@@ -105,6 +110,7 @@ date: 2026-10-19
 <div class="intel-body">
 <h3>澳洲逮捕两名 TeamPCP 嫌疑人</h3>
 <p class="sum">澳大利亚联邦警察逮捕两名 21 岁和 23 岁的西澳嫌疑人，指称其为 TeamPCP 团伙成员——该团伙被认为是迄今持续时间最长的软件供应链攻击系列的实施者。</p>
+<div class="intel-facts"><b class="fct factor">TeamPCP</b></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>对长期危害开源生态的供应链犯罪团伙形成执法震慑，但同类威胁者仍会填补真空。</p></div>
 <div class="cell"><b>Action</b><p>借此复盘依赖投毒检测面：新包监控、maintainer 账号风险与 CI 安装钩子审查。</p></div>

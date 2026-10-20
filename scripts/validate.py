@@ -80,6 +80,28 @@ def main():
                         checked = True; break
                 if not checked and len(ev) > 1:
                     errors.append(f"{loc} 证据文本无法在原始 summary 中溯源（疑似幻觉）")
+            # v1.4 事实字段核验：数字型实体（版本/CVE/日期/分数）必须逐字存在于来源文本
+            src_raw = by_hash[h]["summary"] + " " + by_hash[h]["title"]
+            src_n = norm(src_raw)
+            cve_f = a.get("cve")
+            if cve_f not in (None, "", "null"):
+                if not re.fullmatch(r"CVE-\d{4}-\d{4,7}", str(cve_f)) or norm(str(cve_f)) not in src_n:
+                    errors.append(f"{loc} cve 非法或不在来源文本: {cve_f}")
+            cvss_f = a.get("cvss")
+            if cvss_f not in (None, "", "null"):
+                if not re.fullmatch(r"\d(\.\d)?", str(cvss_f)) or str(cvss_f) not in src_raw:
+                    errors.append(f"{loc} cvss 非法或不在来源文本: {cvss_f}")
+            for fk in ("actor", "affected", "fixed"):
+                fv = a.get(fk)
+                if fv in (None, "", "null"):
+                    continue
+                bad = [t for t in re.findall(r"[A-Za-z][A-Za-z0-9.+/\-]*\d[A-Za-z0-9.+/\-]*|GHSA-[a-z0-9\-]{4,}", str(fv))
+                       if norm(t) not in src_n]
+                if bad:
+                    errors.append(f"{loc} {fk} 实体无法溯源（疑似幻觉）: {bad[:3]}")
+            ol = a.get("outlets")
+            if ol is not None and (not isinstance(ol, int) or not (1 <= ol <= 60)):
+                errors.append(f"{loc} outlets 非法: {ol}")
         else:
             stats["excluded"] += 1
 
