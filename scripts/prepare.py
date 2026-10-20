@@ -38,7 +38,7 @@ def main():
         if DROP.search(it["title"]) or META_KEV.search(it["title"]) or (DROP.search(text) and not KEEP.search(it["title"])):
             dropped += 1
             continue
-        if KEEP.search(text) or it["source"] in ("cisa", "netsec", "trailofbits", "ghsec", "kev", "ghsa", "ransomlook", "rwlive", "derp", "derptelem"):
+        if KEEP.search(text) or it["source"] in ("cisa", "netsec", "trailofbits", "ghsec", "kev", "ghsa", "ransomlook", "rwlive", "derp", "derptelem", "threatfox", "urlhaus"):
             kept.append(it)
         else:
             dropped += 1

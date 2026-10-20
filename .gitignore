@@ -3,3 +3,4 @@ docs/
 *.log
 __pycache__/
 pages/
+.secrets/

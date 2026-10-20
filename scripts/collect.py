@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """SID collect — 采集 RSS 来源，规范化、去重、持久化。幂等：按 run_date + item hash 去重。
 退出码：0=成功(含部分来源失败) 2=无任何来源成功(硬失败)。stdout 最后一行输出 JSON 摘要。"""
-import hashlib, json, os, re, sys, time, urllib.parse, urllib.request, xml.etree.ElementTree as ET
+import hashlib, json, os, re, sys, time, urllib.error, urllib.parse, urllib.request, xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 
@@ -336,6 +336,96 @@ def main():
             results.append({"source": "derptelem", "status": "fail", "error": "no families parsed"})
     except Exception as e:
         results.append({"source": "derptelem", "status": "fail", "error": str(e)[:200]})
+
+    # ---- abuse.ch 指标遥测（风控纪律：每端点每日仅 1 次查询、无重试、key 不落任何输出）----
+    def _abusech_key():
+        v = os.environ.get("ABUSECH_KEY", "").strip()
+        if v:
+            return v
+        p = os.path.join(BASE, ".secrets", "abusech.key")
+        return open(p).read().strip() if os.path.exists(p) else ""
+
+    def _abusech_post(url, payload, key):
+        req = urllib.request.Request(url, data=json.dumps(payload).encode(),
+                                     headers={"Auth-Key": key, "Content-Type": "application/json",
+                                              "User-Agent": "SID-Daily/1.0 (security-intelligence-daily; read-only consumer)"})
+        with urllib.request.urlopen(req, timeout=25) as r:
+            return json.loads(r.read())
+
+    ak = _abusech_key()
+
+    # ThreatFox：近 24h 新增 IOC 聚合
+    tf_status = "fail"
+    if ak:
+        try:
+            d = _abusech_post("https://threatfox-api.abuse.ch/api/v1/", {"query": "get_iocs", "days": 1}, ak)
+            rows = d.get("data") or []
+            if d.get("query_status") == "ok" and rows:
+                import collections as _C
+                tt = _C.Counter(r["threat_type"] for r in rows)
+                mw = _C.Counter((r.get("malware_printable") or r["malware"]).lower() for r in rows)
+                comp = sum(1 for r in rows if str(r.get("is_compromised")) == "true")
+                h = hashlib.sha256(f"threatfox|{run_date}".encode()).hexdigest()[:16]
+                if h not in seen:
+                    seen[h] = True
+                    mtop = "、".join(f"{n} {c}" for n, c in mw.most_common(5))
+                    ttop = "、".join(f"{n} {c}" for n, c in tt.most_common(3))
+                    summary = (f"abuse.ch ThreatFox 近 24 小时新增 IOC {len(rows)} 条（按类型：{ttop}）；"
+                               f"活跃家族 Top5：{mtop}；其中 {comp} 条指向被入侵的合法主机（compromised）。"
+                               "完整指标以 abuse.ch 数据为准，本文仅汇总分布。")
+                    new_items.append({"title": f"ThreatFox 日新增 IOC {len(rows)} 条：{mw.most_common(1)[0][0]} 居首",
+                                      "link": "https://threatfox.abuse.ch/browse/", "date": datetime.now(CST).isoformat(),
+                                      "summary": summary, "hash": h, "source": "threatfox",
+                                      "source_name": "abuse.ch ThreatFox", "tags": ["malware", "botnet", "telemetry"],
+                                      "collected_at": datetime.now(CST).isoformat()})
+                    all_items = existing + new_items
+                tf_status = "ok"
+                results.append({"source": "threatfox", "status": "ok", "count": len(rows)})
+            else:
+                results.append({"source": "threatfox", "status": "fail", "error": str(d.get("query_status", "no data"))})
+        except Exception as e:
+            results.append({"source": "threatfox", "status": "fail", "error": str(e)[:120]})
+    else:
+        results.append({"source": "threatfox", "status": "fail", "error": "no auth key"})
+
+    # URLhaus：近 24h 新增恶意 URL（v2 CSV 导出，端点按邮箱确认状态放行）
+    uh_status = "fail"
+    if ak:
+        try:
+            req = urllib.request.Request(f"https://urlhaus-api.abuse.ch/v2/files/exports/{ak}/recent.csv",
+                                         headers={"User-Agent": "SID-Daily/1.0 (security-intelligence-daily; read-only consumer)"})
+            with urllib.request.urlopen(req, timeout=40) as r:
+                csv_text = r.read().decode("utf-8", "replace")
+            import csv as _csv, io as _io
+            rows = list(_csv.DictReader(_io.StringIO(csv_text)))
+            if rows:
+                import collections as _C
+                mal = _C.Counter((x.get("malware") or "unknown").lower() for x in rows)
+                act = sum(1 for x in rows if (x.get("url_status") or "").lower() == "online")
+                h = hashlib.sha256(f"urlhaus|{run_date}".encode()).hexdigest()[:16]
+                if h not in seen:
+                    seen[h] = True
+                    mtop = "、".join(f"{n} {c}" for n, c in mal.most_common(5))
+                    summary = (f"abuse.ch URLhaus 近 24 小时新增恶意 URL {len(rows)} 条（当前仍在线 {act} 条），"
+                               f"关联恶意软件 Top5：{mtop}。该类条目多为挂马站/载荷投递/C2 面板，明细以 abuse.ch 数据为准。")
+                    new_items.append({"title": f"URLhaus 日增恶意 URL {len(rows)} 条",
+                                      "link": "https://urlhaus.abuse.ch/browse/", "date": datetime.now(CST).isoformat(),
+                                      "summary": summary, "hash": h, "source": "urlhaus",
+                                      "source_name": "abuse.ch URLhaus", "tags": ["malware", "web", "telemetry"],
+                                      "collected_at": datetime.now(CST).isoformat()})
+                    all_items = existing + new_items
+                uh_status = "ok"
+                results.append({"source": "urlhaus", "status": "ok", "count": len(rows)})
+            else:
+                results.append({"source": "urlhaus", "status": "fail", "error": "empty export"})
+        except urllib.error.HTTPError as e:
+            note = "email not confirmed" if e.code == 403 else f"http {e.code}"
+            results.append({"source": "urlhaus", "status": "fail", "error": note})
+        except Exception as e:
+            results.append({"source": "urlhaus", "status": "fail", "error": str(e)[:120]})
+    else:
+        results.append({"source": "urlhaus", "status": "fail", "error": "no auth key"})
+
     tmp = cand_file + ".tmp"
     json.dump({"run_id": run_id, "run_date": run_date, "count": len(all_items), "items": all_items},
               open(tmp, "w"), ensure_ascii=False, indent=1)
@@ -343,10 +433,10 @@ def main():
     json.dump(cooldown, open(cooldown_file, "w"), indent=1)
 
     ok = sum(1 for r in results if r["status"] == "ok")
-    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem"))
+    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem", "threatfox", "urlhaus"))
     hard_fail = ok == 0
     status = {"run_id": run_id, "run_date": run_date, "stage": "collect",
-              "sources_total": len(FEEDS) + 4, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0),
+              "sources_total": len(FEEDS) + 6, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0),
               "sources_fail": [r for r in results if r["status"] not in ("ok",)],
               "new_items": len(new_items), "total_items": len(all_items),
               "finished_at": datetime.now(CST).isoformat()}
