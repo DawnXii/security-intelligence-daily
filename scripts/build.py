@@ -88,7 +88,7 @@ def main():
         toc = ['<nav class="toc" id="toc" aria-label="目录">', '<h2>目录 <span>Contents</span></h2>',
                '<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · '
                '<b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>'
-               '优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>',
+               '优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>',
                '<div class="toc-scroll">']
         for cat in cats_present:
             sel = [a for a in items if a.get("category") == cat]
