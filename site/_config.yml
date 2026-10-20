@@ -2,7 +2,8 @@ title: 安全情报日报 Security Intelligence Daily
 # 日报按北京时间(TZ=Asia/Shanghai)命名，而 Actions 构建机为 UTC；
 # 不加此行时，每日 00:00-08:00 UTC 之间的构建会把当日帖子当"未来帖"排除(404)。
 future: true
-description: 每天 04:00 自动聚合 23 个安全信源，AI 分析、逐条证据机械校验、跨天去重的基础设施与供应链安全情报日报（中文）。
+url: https://dawnxii.github.io/security-intelligence-daily
+description: 每天 09:00 自动聚合 23 个安全信源，AI 分析、逐条证据机械校验、跨天去重的基础设施与供应链安全情报日报（中文）。
 plugins:
   - jekyll-sitemap
 markdown: kramdown

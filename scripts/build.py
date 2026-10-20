@@ -180,6 +180,7 @@ def main():
 layout: post
 title: "安全情报日报 {run_date}"
 date: {run_date}
+events: {len(items)}
 ---
 
 """

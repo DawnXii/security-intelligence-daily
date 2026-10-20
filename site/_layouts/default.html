@@ -12,7 +12,10 @@
 <meta property="og:title" content="{{ page.title | default: site.title | escape }}">
 <meta property="og:description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
 <meta property="og:type" content="{% if page.url == '/' or page.url contains 'index' %}website{% else %}article{% endif %}">
-<meta name="twitter:card" content="summary">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:image" content="{{ site.url }}/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ site.url }}/assets/og-image.png">
 <style>
 :root{
   --bg:#FAFAF8; --paper:#FFFFFF; --ink:#0A0A0A;
