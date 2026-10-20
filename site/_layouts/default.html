@@ -8,6 +8,11 @@
 <link rel="alternate icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32.png' | relative_url }}">
 <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}">
 <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
+<meta property="og:site_name" content="安全情报日报 Security Intelligence Daily">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
+<meta property="og:type" content="{% if page.url == '/' or page.url contains 'index' %}website{% else %}article{% endif %}">
+<meta name="twitter:card" content="summary">
 <style>
 :root{
   --bg:#FAFAF8; --paper:#FFFFFF; --ink:#0A0A0A;
@@ -230,7 +235,7 @@ footer.site{margin-top:80px;border-top:2px solid var(--ink);background:var(--pap
 
 <footer class="site">
   <div class="wrap fd">
-    <span>© 2026 SID · 19 sources · Machine-verified before published</span>
+    <span>© 2026 SID · 23 sources · Machine-verified before published</span>
     <a href="https://github.com/DawnXii/security-intelligence-daily" target="_blank" rel="noopener">DawnXii/security-intelligence-daily ↗</a>
   </div>
 </footer>
