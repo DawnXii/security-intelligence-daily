@@ -26,6 +26,7 @@ FEEDS = [
     {"id": "trailofbits", "name": "Trail of Bits", "url": "https://blog.trailofbits.com/index.xml", "tags": ["research", "supplychain"]},
     {"id": "chainalysis", "name": "Chainalysis Blog", "url": "https://www.chainalysis.com/blog/feed/", "tags": ["crypto", "web3"]},
     {"id": "rwlive", "name": "Ransomware.live", "url": "https://api.ransomware.live/rss", "tags": ["ransomware", "incident"]},
+    {"id": "derp", "name": "Derp.ca Research", "url": "https://www.derp.ca/feed", "tags": ["malware", "research"]},
 ]
 
 KEV_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
@@ -301,6 +302,40 @@ def main():
         results.append({"source": "ransomlook", "status": "fail", "error": str(e)[:200]})
 
     all_items = existing + new_items
+
+    # ---- derp.ca 恶意软件基础设施遥测（Top families 周活聚合，源自 derp.ca/malware 沙箱统计）----
+    dtm_status = "fail"
+    try:
+        dtm_html = fetch("https://www.derp.ca/malware", timeout=25).decode("utf-8", "replace")
+        seg = dtm_html[dtm_html.find('data-week-top'):]
+        arts = re.findall(r"<article.*?</article>", seg, re.S)[:10]
+        fams = []
+        for ar in arts:
+            fam = re.search(r'href="/([^/"]+)/"[^>]*>([^<]+)</a>', ar)
+            pct = re.search(r'([\d.]+)% of week', ar)
+            cnt = re.search(r'font-bold tabular-nums[^>]*>([\d,]+)<', ar)
+            if fam and cnt:
+                fams.append((fam.group(2).strip(), cnt.group(1), pct.group(1) if pct else "?"))
+        if fams:
+            top = "、".join(f"{n} {c} 样本（{p}%）" for n, c, p in fams[:6])
+            h = hashlib.sha256(f"derptelem|{run_date}".encode()).hexdigest()[:16]
+            if h not in seen:
+                seen[h] = True
+                summary = (f"derp.ca 恶意软件基础设施跟踪器（Hatching Triage 沙箱遥测）近 7 天活跃家族 Top{len(fams)}："
+                           + top + "。完整榜单见来源页。")
+                new_items.append({"title": f"恶意软件家族周活跃遥测：{fams[0][0]} 占比 {fams[0][2]}%",
+                                  "link": "https://www.derp.ca/malware", "date": datetime.now(CST).isoformat(),
+                                  "summary": summary, "hash": h, "source": "derptelem",
+                                  "source_name": "Derp Malware Telemetry", "tags": ["malware", "telemetry"],
+                                  "collected_at": datetime.now(CST).isoformat()})
+                all_items = existing + new_items
+            dtm_status = "ok"
+            results.append({"source": "derptelem", "status": "ok", "count": 1, "families": len(fams)})
+            cooldown.pop("derptelem", None)
+        else:
+            results.append({"source": "derptelem", "status": "fail", "error": "no families parsed"})
+    except Exception as e:
+        results.append({"source": "derptelem", "status": "fail", "error": str(e)[:200]})
     tmp = cand_file + ".tmp"
     json.dump({"run_id": run_id, "run_date": run_date, "count": len(all_items), "items": all_items},
               open(tmp, "w"), ensure_ascii=False, indent=1)
@@ -308,10 +343,10 @@ def main():
     json.dump(cooldown, open(cooldown_file, "w"), indent=1)
 
     ok = sum(1 for r in results if r["status"] == "ok")
-    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook"))
+    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem"))
     hard_fail = ok == 0
     status = {"run_id": run_id, "run_date": run_date, "stage": "collect",
-              "sources_total": len(FEEDS) + 3, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0),
+              "sources_total": len(FEEDS) + 4, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0),
               "sources_fail": [r for r in results if r["status"] not in ("ok",)],
               "new_items": len(new_items), "total_items": len(all_items),
               "finished_at": datetime.now(CST).isoformat()}
