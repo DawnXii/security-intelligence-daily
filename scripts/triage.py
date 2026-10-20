@@ -57,7 +57,7 @@ def main():
     scored.sort(key=lambda x: -x[0])
     # 来源配额：防止单一来源（如 CISA ICS 批量通告）挤占版面
     CAPS = {"cisa": 8, "kev": 5, "ghsa": 8, "ransomlook": 4, "rwlive": 4}
-    MINQ = {"ransomlook": 2, "derptelem": 1}  # 关键新类保底：勒索聚合情报至少进分析集 2 条，保证类别覆盖
+    MINQ = {"ransomlook": 2, "derptelem": 1, "urlhaus": 1, "threatfox": 1}  # 关键新类保底：勒索聚合情报至少进分析集 2 条，保证类别覆盖
     sel, per_src, chosen = [], {}, set()
     def add(s, cats, it):
         chosen.add(it["hash"])
