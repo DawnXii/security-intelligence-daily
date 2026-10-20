@@ -1,5 +1,10 @@
 # Prompt CHANGELOG
 
+## analyze v1.4 — 2026-10-20（stable）
+- 变更：参考 derp.ca 简报形态做内容富化，风格不变。① 叙事三层强化：summary_zh=The story（披露主体/关键数字/时间线/利用与修复状态），impact=Why it matters（暴露人群/已确认后果），action=处置清单（版本号/工具名取自来源）。② 新增结构化事实字段（全部可选，缺省不渲染）：cve、cvss、actor（归因标签）、affected/fixed（受影响/修复版本）、outlets（当日清单内同 CVE/同主体条目数）。③ validate 扩展反幻觉核验：cve 格式+逐字溯源；cvss 数字须在原文；actor/affected/fixed 内所有含数字英文实体 token 必须逐字来自来源文本；outlets int 1–60。④ build 卡片新增 intel-facts 事实条（CVE 黑底琥珀 chip/CVSS 琥珀/归因红/N 源报道虚线；版本行小字）。负向测试：伪造 CVE-2026-99999 被 rc=3 拦截。
+- 顺修：TOC 图例 `&lt;` 在 Pages 构建被二次转义显示为字面 "&lt;75" → 改纯文本 ≤74（build.py，历史 bug）。
+- 回归（2026-10-19 重建实跑）：6/6 卡片带事实条，validate 0 违规，live 渲染结构正确、无转义泄漏；旧字段缺省时卡片与 v1.3 渲染完全一致（向后兼容）。
+
 ## analyze v1.3 — 2026-10-19（stable）
 - 变更：新增「跨天查重」规则节。候选条目由 scripts/history.py 标注 previously_reported（同链接或同 CVE 命中已发布历史）；带标注条目默认 include=false，仅实质进展（利用状态变化/首次入 KEV/补丁发布/勒索聚合受害者数 +≥15 或距上次 ≥7 天/执法打击）可跟进，且 summary_zh 第一句须写明跟进日期与增量。上游原文未变的重复报道在 prepare 阶段已被确定性剔除（history_dropped），不进分析集。
 - 动因：10-14~19 实测同事件连推（n0n 三连推、Cisco 邮件网关三连推、包管理器研究两连推），用户要求"无新进展不重复推送"。
