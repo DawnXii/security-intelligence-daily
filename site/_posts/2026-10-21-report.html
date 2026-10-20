@@ -1,0 +1,181 @@
+---
+layout: post
+title: "安全情报日报 2026-10-21"
+date: 2026-10-21
+events: 10
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">5</span></p><ol>
+<li><a class="toc-link" href="#vuln-35655"><span class="tc">·</span><span class="tt">西门子软件中心漏洞被ClickFix在野利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-42118"><span class="tc">·</span><span class="tt">Plex四个漏洞同日入选KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-78426"><span class="tc">·</span><span class="tt">FortiSIEM未授权RCE现公开PoC</span><span class="meta"><i class="rp p1">P1</i><i class="xs xp">PoC 公开</i></span></a></li>
+<li><a class="toc-link" href="#vuln-86824"><span class="tc">·</span><span class="tt">NGINX一次修五个漏洞含潜在RCE</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-26098"><span class="tc">·</span><span class="tt">Mercury未授权RCE漏洞CVSS满分</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#supplychain-98934"><span class="tc">·</span><span class="tt">OVHcloud命令行工具发布版被投毒</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#supplychain-45733"><span class="tc">·</span><span class="tt">Rank Math官网下载包植入后门</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#ransomware-35091"><span class="tc">★</span><span class="tt">Qilin与INC借PAN-OS漏洞绕过MFA入侵</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">活跃攻击</i></span></a></li>
+<li><a class="toc-link" href="#ransomware-34158"><span class="tc">·</span><span class="tt">CISA发布SafePay勒索团伙专题通告</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ttp">攻击战术与技术</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ttp-57874"><span class="tc">·</span><span class="tt">APT28渗透北约国家舰船制造商</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-35655">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>84</i></span></div>
+<div class="intel-body">
+<h3>西门子软件中心漏洞被ClickFix在野利用</h3>
+<p class="sum">Siemens 修复了 Siemens Software Center 的 DLL 侧加载漏洞 CVE-2026-110936（CVSS v4 8.4），厂商确认已用于 ClickFix 攻击：攻击者在应用搜索的目录放置特制 DLL，即以同权限执行恶意代码，并借此投递远程访问木马（RAT）。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-110936</b><b class="fct fcvss">CVSS 8.4</b><div class="fvers"><span class="fv"><b>受影响</b> Siemens Software Center</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>安装了 Siemens Software Center 的工程终端已是确认在野攻击的落地入口；后果为 RAT 植入带来的持续远控与内网侦察，工业环境暴露面尤其危险。</p></div>
+<div class="cell"><b>Action</b><p>按 Siemens 安全公告升级 Siemens Software Center 至修复版本；排查软件安装目录异常 DLL；监控 ClickFix 常见入口（浏览器报错诱导、运行框粘贴命令）行为并培训员工。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/clickfix-attackers-exploit-siemens.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-42118">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3>Plex四个漏洞同日入选KEV</h3>
+<p class="sum">CISA 于 2026-10-20 将 Plex Media Server 的 CVE-2026-96656 列入已知被利用漏洞目录（KEV），确认存在在野利用；同日另外三条 Plex 漏洞 CVE-2026-96654、CVE-2026-96655、CVE-2026-96652 也一起入选（当日清单同主体共 5 条，含 Plex2Shell 在野利用报道）。美国联邦机构需按 BOD 26-04 处置。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-96656</b><b class="fct fout">5 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Plex Media Server</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>互联网暴露的 Plex Media Server 实例（家庭/NAS/小型媒体服广泛部署）批量面临在野利用风险；KEV 收录意味着利用已获美方情报确证。</p></div>
+<div class="cell"><b>Action</b><p>按 Plex 官方公告（KEV 备注指向厂商论坛通告）立即升级 Plex Media Server 至修复版本；清点面向互联网暴露的 Plex 实例并核查异常进程；联邦/受 BOD 26-04 约束机构按目录要求限期修复并留存取证。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-96656" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-78426">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3>FortiSIEM未授权RCE现公开PoC</h3>
+<p class="sum">研究人员发布了 Fortinet FortiSIEM 严重漏洞 CVE-2026-106173（CVSS 9.4）的公开 PoC：未认证路径穿越缺陷可经构造请求执行任意代码/命令，该漏洞近期已被厂商修复（来源未列具体修复版本号）。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-106173</b><b class="fct fcvss">CVSS 9.4</b><div class="fvers"><span class="fv"><b>受影响</b> Fortinet FortiSIEM</span><span class="fv"><b>修复</b> 已修复（来源标注 recently patched，未给出具体版本号）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>SIEM 是企业安全分析中枢，常驻敏感日志与接入凭据；面向互联网暴露的 FortiSIEM 实例在 PoC 公开后面临被规模化利用的现实风险。</p></div>
+<div class="cell"><b>Action</b><p>按 Fortinet 安全公告升级 FortiSIEM 至已修复版本；PoC 已公开，应按准在野利用级别应急处理；核查管理/采集接口暴露面与异常请求日志。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/critical-fortisiem-flaw-gets-public.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-86824">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>NGINX一次修五个漏洞含潜在RCE</h3>
+<p class="sum">NGINX 于 October 14 发布 1.30.6 与 1.31.7 共修复五个漏洞：三个内存类缺陷在特定配置下可崩溃 worker 进程甚至执行代码，其中一个自 May 2005 以来的每个版本都存在；第四个可伪造 TLS 会话、可能跳过客户端证书校验。来源未给 CVE 编号，暂无在野利用报道。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> NGINX 全版本线（一个缺陷存在于自 May 2005 起的 every release）</span><span class="fv"><b>修复</b> 1.30.6 和 1.31.7</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>NGINX 及其衍生发行版承载海量互联网入口，mTLS 客户端证书鉴权被绕过意味着零信任式接入面失效；潜在 RCE 虽需特定配置，仍波及全球基础流量层。</p></div>
+<div class="cell"><b>Action</b><p>升级到 1.30.6（stable）或 1.31.7；清点使用上述"特定配置"（如启用 TLS 客户端证书校验）的暴露实例优先打补丁；关注 F5 后续 CVE 明细再补充检测。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/nginx-fixes-5-flaws-including-possible.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-26098">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>64</i></span></div>
+<div class="intel-body">
+<h3>Mercury未授权RCE漏洞CVSS满分</h3>
+<p class="sum">GitHub 安全通告披露 pip 包 Mercury 的未授权远程代码执行漏洞 CVE-2026-111057（CVSS 10.0），因 block_handler 的 BLOCKED_PATTERNS 列表少一个逗号导致 /api/terminals 绕过拦截，任何未认证攻击者可在宿主上开交互式 OS shell；修复版本 3.2.4。同日同产品另披露 /api/kernels 未授权 RCE CVE-2026-111058（CVSS 9.8，3.2.6 修复）。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111057</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> mercury（pip 生态包）</span><span class="fv"><b>修复</b> 3.2.4</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Mercury 默认以匿名访问运行 JupyterLab，对外暴露且未设 token 的部署直接被拿到主机级 shell；尚无在野利用报道。</p></div>
+<div class="cell"><b>Action</b><p>升级 mercury 至 3.2.4（并建议直升 3.2.6 覆盖同批 CVE-2026-111058）；暴露面核查 /api/terminals、/api/kernels 是否可达，未升级前以网络层限制访问并强制设置 token。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-f8c7-rwf9-fmgm" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-98934">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>72</i></span></div>
+<div class="intel-body">
+<h3>OVHcloud命令行工具发布版被投毒</h3>
+<p class="sum">OVHcloud 警告其开源命令行（CLI）工具的 GitHub 发布件被攻击者篡改，用于分发窃取开发者密钥的信息窃取木马（information-stealing malware）。来源为简短报道，未列出受影响版本号与 IOC 清单。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> OVHcloud 开源 CLI 工具（GitHub 发布件）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>从 GitHub Releases 安装 OVHcloud CLI 的开发者与自动化环境凭据面临被批量窃取的现实风险，云账号密钥泄露可进一步横向进入生产环境。</p></div>
+<div class="cell"><b>Action</b><p>核验所用 OVHcloud CLI 二进制哈希/签名与官方公告；疑似受影响安装全部清除，并轮换机器上的 OVHcloud API key 及其他开发者 secrets；追踪厂商后续恢复发布与取证指引。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/ovhcloud-cli-releases-backdoored-on-github-to-steal-developer-secrets/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="supplychain-45733">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>72</i></span></div>
+<div class="intel-body">
+<h3>Rank Math官网下载包植入后门</h3>
+<p class="sum">WordPress SEO 插件 Rank Math 的 PRO 版上周遭供应链投毒：官网部分下载包携带恶意软件，会在网站植入隐藏后门。来源为简短报道，未列出受污染版本号与后门 IOC。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> Rank Math PRO WordPress plugin（官网下载）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>过去一周内从 Rank Math 官网下载 PRO 版的站点可能已被持久化后门控制，攻击者可随时回访；站长凭据、访客数据与挂马分发风险随站点失陷而来。</p></div>
+<div class="cell"><b>Action</b><p>上周从官网下载的 Rank Math PRO 立即校验哈希并重装可信副本；全站排查新增文件、异常 cron/上传目录与管理员账号；轮换 WP 管理员与应用密钥；跟进厂商污染版本区间通告。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/wordpress-seo-plugin-rank-math-compromised-to-backdoor-websites/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel focus reveal" id="ransomware-35091">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">活跃攻击</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
+<div class="intel-body">
+<h3>Qilin与INC借PAN-OS漏洞绕过MFA入侵</h3>
+<p class="sum">Palo Alto Networks 披露仍在持续观测勒索软件团伙利用已修复的 PAN-OS/Prisma Access 认证绕过漏洞 CVE-2026-0257（CVSS 7.8）搭建非法 VPN 连接；报道称 Qilin 与 INC 两个勒索团伙借此绕过 MFA。该漏洞厂商已于 May 2026 发布补丁，但攻击延续至今。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-0257</b><b class="fct fcvss">CVSS 7.8</b><b class="fct factor">Qilin, INC</b><div class="fvers"><span class="fv"><b>受影响</b> PAN-OS 与 Prisma Access</span><span class="fv"><b>修复</b> May 2026 已发布补丁</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>尚未打全补丁的 PAN-OS/Prisma Access 机构被直接绕过双因子建立 VPN 通道，已是勒索团伙级入侵的现实入口；后果指向初始访问与后续加密/泄密链条。</p></div>
+<div class="cell"><b>Action</b><p>立即将 PAN-OS/Prisma Access 升级至 May 2026 及之后修复版本并确认未回退；审计 VPN 会话日志中的非法连接与 MFA 绕过痕迹；对疑似中招终端按勒索入侵预案重置凭据。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/qilin-and-inc-ransomware-groups-exploit.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="ransomware-34158">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
+<div class="intel-body">
+<h3>CISA发布SafePay勒索团伙专题通告</h3>
+<p class="sum">CISA 于 2026-10-20 发布 #StopRansomware 专题通告（aa26-293a），披露 SafePay 勒索团伙近期活动。该团伙自 August 2024 起高度活跃，目标覆盖北美、南美、欧洲和澳大利亚的企业与关键基础设施；初始访问主要靠窃取或猜测口令、利用安全系统漏洞和钓鱼，进入网络后逐步建立控制。</p>
+<div class="intel-facts"><b class="fct factor">SafePay</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群为上述地区的普通企业与关键基础设施组织；通告确认 SafePay 已进入网络并建立控制链，属持续活跃的成熟勒索团伙而非单起事件。</p></div>
+<div class="cell"><b>Action</b><p>对照通告核查三条初始访问路径：口令策略与凭据复用、安全产品补丁状态、钓鱼防线；按 CISA #StopRansomware 指南补齐离线备份与终端检测覆盖。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-293a" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ttp"><span class="n">04</span>攻击战术与技术</p>
+
+<div class="intel reveal" id="ttp-57874">
+<div class="intel-head"><span class="chip">攻击战术与技术</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>66</i></span></div>
+<div class="intel-body">
+<h3>APT28渗透北约国家舰船制造商</h3>
+<p class="sum">Symantec 威胁狩猎团队（活动簇代号 Swallowtail）将针对两个北约成员国的系列攻击归因于俄政府背景团伙 APT28（别名 BlueDelta、Fancy Bear、Forest Blizzard），受害者含一北约成员国的海军舰船制造商；攻击中使用 HOOKEDGE 后门和一个此前未见的反射式加载器（reflective loader）。</p>
+<div class="intel-facts"><b class="fct factor">APT28（BlueDelta/Fancy Bear/Forest Blizzard；Swallowtail）</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>北约成员国国防供应链企业的内网与涉密资料被国家背景团伙长期渗透；对个人数据无直接后果，主要是间谍与后续供应链攻击风险。</p></div>
+<div class="cell"><b>Action</b><p>国防承包商与供应链供应商对照 Symantec 报告狩猎 HOOKEDGE 后门与新反射式加载器落地痕迹；收紧远程运维与第三方接入面；关注报告中 IOC/哈希（来源页）补充检测规则。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/russian-apt28-breaches-nato-naval.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
