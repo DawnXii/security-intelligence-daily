@@ -1,0 +1,132 @@
+---
+layout: post
+title: "安全情报日报 2026-10-22"
+date: 2026-10-22
+events: 7
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">5</span></p><ol>
+<li><a class="toc-link" href="#vuln-82561"><span class="tc">·</span><span class="tt">PHP2Shell现攻击尝试PHP发紧急补丁</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-97370"><span class="tc">·</span><span class="tt">GitLab曝未授权RCE覆盖12年版本</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-24461"><span class="tc">·</span><span class="tt">CISA警告Plex四漏洞遭链式在野利用</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-52207"><span class="tc">·</span><span class="tt">Moxa工业边缘网关硬编码密钥漏洞</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-80372"><span class="tc">·</span><span class="tt">Eclipse Milo漏洞可窃取凭据仿冒用户</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-16102"><span class="tc">★</span><span class="tt">LiteLLM遭投毒投递窃密器与后门</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-88868"><span class="tc">·</span><span class="tt">sovcali周增7受害者拍卖Lucid数据</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-82561">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3>PHP2Shell现攻击尝试PHP发紧急补丁</h3>
+<p class="sum">PHP 发布紧急更新修复语言自身两个严重漏洞（合称 PHP2Shell），允许无账号攻击者在 Web 服务器执行代码；修复版本为 8.5.12、8.4.27、8.3.36 和 8.2.35，PHP 团队称只有完整升级才能保护服务器。漏洞位于 PHP runtime 而非应用层，报道标题显示已出现利用尝试。</p>
+<div class="intel-facts"><b class="fct fout">4 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> PHP runtime（应用无关）</span><span class="fv"><b>修复</b> 8.5.12, 8.4.27, 8.3.36, 8.2.35</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>任何直接对外提供 web 请求的 PHP 站点均暴露，即使应用自身无漏洞；未打补丁的公网 PHP 服务器面临被植入 webshell/接管的风险。</p></div>
+<div class="cell"><b>Action</b><p>立即升级至 PHP 8.5.12 / 8.4.27 / 8.3.36 / 8.2.35；无法即刻升级的临时收敛对外暴露面，并对 PHP 服务做 webshell 与异常进程排查。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-22 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/php-issues-emergency-patches-for-two.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-97370">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>75</i></span></div>
+<div class="intel-body">
+<h3>GitLab曝未授权RCE覆盖12年版本</h3>
+<p class="sum">GitLab 于 October 21 发布修复：一个未登录即可在 self-managed 服务器执行代码的漏洞，影响可回溯至 2014 年发布的 7.0 起的每个版本，标题标注 CVSS 10.0。此前 October 12 的更新仅覆盖 19.2 及以后版本，新修复版在其之上再高一档补丁——九天前打过补丁的管理者仍需再升。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> GitLab self-managed 7.0（2014）以来全部版本</span><span class="fv"><b>修复</b> October 21 修复版本</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>所有 self-managed GitLab 实例（承载代码仓库与 CI/CD 管线）在未打最新补丁前面临未授权 RCE；CI/CD 失陷意味着供应链下游扩散风险。</p></div>
+<div class="cell"><b>Action</b><p>立即升级至 October 21 发布的修复版本（在 10 月 12 日补丁基础上仍需再高一档）；已在 October 12 打过 19.2+ 补丁的实例同样需要跟进本次版本。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-22 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/critical-gitlab-flaw-cvss-100-could.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-24461">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3>CISA警告Plex四漏洞遭链式在野利用</h3>
+<p class="sum">CISA 警告：攻击者正在主动利用 Plex Media Server 的四个漏洞发起被称作 Plex2Shell 的攻击链、攻陷服务器（BleepingComputer 2026-10-22 报道）；当日 CISA KEV 清单同步收录相关条目（同事件重复条目已去重）。</p>
+<div class="intel-facts"><b class="fct fout">5 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Plex Media Server</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>公网暴露 Plex Media Server 的个人与机构用户面临服务器整体失陷；已确认后果为攻击者借漏洞链完成入侵。</p></div>
+<div class="cell"><b>Action</b><p>按厂商与 KEV/BOD 26-04 要求立即升级 Plex Media Server 至修复版本，评估资产互联网暴露面，对已暴露实例做失陷取证（KEV 要求按 CISA Forensics Triage Requirements 处置）。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-22 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/cisa-hackers-chain-plex-flaws-in-plex2shell-attacks-to-breach-servers/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-52207">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>55</i></span></div>
+<div class="intel-body">
+<h3>Moxa工业边缘网关硬编码密钥漏洞</h3>
+<p class="sum">CISA ICS 通告（2026-10-20，ICSA-26-293-03）：Moxa AIG-302 ThingsPro Edge 固件 ≤1.4.0 存在 2 个漏洞（CVE-2026-109812、CVE-2026-109813），涉及缺失授权与硬编码加密密钥，厂商 CVSS 8.1；成功利用可获取并泄露敏感信息，部署场景覆盖关键制造、能源、水务等领域。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-109812</b><b class="fct fcvss">CVSS 8.1</b><div class="fvers"><span class="fv"><b>受影响</b> Moxa AIG-302 ThingsPro Edge firmware 1.4.0 及更早</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>运行 ThingsPro Edge 的 OT 边缘设备（5G 网关）全球部署，凭据/密钥类泄露可成为进入制造与能源、水务网络的跳板。</p></div>
+<div class="cell"><b>Action</b><p>按 Moxa 通告将 AIG-302 ThingsPro Edge 固件升级出 ≤1.4.0 受影响范围，限制管理面暴露，轮换与硬编码密钥相关的凭据。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-22 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-293-03" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-80372">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>55</i></span></div>
+<div class="intel-body">
+<h3>Eclipse Milo漏洞可窃取凭据仿冒用户</h3>
+<p class="sum">CISA ICS 通告（2026-10-15，ICSA-26-288-01）：OPC UA 开源实现 Eclipse Milo 共 5 个漏洞（0.6.0 至 1.1.4 及 1.0.0 至 1.1.4 两组范围，含 CVE-2026-63252、CVE-2026-62927 等），厂商 CVSS 8.2；成功利用可删除受保护数据、恢复用户凭据并仿冒合法用户，或使服务器对所有客户端停止响应。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-63252</b><b class="fct fcvss">CVSS 8.2</b><div class="fvers"><span class="fv"><b>受影响</b> Eclipse Milo &gt;=0.6.0 &lt;=1.1.4 及 &gt;=1.0.0 &lt;=1.1.4</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>大量工业软件与 OT 平台基于 Eclipse Milo 实现 OPC UA 通信，凭据可被恢复意味着工控身份体系被仿冒；全球部署、总部比利时。</p></div>
+<div class="cell"><b>Action</b><p>将依赖的 Eclipse Milo 升级出 ≤1.1.4 受影响范围，限制 OPC UA 端口暴露，轮换可被恢复的用户凭据。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-22 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-288-01" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel focus reveal" id="supplychain-16102">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
+<div class="intel-body">
+<h3>LiteLLM遭投毒投递窃密器与后门</h3>
+<p class="sum">LiteLLM Python 包遭软件供应链攻击：1.107.0 版本经 PyPI wheel 与 Docker 镜像投递凭据窃取器和后门，SafeDep、Socket、StepSecurity、Upwind 等监测方披露。该包随后在 PyPI 被隔离（quarantined）。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> LiteLLM 1.107.0</span><span class="fv"><b>修复</b> 已隔离（quarantined）于 PyPI</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>LiteLLM 是流行 LLM 网关库，被 AI/运维管线广泛引用；拉取过受影响版本的开发机、CI 构建与容器运行环境可能已泄露 API key、令牌与凭据，并植入持久后门。</p></div>
+<div class="cell"><b>Action</b><p>立即排查是否安装过 LiteLLM 1.107.0（PyPI wheel 或 Docker 镜像），隔离环境取证、轮换该环境全部凭据与密钥，改用隔离后的干净版本重建依赖锁定，并对构建主机做威胁狩猎。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-22 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/litellm-compromised-in-supply-chain.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-88868">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>58</i></span></div>
+<div class="intel-body">
+<h3>sovcali周增7受害者拍卖Lucid数据</h3>
+<p class="sum">RansomLook 数据显示，勒索团伙 sovcali 近 7 天在泄密站发布 7 条帖子、涉及 7 家受害者，最新发现时间 2026-10-21。受害者样例中出现 Lucid Motors：团伙挂出"5 TB 工程数据与源代码拍卖"帖，并声称两天内Drop了 100GB。</p>
+<div class="intel-facts"><b class="fct factor">sovcali</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>泄密站帖子直接面向买家公开出售，被点名企业面临工程数据与源代码外泄确认；中小商户（如托管/记账公司）同样在受害者列表中。</p></div>
+<div class="cell"><b>Action</b><p>被点名的组织应核验 RansomLook 团伙页条目、启动泄露数据应急评估与取证；常规面：收敛暴露的备份与凭据、核查钓鱼入口。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-22 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/sovcali" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
