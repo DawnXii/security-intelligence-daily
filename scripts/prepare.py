@@ -33,12 +33,23 @@ def main():
     items = json.load(open(raw_file))["items"]
 
     kept, dropped = [], 0
+    # 全局时效窗口：feed 存档类老条目（>14d）不进当日分析（php.net atom 含 2015 年归档）
+    def _fresh(it):
+        d = str(it.get("date", ""))[:10]
+        try:
+            dt = datetime.strptime(d, "%Y-%m-%d").replace(tzinfo=CST)
+        except ValueError:
+            return True  # 无日期字段的结构化条目放行
+        return (datetime.now(CST) - dt).days <= 14
     for it in items:
+        if not _fresh(it):
+            dropped += 1
+            continue
         text = it["title"] + " " + it["summary"]
         if DROP.search(it["title"]) or META_KEV.search(it["title"]) or (DROP.search(text) and not KEEP.search(it["title"])):
             dropped += 1
             continue
-        if KEEP.search(text) or it["source"] in ("cisa", "netsec", "trailofbits", "ghsec", "kev", "ghsa", "ransomlook", "rwlive", "derp", "derptelem", "threatfox", "urlhaus"):
+        if KEEP.search(text) or it["source"] in ("cisa", "netsec", "trailofbits", "ghsec", "kev", "ghsa", "ransomlook", "rwlive", "derp", "derptelem", "threatfox", "urlhaus", "phpnet", "wpsec", "nvd"):
             kept.append(it)
         else:
             dropped += 1

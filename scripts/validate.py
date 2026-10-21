@@ -89,7 +89,7 @@ def main():
                     errors.append(f"{loc} cve 非法或不在来源文本: {cve_f}")
             cvss_f = a.get("cvss")
             if cvss_f not in (None, "", "null"):
-                if not re.fullmatch(r"\d(\.\d)?", str(cvss_f)) or str(cvss_f) not in src_raw:
+                if not re.fullmatch(r"\d+(\.\d)?", str(cvss_f)) or str(cvss_f) not in src_raw:
                     errors.append(f"{loc} cvss 非法或不在来源文本: {cvss_f}")
             for fk in ("actor", "affected", "fixed"):
                 fv = a.get(fk)

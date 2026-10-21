@@ -27,6 +27,8 @@ FEEDS = [
     {"id": "chainalysis", "name": "Chainalysis Blog", "url": "https://www.chainalysis.com/blog/feed/", "tags": ["crypto", "web3"]},
     {"id": "rwlive", "name": "Ransomware.live", "url": "https://api.ransomware.live/rss", "tags": ["ransomware", "incident"]},
     {"id": "derp", "name": "Derp.ca Research", "url": "https://www.derp.ca/feed", "tags": ["malware", "research"]},
+    {"id": "phpnet", "name": "PHP.net News", "url": "https://www.php.net/feed.atom", "tags": ["vuln", "vendor"]},
+    {"id": "wpsec", "name": "WordPress News", "url": "https://wordpress.org/news/feed/", "tags": ["vuln", "vendor"]},
 ]
 
 KEV_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
@@ -337,6 +339,54 @@ def main():
     except Exception as e:
         results.append({"source": "derptelem", "status": "fail", "error": str(e)[:200]})
 
+    # ---- NVD 近 48h 新发布 CVE 增量网（一手 CVE 数据，兜厂商发布早于媒体报道的窗口）----
+    nvd_status = "fail"
+    try:
+        import datetime as _dt
+        fmt = "%Y-%m-%dT%H:%M:%S.000"
+        now_u = _dt.datetime.now(_dt.timezone.utc)
+        ps, pe = (now_u - _dt.timedelta(hours=48)).strftime(fmt), now_u.strftime(fmt)
+        rows, start, total = [], 0, None
+        while total is None or (start < total and start < 4000):
+            q = ("https://services.nvd.nist.gov/rest/json/cves/2.0"
+                 f"?pubStartDate={ps}&pubEndDate={pe}&resultsPerPage=2000&startIndex={start}")
+            with urllib.request.urlopen(urllib.request.Request(q, headers={"User-Agent": "SID-Daily/1.0"}), timeout=60) as r:
+                d = json.loads(r.read())
+            total = d.get("totalResults", 0); batch = d.get("vulnerabilities", [])
+            rows += batch; start += len(batch)
+            if not batch or start >= total or start >= 4000:
+                break
+            time.sleep(15)  # keyless NVD rate limit: 5 req/30s
+        SENS = re.compile(r"php|wordpress|wp-|cisco|fortinet|palo alto|ivanti|sonicwall|juniper|vmware|windows|microsoft|exchange|sharepoint|defender|drupal|joomla|magento|opensearch|elastic|nginx|apache|gitlab|jenkins|docker|kubernetes|confluence|atlassian|next\.?js|react|vpn|firewall|router|switch|nas\b|lenovo|d-link|tp-link|hyku|smart tv|smartcam|nuclei|roundcube|zabbix|zoho|sage|commvault|veeam|veeam", re.I)
+        picked = []
+        for v in rows:
+            c = v.get("cve", {})
+            m = (c.get("metrics") or {}).get("cvssMetricV31") or (c.get("metrics") or {}).get("cvssMetricV40") or []
+            score = max((x.get("cvssData", {}).get("baseScore", 0) or 0) for x in m) if m else 0
+            desc = next((x["value"] for x in (c.get("descriptions") or []) if x.get("lang") == "en"), "")
+            if not desc:
+                continue
+            if score >= 7.5 or (score == 0 and SENS.search(c.get("id", "") + " " + desc)):
+                picked.append((score, c.get("id", ""), c.get("published", "")[:10], desc))
+        picked.sort(key=lambda x: -x[0])
+        added_nvd = 0
+        for score, cid, pub, desc in picked[:25]:
+            h = hashlib.sha256(f"nvd|{cid}".encode()).hexdigest()[:16]
+            if h in seen:
+                continue
+            seen[h] = True; added_nvd += 1
+            new_items.append({"title": f"CVE 新收录 {cid}：评分 {score}" if score else f"CVE 新收录 {cid}（评分待定）",
+                              "link": f"https://nvd.nist.gov/vuln/detail/{cid}", "date": pub or run_date,
+                              "summary": f"NVD 新发布（published {pub}）：{desc[:400]}。评分：{score or '暂无'}。受影响范围以描述文本与厂商通告为准。",
+                              "hash": h, "source": "nvd", "source_name": "NVD (NIST)",
+                              "tags": ["vuln", "cve"], "collected_at": datetime.now(CST).isoformat()})
+        all_items = existing + new_items
+        nvd_status = "ok"
+        results.append({"source": "nvd", "status": "ok", "count": added_nvd, "window_total": total})
+        cooldown.pop("nvd", None)
+    except Exception as e:
+        results.append({"source": "nvd", "status": "fail", "error": str(e)[:150]})
+
     # ---- abuse.ch 指标遥测（风控纪律：每端点每日仅 1 次查询、无重试、key 不落任何输出）----
     def _abusech_key():
         v = os.environ.get("ABUSECH_KEY", "").strip()
@@ -433,10 +483,10 @@ def main():
     json.dump(cooldown, open(cooldown_file, "w"), indent=1)
 
     ok = sum(1 for r in results if r["status"] == "ok")
-    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem", "threatfox", "urlhaus"))
+    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem", "threatfox", "urlhaus", "nvd"))
     hard_fail = ok == 0
     status = {"run_id": run_id, "run_date": run_date, "stage": "collect",
-              "sources_total": len(FEEDS) + 6, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0),
+              "sources_total": len(FEEDS) + 7, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0) + (1 if nvd_status == "ok" else 0),
               "sources_fail": [r for r in results if r["status"] not in ("ok",)],
               "new_items": len(new_items), "total_items": len(all_items),
               "finished_at": datetime.now(CST).isoformat()}
