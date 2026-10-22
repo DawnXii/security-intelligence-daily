@@ -3,49 +3,58 @@ layout: default
 title: Information Sources
 ---
 <div class="wrap">
-<p class="section-label"><span class="n">S</span>Information Sources</p>
-<p class="lead" style="max-width:760px">站点信源全景：33 个厂商、研究团队与安全媒体一手 RSS，加 8 个结构化情报接口与遥测源。每天 04:00 全量拉取，跨天指纹去重后进入启发式评分与 AI 分析，逐条证据机械校验，未过校验不予发布。X 信源通道已就位，待官方 API 凭据接入。</p>
-<div class="srcgrid">
-  <span class="srcchip"><i>RSS</i>The Hacker News</span>
-  <span class="srcchip"><i>RSS</i>Security Affairs</span>
-  <span class="srcchip"><i>RSS</i>PortSwigger Research</span>
-  <span class="srcchip"><i>RSS</i>The Register</span>
-  <span class="srcchip"><i>RSS</i>BleepingComputer</span>
-  <span class="srcchip"><i>RSS</i>NetSec Learn</span>
-  <span class="srcchip"><i>RSS</i>CISA Advisories</span>
-  <span class="srcchip"><i>RSS</i>Cloudflare Blog</span>
-  <span class="srcchip"><i>RSS</i>AWS Security</span>
-  <span class="srcchip"><i>RSS</i>GitHub Security</span>
-  <span class="srcchip"><i>RSS</i>SANS ISC</span>
-  <span class="srcchip"><i>RSS</i>KrebsOnSecurity</span>
-  <span class="srcchip"><i>RSS</i>Google Safety</span>
-  <span class="srcchip"><i>RSS</i>Trail of Bits</span>
-  <span class="srcchip"><i>RSS</i>Chainalysis</span>
-  <span class="srcchip"><i>RSS</i>Ransomware.live</span>
-  <span class="srcchip"><i>RSS</i>Derp.ca Research</span>
-  <span class="srcchip"><i>API</i>CISA KEV</span>
-  <span class="srcchip"><i>API</i>GitHub Advisory</span>
-  <span class="srcchip"><i>API</i>RansomLook</span>
-  <span class="srcchip"><i>API</i>abuse.ch ThreatFox</span>
-  <span class="srcchip"><i>API</i>abuse.ch URLhaus</span>
-  <span class="srcchip"><i>API</i>NVD 48h 增量</span>
-  <span class="srcchip"><i>RSS</i>PHP.net News</span>
-  <span class="srcchip"><i>RSS</i>Microsoft Security</span>
-  <span class="srcchip"><i>RSS</i>Cisco Talos</span>
-  <span class="srcchip"><i>RSS</i>CrowdStrike</span>
-  <span class="srcchip"><i>RSS</i>ESET Research</span>
-  <span class="srcchip"><i>RSS</i>Kaspersky Securelist</span>
-  <span class="srcchip"><i>RSS</i>Check Point Research</span>
-  <span class="srcchip"><i>RSS</i>Horizon3.ai</span>
-  <span class="srcchip"><i>RSS</i>Qualys</span>
-  <span class="srcchip"><i>RSS</i>Sophos</span>
-  <span class="srcchip"><i>RSS</i>Snyk</span>
-  <span class="srcchip"><i>RSS</i>UK NCSC</span>
-  <span class="srcchip"><i>RSS</i>Dark Reading</span>
-  <span class="srcchip"><i>RSS</i>SecurityWeek</span>
-  <span class="srcchip"><i>RSS</i>Malwarebytes</span>
-  <span class="srcchip"><i>RSS</i>WordPress News</span>
-  <span class="srcchip"><i>CSV</i>Derp Family Telemetry</span>
-</div>
-<p class="ioc-meta" style="margin-top:22px">信源清单与采集实现：<a href="https://github.com/DawnXii/security-intelligence-daily" target="_blank" rel="noopener">GitHub 仓库 scripts/collect.py</a></p>
+<p class="section-label"><span class="n">S</span>信源全景 <span class="srcttl">33 个 RSS · 8 个结构化接口</span></p>
+<table class="iact srctbl">
+<tbody>
+<tr class="grprow"><td colspan="3">官方 / 政府</td></tr>
+<tr><td class="mono">CISA KEV</td><td><i class="fam2">API</i></td><td>美国"已知被利用漏洞"目录——在野利用的权威判据与修复时限清单</td></tr>
+<tr><td class="mono">CISA Advisories</td><td><i class="fam2">RSS</i></td><td>重大漏洞的部级预警与处置指引</td></tr>
+<tr><td class="mono">UK NCSC</td><td><i class="fam2">RSS</i></td><td>英国国家网络安全中心事件警报</td></tr>
+<tr><td class="mono">NVD 增量</td><td><i class="fam2">API</i></td><td>美国国家漏洞库 48h 新收录——CVSS 定级与受影响范围的第一手口径</td></tr>
+<tr><td class="mono">GitHub Advisory</td><td><i class="fam2">API</i></td><td>开源组件漏洞库（GHSA），覆盖 npm / pip / go / maven 生态</td></tr>
+
+<tr class="grprow"><td colspan="3">威胁情报平台</td></tr>
+<tr><td class="mono">ThreatFox</td><td><i class="fam2">API</i></td><td>日增恶意 IOC：C2 地址、窃密器配置、僵尸网络归属与置信度</td></tr>
+<tr><td class="mono">URLhaus</td><td><i class="fam2">API</i></td><td>日增恶意 URL：载荷下载站、C2 面板与在线状态</td></tr>
+<tr><td class="mono">OpenPhish</td><td><i class="fam2">Feed</i></td><td>当日新增钓鱼 URL（仿冒银行 / 云盘 / 凭证页）</td></tr>
+<tr><td class="mono">RansomLook</td><td><i class="fam2">API</i></td><td>勒索团伙泄密站监控：受害者名单、团伙 onion 地址与活跃度</td></tr>
+<tr><td class="mono">Ransomware.live</td><td><i class="fam2">RSS</i></td><td>勒索攻击受害者实时快讯</td></tr>
+<tr><td class="mono">Derp 家族遥测</td><td><i class="fam2">API</i></td><td>Hatching Triage 沙箱周活跃家族榜——恶意软件热度温度计</td></tr>
+
+<tr class="grprow"><td colspan="3">厂商与安全团队研究</td></tr>
+<tr><td class="mono">Microsoft Security</td><td><i class="fam2">RSS</i></td><td>国家级攻击组织追踪、平台漏洞与生态安全事件</td></tr>
+<tr><td class="mono">Google Safety</td><td><i class="fam2">RSS</i></td><td>Android / Chrome 安全与 Project Zero 披露动态</td></tr>
+<tr><td class="mono">Cisco Talos</td><td><i class="fam2">RSS</i></td><td>网络威胁利用观察与检测规则发布</td></tr>
+<tr><td class="mono">CrowdStrike</td><td><i class="fam2">RSS</i></td><td>入侵链分析与威胁归属报告</td></tr>
+<tr><td class="mono">ESET Research</td><td><i class="fam2">RSS</i></td><td>恶意软件家族深度技术报告（WeLiveSecurity）</td></tr>
+<tr><td class="mono">Kaspersky Securelist</td><td><i class="fam2">RSS</i></td><td>APT 与恶意样本的顶级逆向分析</td></tr>
+<tr><td class="mono">Check Point Research</td><td><i class="fam2">RSS</i></td><td>钓鱼战役、供应链攻击与漏洞发现</td></tr>
+<tr><td class="mono">Horizon3.ai</td><td><i class="fam2">RSS</i></td><td>攻击链技术剖析（NodeZero 实战发现系列）</td></tr>
+<tr><td class="mono">Sophos</td><td><i class="fam2">RSS</i></td><td>入侵处置、威胁狩猎与勒索专题</td></tr>
+<tr><td class="mono">Qualys</td><td><i class="fam2">RSS</i></td><td>高危漏洞研究（含 Linux 内核提权发现线）</td></tr>
+<tr><td class="mono">Snyk Security</td><td><i class="fam2">RSS</i></td><td>开源供应链安全事件与研究工具</td></tr>
+<tr><td class="mono">Cloudflare Blog</td><td><i class="fam2">RSS</i></td><td>网络层攻击、DDoS 与机器人活动的一线观测</td></tr>
+<tr><td class="mono">AWS Security</td><td><i class="fam2">RSS</i></td><td>云侧漏洞披露与运营安全实践</td></tr>
+<tr><td class="mono">GitHub Security</td><td><i class="fam2">RSS</i></td><td>代码平台自身安全事件与供应链接入</td></tr>
+<tr><td class="mono">PortSwigger</td><td><i class="fam2">RSS</i></td><td>Web 漏洞研究（Burp Suite 团队，新漏洞手法剖析）</td></tr>
+<tr><td class="mono">Trail of Bits</td><td><i class="fam2">RSS</i></td><td>审计发现与安全工具开源</td></tr>
+<tr><td class="mono">Chainalysis</td><td><i class="fam2">RSS</i></td><td>勒索赎金流向与加密犯罪链上追踪</td></tr>
+<tr><td class="mono">PHP.net News</td><td><i class="fam2">RSS</i></td><td>PHP 官方安全发布公告——语言级漏洞的第一披露场</td></tr>
+<tr><td class="mono">WordPress News</td><td><i class="fam2">RSS</i></td><td>WordPress 官方安全版本发布通告</td></tr>
+
+<tr class="grprow"><td colspan="3">独立研究者与媒体</td></tr>
+<tr><td class="mono">derp.ca</td><td><i class="fam2">RSS</i></td><td>C2 基础设施、僵尸网络与在野利用的实时追踪（stormser 榜出处）</td></tr>
+<tr><td class="mono">The Hacker News</td><td><i class="fam2">RSS</i></td><td>体量最大的安全新闻日报</td></tr>
+<tr><td class="mono">BleepingComputer</td><td><i class="fam2">RSS</i></td><td>勒索软件与消费级在野利用快讯强项</td></tr>
+<tr><td class="mono">Security Affairs</td><td><i class="fam2">RSS</i></td><td>安全事件与国际视角分析</td></tr>
+<tr><td class="mono">KrebsOnSecurity</td><td><i class="fam2">RSS</i></td><td>网络犯罪与黑色产业深度调查</td></tr>
+<tr><td class="mono">The Register</td><td><i class="fam2">RSS</i></td><td>科技安全新闻与尖刻评论</td></tr>
+<tr><td class="mono">SANS ISC</td><td><i class="fam2">RSS</i></td><td>每日漏洞日记与现网攻击观测</td></tr>
+<tr><td class="mono">Dark Reading</td><td><i class="fam2">RSS</i></td><td>产业安全动态与管理议题</td></tr>
+<tr><td class="mono">SecurityWeek</td><td><i class="fam2">RSS</i></td><td>企业安全事件报道</td></tr>
+<tr><td class="mono">Malwarebytes</td><td><i class="fam2">RSS</i></td><td>恶意软件与灰产行为观察</td></tr>
+<tr><td class="mono">NetSec Learn</td><td><i class="fam2">RSS</i></td><td>攻防教程与工具动态聚合</td></tr>
+</tbody>
+</table>
+<p class="ioc-meta" style="margin-top:22px">采集实现与全量清单：<a href="https://github.com/DawnXii/security-intelligence-daily" target="_blank" rel="noopener">GitHub · scripts/collect.py</a></p>
 </div>
