@@ -63,6 +63,37 @@ GHSA_ECO = {"npm", "pip", "go", "maven", "rubygems", "rust", "composer", "nuget"
 
 UA = "Mozilla/5.0 (compatible; SID-collector/1.0)"
 
+
+ARCH_TOKENS = {"mips","mipsel","arm","armv4l","armv5l","armv6","armv7","aarch64","arm64","x86","i686",
+               "x64","x86_64","amd64","ppc","pc","sh4","m68k","sparc","risc","64-bit","32-bit",
+               "elf","pe","macho","netware","xordos","tc16","tcm","shellcode","vxdll"}
+OS_MAP = {"elf":"Linux","pe":"Windows","exe":"Windows","macho":"macOS","apk":"Android",
+          "bash":"Linux","sh":"Linux","ps1":"Windows","vbs":"Windows","lnk":"Windows",
+          "macro":"Windows","jar":"跨平台","netware":"NetWare","ios":"iOS","dylib":"macOS",
+          "cmd":"Windows","bat":"Windows","ps":"Windows","hta":"Windows","iso":"Windows"}
+
+def _ioc_tags(tagstr):
+    """From comma tokens: return (family_guess, arch list, os guess). Pure token rules."""
+    toks = [t.strip().lower() for t in (tagstr or "").replace(";", ",").split(",") if t.strip()]
+    arch = []
+    oses = []
+    fams = []
+    for t in toks:
+        if t in OS_MAP and OS_MAP[t] not in oses:
+            oses.append(OS_MAP[t])
+        if t in ARCH_TOKENS:
+            continue
+        if t in ("malware_download","botnet_cc","c2","phishing","defacement","exploit_kit",
+                 "malware_config","domain-sinkhole","ransomware","trojan","stealer","loader",
+                 "bot","miner","spam","scam","html","binary","file","other","openphish"):
+            continue
+        if t.isdigit() or "bit" in t or len(t) > 40:
+            continue
+        fams.append(t)
+    arch = [t for t in toks if t in ARCH_TOKENS][:3]
+    return (fams[0] if fams else ""), arch, (oses[0] if oses else "")
+
+
 def fetch(url, timeout=20, retries=2):
     """带退避+抖动的抓取。代理由环境 HTTP(S)_PROXY 自动继承。"""
     last = None
@@ -427,7 +458,8 @@ def main():
                               "summary": "OpenPhish 当日新增钓鱼 URL feed（未逐一人工核实，链接已脱敏托管源可查）：" + u[:300],
                               "hash": h, "source": "openphish", "source_name": "OpenPhish",
                               "tags": ["phishing"], "collected_at": datetime.now(CST).isoformat()})
-        slim_p = [{"i": u, "t": "url", "f": "phishing", "k": _up(u).netloc[:60], "c": 80,
+        slim_p = [{"i": u, "t": "url", "f": "", "tt": "phishing", "arch": [], "os": "",
+                   "k": _up(u).netloc[:60], "c": 80,
                    "s": run_date, "u": "https://openphish.com/feed.txt", "z": "openphish"} for u in purls]
         os.makedirs(os.path.join(DATA, "iocs"), exist_ok=True)
         pp = os.path.join(DATA, "iocs", f"{run_date}-openphish.json")
@@ -541,12 +573,18 @@ def main():
                 tf_status = "ok"
                 results.append({"source": "threatfox", "status": "ok", "count": len(rows)})
                 os.makedirs(os.path.join(DATA, "iocs"), exist_ok=True)
-                slim = [{"i": r.get("ioc"), "t": r.get("ioc_type"),
-                         "f": r.get("malware_printable") or r.get("malware") or "unknown",
-                         "k": r.get("threat_type"), "c": r.get("confidence_level"),
-                         "s": (r.get("first_seen") or "")[:10],
-                         "u": f"https://threatfox.abuse.ch/ioc/{r.get('id')}", "z": "threatfox"}
-                        for r in rows if r.get("ioc")]
+                slim = []
+                for r in rows:
+                    if not r.get("ioc"):
+                        continue
+                    fam = r.get("malware_printable") or r.get("malware") or ""
+                    fams_, arch_, os_ = _ioc_tags(fam)
+                    slim.append({"i": r.get("ioc"), "t": r.get("ioc_type"),
+                                 "f": fam.lower() or fams_, "tt": r.get("threat_type") or "",
+                                 "arch": arch_, "os": os_,
+                                 "c": r.get("confidence_level"),
+                                 "s": (r.get("first_seen") or "")[:10],
+                                 "u": f"https://threatfox.abuse.ch/ioc/{r.get('id')}", "z": "threatfox"})
                 tf_path = os.path.join(DATA, "iocs", f"{run_date}-threatfox.json")
                 json.dump(slim, open(tf_path + ".tmp", "w"), ensure_ascii=False, indent=0)
                 os.replace(tf_path + ".tmp", tf_path)
@@ -595,9 +633,12 @@ def main():
                     url = (x.get("url") or "").strip()
                     if not url:
                         continue
+                    fam_, arch_, os_ = _ioc_tags(x.get("tags"))
                     uh.append({"i": url, "t": "url",
-                               "f": (x.get("threat") or "unknown"),
-                               "k": (x.get("tags") or "")[:60], "c": 90 if (x.get("url_status") or "").lower() == "online" else 60,
+                               "f": fam_ or (x.get("tags") or "unknown").split(",")[-1].lower(),
+                               "tt": x.get("threat") or "",
+                               "arch": arch_, "os": os_,
+                               "c": 90 if (x.get("url_status") or "").lower() == "online" else 60,
                                "s": (x.get("dateadded") or "")[:10], "u": (x.get("urlhaus_link") or "https://urlhaus.abuse.ch/"),
                                "z": "urlhaus"})
                 uh_path = os.path.join(DATA, "iocs", f"{run_date}-urlhaus.json")

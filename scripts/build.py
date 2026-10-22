@@ -19,6 +19,9 @@ def build_iocs_page(run_date):
     import glob as _g
     from html import escape as esc
     from datetime import timedelta
+    import sys as _sys
+    _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from collect import _ioc_tags
     days = [(datetime.strptime(run_date, "%Y-%m-%d") - timedelta(n)).strftime("%Y-%m-%d") for n in range(7)]
     merged, seen_i = [], set()
     per_day_cap = {"threatfox": 300, "urlhaus": 300, "openphish": 300}
@@ -36,11 +39,29 @@ def build_iocs_page(run_date):
             i = (r.get("i") or "").strip()
             if i and i not in seen_i:
                 seen_i.add(i)
-                merged.append({"d": d[5:], "i": i, "t": r.get("t") or "", "f": r.get("f") or "unknown",
-                               "c": r.get("c") or "", "z": r.get("z") or ""})
+                z = r.get("z") or ""
+                f_ = (r.get("f") or "").lower()
+                tt_ = (r.get("tt") or "").lower()
+                arch_ = r.get("arch") or []
+                os_ = (r.get("os") or "").lower()
+                if "tt" not in r:  # 旧落盘格式兼容
+                    k_ = (r.get("k") or "")
+                    if z == "threatfox":
+                        tt_ = k_.lower()
+                    elif z == "urlhaus":
+                        tt_ = f_
+                        ff, arch_, oo = _ioc_tags(k_)
+                        f_ = ff.lower()
+                        os_ = oo.lower()
+                    elif z == "openphish":
+                        tt_ = "phishing"
+                        f_ = ""
+                merged.append({"d": d[5:], "i": i, "t": r.get("t") or "", "f": f_,
+                               "tt": tt_, "arch": arch_, "os": os_,
+                               "c": r.get("c") or "", "z": z})
     if not merged:
         return 0
-    fams = collections.Counter(r['f'].lower() for r in merged)
+    fams = collections.Counter(r['f'].lower() for r in merged if r['f'])
     types = sorted({r['t'] for r in merged if r['t']})
     srcs = sorted({r['z'] for r in merged if r['z']})
     dlist = sorted({r['d'] for r in merged}, reverse=True)
@@ -48,12 +69,19 @@ def build_iocs_page(run_date):
         return f'<button class="ichip{" on" if on else ""}" data-k="{group}" data-v="{esc(str(v))}">{esc(str(lab))}</button>'
     tp_chips = chip("tp", "all", "全部类型", True) + "".join(chip("tp", t, {"ip:port": "IP", "sha256_hash": "SHA256", "url": "URL", "domain": "DOMAIN"}.get(t, t)) for t in types)
     fm_chips = chip("fm", "all", "全部", True) + "".join(chip("fm", f, f) for f, _ in fams.most_common(12))
+    tts = collections.Counter(r['tt'] for r in merged if r['tt'])
+    ars = collections.Counter(a for r in merged for a in (r['arch'] or []))
+    oss = collections.Counter(r['os'] for r in merged if r['os'])
+    tt_chips = chip("tt", "all", "全部", True) + "".join(chip("tt", x, x) for x, _ in tts.most_common(8))
+    ar_chips = chip("ar", "all", "全部", True) + "".join(chip("ar", x, x) for x, _ in ars.most_common(8))
+    os_chips = chip("os", "all", "全部", True) + "".join(chip("os", x, x) for x, _ in oss.most_common(6))
     z_chips = chip("z", "all", "全部", True) + "".join(chip("z", z, z) for z in srcs)
     d_chips = chip("d", "all", "近7天", True) + "".join(chip("d", x, x) for x in dlist)
     data_json = json.dumps(merged, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\u002f")
     page = "---\nlayout: default\n---\n" + open(os.path.join(BASE, "templates", "iocpage.html"), encoding="utf-8").read()
     page = (page.replace("__N__", str(len(merged))).replace("__TP__", tp_chips)
             .replace("__D__", d_chips).replace("__FM__", fm_chips).replace("__Z__", z_chips)
+            .replace("__TT__", tt_chips).replace("__AR__", ar_chips).replace("__OS__", os_chips)
             .replace("__DATA__", data_json))
     od = os.path.join(SITE, "iocs")
     os.makedirs(od, exist_ok=True)
