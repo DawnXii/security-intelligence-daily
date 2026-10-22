@@ -124,7 +124,7 @@ def refresh_home_slot(run_date, brief, ai_brief=None):
         wd = WEEK_CN[datetime.strptime(run_date, "%Y-%m-%d").weekday()]
         hl = ai_brief["headline"] if ai_brief else brief["headline"]
         body = ai_brief["pulse"] if ai_brief else brief["dek"]
-        stats = [(str(brief["n"]), "事件 今日"), (str(brief["wild"]), "在野利用"),
+        stats = [(str(brief["n"]), "今日事件"), (str(brief["wild"]), "在野利用"),
                  (str(brief["chips"][3].split()[0]), "类别数"),
                  (str(brief["chips"][4].split()[-1]), "顶分")]
         inner = ('<p class="td-date">' + run_date + f"（{wd}）</p>\n"
