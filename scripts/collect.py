@@ -563,7 +563,8 @@ def main():
                     ttop = "、".join(f"{n} {c}" for n, c in tt.most_common(3))
                     summary = (f"abuse.ch ThreatFox 近 24 小时新增 IOC {len(rows)} 条（按类型：{ttop}）；"
                                f"活跃家族 Top5：{mtop}；其中 {comp} 条指向被入侵的合法主机（compromised）。"
-                               "完整指标以 abuse.ch 数据为准，本文仅汇总分布。")
+                               "代表性指标（高置信）：" + "、".join(
+                                   (r.get("ioc") or "") for r in sorted(rows, key=lambda x: -(x.get("confidence_level") or 0))[:3] if r.get("ioc")) + "。")
                     new_items.append({"title": f"ThreatFox 日新增 IOC {len(rows)} 条：{mw.most_common(1)[0][0]} 居首",
                                       "link": "https://threatfox.abuse.ch/browse/", "date": datetime.now(CST).isoformat(),
                                       "summary": summary, "hash": h, "source": "threatfox",
@@ -617,7 +618,7 @@ def main():
                     seen[h] = True
                     mtop = "、".join(f"{n} {c}" for n, c in mal.most_common(5))
                     summary = (f"abuse.ch URLhaus 近 24 小时新增恶意 URL {len(rows)} 条（当前仍在线 {act} 条），"
-                               f"关联恶意软件 Top5：{mtop}。该类条目多为挂马站/载荷投递/C2 面板，明细以 abuse.ch 数据为准。")
+                               f"关联恶意软件 Top5：{mtop}。代表性在线样本：" + "、".join((x.get("url") or "").strip() for x in rows_s[:3] if x.get("url")) + "。")
                     new_items.append({"title": f"URLhaus 日增恶意 URL {len(rows)} 条",
                                       "link": "https://urlhaus.abuse.ch/browse/", "date": datetime.now(CST).isoformat(),
                                       "summary": summary, "hash": h, "source": "urlhaus",

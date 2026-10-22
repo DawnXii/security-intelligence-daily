@@ -49,6 +49,7 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="cell"><b>Impact</b><p>PHP 是 Web 应用的基础运行时，未修补的高危 RCE 提前公告意味着补丁发布后利用窗口将集中打开，跑 PHP 的站点与中间件需要待发版即行动。</p></div>
 <div class="cell"><b>Action</b><p>将 PHP 升级纳入今日（10-21）发布后的应急计划；发布后核对受影响版本清单并立即修补，在修补前检查 session.upload_progress 等配置面是否可临时收紧。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/php2shell-two-unpatched-critical-php.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -57,12 +58,13 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
 <div class="intel-body">
 <h3>Plex 媒体服务器四漏洞入KEV</h3>
-<p class="sum">Plex Media Server 漏洞 CVE-2026-96656 已被 CISA 列入已知被利用漏洞目录（KEV），dateAdded 2026-10-20；同批还有 96655/96654/96652 等条目（当日清单内共 4 条同产品 KEV 新增），要求按 BOD 26-04 修复或停用。</p>
+<p class="sum">Plex Media Server 漏洞 <i class="hlcve">CVE-2026-96656</i> 已被 CISA 列入已知被利用漏洞目录（<i class="hl">KEV</i>），dateAdded 2026-10-20；同批还有 96655/96654/96652 等条目（当日清单内共 4 条同产品 KEV 新增），要求按 BOD 26-04 修复或停用。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-96656</b><b class="fct fout">4 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Plex Media Server</span></div></div>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>Plex 在家庭实验室与企业内网广泛部署，暴露于 LAN/公网的管理面确认被在野利用。</p></div>
+<div class="cell"><b>Impact</b><p>Plex 在家庭实验室与企业内网广泛部署，暴露于 LAN/公网的管理面确认被<i class="hl">在野利用</i>。</p></div>
 <div class="cell"><b>Action</b><p>立即升级 Plex Media Server 至修复版本；无法修补的实例断网或停用，并对外暴露实例做入侵回溯。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-96656" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -71,12 +73,13 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
 <div class="intel-body">
 <h3>FortiSIEM 9.4漏洞现公开PoC</h3>
-<p class="sum">研究人员发布了针对 Fortinet FortiSIEM 关键漏洞 CVE-2026-106173（CVSS 9.4，路径穿越类）的无认证 RCE 利用 PoC，该漏洞厂商已发布补丁；此前已有同类威胁情报。</p>
+<p class="sum">研究人员发布了针对 Fortinet FortiSIEM 关键漏洞 <i class="hlcve">CVE-2026-106173</i>（<i class="hlv">CVSS 9.4</i>，路径穿越类）的无认证 RCE 利用 <i class="hl">PoC</i>，该漏洞厂商已发布补丁；此前已有同类威胁情报。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-106173</b><b class="fct fcvss">CVSS 9.4</b><div class="fvers"><span class="fv"><b>受影响</b> Fortinet FortiSIEM</span><span class="fv"><b>修复</b> 已发布补丁</span></div></div>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>公开 PoC 大幅降低利用门槛，集中部署 FortiSIEM 的 SOC/托管环境面临批量扫描利用风险。</p></div>
-<div class="cell"><b>Action</b><p>确认所有 FortiSIEM 实例升级到官方修复版本，管理口不对公网开放；用公开 PoC 特征（路径穿越请求）在 WAF/日志中排查扫描行为。</p></div>
+<div class="cell"><b>Impact</b><p><i class="hl">公开 <i class="hl">PoC</i></i> 大幅降低利用门槛，集中部署 FortiSIEM 的 SOC/托管环境面临批量扫描利用风险。</p></div>
+<div class="cell"><b>Action</b><p>确认所有 FortiSIEM 实例升级到官方修复版本，管理口不对公网开放；用<i class="hl">公开 <i class="hl">PoC</i></i> 特征（路径穿越请求）在 WAF/日志中排查扫描行为。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/critical-fortisiem-flaw-gets-public.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -85,12 +88,13 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>64</i></span></div>
 <div class="intel-body">
 <h3>西门子软件中心漏洞遭利用</h3>
-<p class="sum">西门子修复了 Siemens Software Center 的 DLL 侧加载漏洞 CVE-2026-110936（CVSS v4 8.4），官方确认已被用于 ClickFix 攻击链，成功利用可以应用同权限执行恶意代码。</p>
+<p class="sum">西门子修复了 Siemens Software Center 的 DLL 侧加载漏洞 <i class="hlcve">CVE-2026-110936</i>（CVSS v4 8.4），官方确认已被用于 ClickFix 攻击链，成功利用可以应用同权限执行恶意代码。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-110936</b><b class="fct fcvss">CVSS 8.4</b><b class="fct factor">ClickFix</b><div class="fvers"><span class="fv"><b>受影响</b> Siemens Software Center</span><span class="fv"><b>修复</b> 已修复</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>工程软件分发链路成为初始执行入口，ClickFix 社工+侧加载组合对开发/工程终端有效。</p></div>
 <div class="cell"><b>Action</b><p>升级 Siemens Software Center；在工程终端基线中限制非受控目录 DLL 加载，并针对 ClickFix 类假验证页做用户侧检测。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/clickfix-attackers-exploit-siemens.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -99,12 +103,13 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>60</i></span></div>
 <div class="intel-body">
 <h3>Oracle EBS漏洞NVD评10.0</h3>
-<p class="sum">NVD 收录 Oracle E-Business Suite Workflow 组件漏洞 CVE-2026-101809（评分 10.0，published 2026-10-20）：易被利用，未认证攻击者经 HTTP 即可攻击并显著波及其他产品（scope change）。</p>
+<p class="sum">NVD 收录 Oracle E-Business Suite Workflow 组件漏洞 <i class="hlcve">CVE-2026-101809</i>（评分 10.0，published 2026-10-20）：易被利用，未认证攻击者经 HTTP 即可攻击并显著波及其他产品（scope change）。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-101809</b><b class="fct fcvss">CVSS 10.0</b><b class="fct fout">6 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Oracle E-Business Suite 12.2.3-12.2.15</span><span class="fv"><b>修复</b> 十月季度补丁</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>EBS 承载企业核心财务/供应链流程，10 分未认证 HTTP 入口意味着暴露面极大的风险。</p></div>
 <div class="cell"><b>Action</b><p>按 Oracle 十月季度补丁（CPU/Oct-2026）更新 EBS 12.2.3-12.2.15 实例；Workflow Notification Mailer 暴露 HTTP 的应加访问控制。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-101809" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -113,12 +118,13 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>58</i></span></div>
 <div class="intel-body">
 <h3>mercury平台未认证RCE已修补</h3>
-<p class="sum">开源金融科技平台 mercury 存在未认证远程代码执行漏洞 CVE-2026-111057（CVSS 10.0）：/api/terminals 访问控制缺失（一处缺失逗号引发），修复版本 3.2.4。</p>
+<p class="sum">开源金融科技平台 mercury 存在未认证远程代码执行漏洞 <i class="hlcve">CVE-2026-111057</i>（CVSS 10.0）：/api/terminals 访问控制缺失（一处缺失逗号引发），修复版本 3.2.4。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-111057</b><b class="fct fcvss">CVSS 10.0</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> mercury（pip）</span><span class="fv"><b>修复</b> 3.2.4</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>mercury 面向券商/金融科技场景，RCE 直通交易与账户数据后端。</p></div>
 <div class="cell"><b>Action</b><p>使用 mercury 的部署立即升级 3.2.4，并回溯 /api/terminals 的历史访问日志。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-f8c7-rwf9-fmgm" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -132,9 +138,10 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <p class="sum">法国云厂商 OVHcloud 公告其开源命令行工具（GitHub 发布的 CLI release）遭攻击者入侵并植入信息窃取恶意软件，用于窃取开发者密钥等凭据。</p>
 
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>官方发布通道被投毒意味着下载即中招，云厂商 CLI 通常持有高权限凭据，横向风险延伸到客户云环境。</p></div>
+<div class="cell"><b>Impact</b><p>官方发布通道<i class="hl">被投毒</i>意味着下载即中招，云厂商 CLI 通常持有高权限凭据，横向风险延伸到客户云环境。</p></div>
 <div class="cell"><b>Action</b><p>核查开发/CI 环境中 OVHcloud CLI 的来源与哈希，替换为可信版本并轮换其保存的云凭据、令牌；对构建机做异常外联排查。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/ovhcloud-cli-releases-backdoored-on-github-to-steal-developer-secrets/" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -151,6 +158,7 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="cell"><b>Impact</b><p>又一勒索团伙进入联邦重点警示序列，边界设备与弱口令通道是其共同入口。</p></div>
 <div class="cell"><b>Action</b><p>对 VPN/RDP/SSH 等远程入口强制 MFA 与口令策略，清点暴露在用的勒索高危面并按通告 IoC 做回溯。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa26-293a" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -167,6 +175,7 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="cell"><b>Impact</b><p>stealer 类家族（stormser/nanocore）周量占优，凭据失窃与后续入侵管线压力持续；xmrig/cobaltstrike 活跃反映挖矿与红队式渗透并存。</p></div>
 <div class="cell"><b>Action</b><p>把 stormser/snojan/nanocore 相关 IoC 纳入 EDR 检索名单；审计凭据暴露面（浏览器口令库、会话令牌）。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://www.derp.ca/malware" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -183,6 +192,7 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="cell"><b>Impact</b><p>防务供应链与工业承包商成为国家级持续渗透目标，此类入侵常作为触达政府项目的跳板。</p></div>
 <div class="cell"><b>Action</b><p>防务承包商应审查 VPN/远程访问入口与更新通道，按披露的 HOOKEDGE 后门特征做威胁狩猎与出口流量审计。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-21 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/russian-apt28-breaches-nato-naval.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>

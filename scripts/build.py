@@ -91,6 +91,79 @@ def build_iocs_page(run_date):
 
 WEEK_CN = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
 
+
+HL_KEYS = ["在野利用", "遭在野", "公开 PoC", "PoC", "KEV", "零日", "紧急补丁", "被投毒", "窃密器"]
+IOC_PATTERNS = [
+    ("url",   re.compile(r"https?://[A-Za-z0-9._\-/:~%+?=&#@\[\]]{8,140}")),
+    ("ipv4",  re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}(?::\d{2,5})?\b")),
+    ("onion", re.compile(r"\b[a-z2-7]{56,59}\.onion\b")),
+    ("sha256", re.compile(r"\b[0-9a-f]{64}\b")),
+    ("md5",   re.compile(r"\b[0-9a-f]{32}\b")),
+]
+
+def highlight(esc_text):
+    """Keyword/CVE highlighting on ALREADY-escaped text (render layer only)."""
+    t = esc_text
+    t = re.sub(r"(CVE-\d{4}-\d+)", r'<i class="hlcve">\1</i>', t)
+    t = re.sub(r"(\d\.\d) 分", r'<i class="hlv">\1 分</i>', t)
+    t = re.sub(r"(CVSS[\s:=]{0,3}\d\.\d)", r'<i class="hlv">\1</i>', t)
+    for k in HL_KEYS:
+        t = t.replace(k, '<i class="hl">' + k + '</i>', 1)
+    return t
+
+def ioc_extract(raw_text):
+    """Verbatim IOC extraction from the item's own texts; conservative, dedup, cap 8."""
+    found, seen = [], set()
+    for typ, rx in IOC_PATTERNS:
+        for m in rx.findall(raw_text):
+            v = m.rstrip(".,;:!?）)、")
+            if typ == "ipv4":
+                octs = v.split(":")[0].split(".")
+                if any(int(o) > 255 for o in octs):
+                    continue
+            if v in seen:
+                continue
+            seen.add(v)
+            found.append((typ, v))
+    order = {"onion": 0, "ipv4": 1, "url": 2, "sha256": 3, "md5": 4}
+    found.sort(key=lambda x: order.get(x[0], 9))
+    return found[:8]
+
+
+def iocblk(a, aid):
+    """Code-block listing verbatim indicators found in the item's own texts."""
+    src = " ".join([str(a.get("summary_zh", "")), str(a.get("action", "")), str(a.get("impact", ""))])
+    iocs = ioc_extract(src)
+    # evidence 里的 URL：非合法厂商/媒体/情报平台域名 → 视为条目携带的指标
+    _legit = ("abuse.ch", "github.com", "githubusercontent.com", "cisa.gov", "thehackernews.com",
+              "bleepingcomputer.com", "krebsonsecurity.com", "theregister.com", "sans.org",
+              "cloudflare.com", "aws.amazon.com", "amazon.com", "microsoft.com", "nvd.nist.gov",
+              "nist.gov", "osv.dev", "google.com", "googleblog.com", "wordpress.org", "php.net",
+              "fortinet.com", "cve.org", "first.org", "openphish.com", "ncsc.gov.uk", "cve.circl.lu",
+              "blog.talosintelligence.com", "ransomlook.io", "ransomware.live", "welivesecurity.com", "securelist.com", "snyk.io",
+              "horizon3.ai", "checkpoint.com", "crowdstrike.com", "qualys.com", "sophos.com",
+              "kaspersky.com", "eset.com", "derp.ca", "darkreading.com", "securityweek.com",
+              "malwarebytes.com", "withsecure.com", "mandiant.com", "unit42.me", "splunk.com",
+              "elastic.co", "trendmicro.com", "avast.com", "avg.com", "rapid7.com", "tenable.com")
+    for e in (a.get("evidence") or []):
+        e = str(e).strip()
+        if not e.startswith("http"):
+            continue
+        low = e.lower()
+        if any(g in low for g in _legit):
+            continue
+        for typ, v in ioc_extract(e):
+            if v not in [x[1] for x in iocs]:
+                iocs.append((typ, v))
+    if not iocs:
+        return ""
+    vals = "\n".join(v for _, v in iocs)
+    cid = f"{aid}-ioc"
+    return ('<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 '
+            f'<em>({len(iocs)})</em></span><button class="iocblk-c" data-copy="{cid}">复制</button></div>'
+            f'<pre id="{cid}">{vals}</pre></div>')
+
+
 def mech_brief(items, run_date):
     """Mechanical situation brief from the day's selected items (no new facts)."""
     n = len(items)
@@ -297,12 +370,13 @@ def main():
                 f'<span class="score">处置 <i class="rp {rt.lower()}">{rt}</i> · CONF {esc(a.get("confidence","?"))}<i>{esc(a.get("score","?"))}</i></span></div>',
                 '<div class="intel-body">',
                 f'<h3>{esc(a["title_zh"])}</h3>',
-                f'<p class="sum">{esc(a.get("summary_zh",""))}</p>',
+                f'<p class="sum">{highlight(esc(a.get("summary_zh","")))}</p>',
                 facts,
                 '<div class="intel-grid">',
-                f'<div class="cell"><b>Impact</b><p>{esc(a.get("impact",""))}</p></div>',
-                f'<div class="cell"><b>Action</b><p>{esc(a.get("action",""))}</p></div>',
+                f'<div class="cell"><b>Impact</b><p>{highlight(esc(a.get("impact","")))}</p></div>',
+                f'<div class="cell"><b>Action</b><p>{highlight(esc(a.get("action","")))}</p></div>',
                 '</div>',
+                iocblk(a, aid),
                 '</div>',
                 f'<div class="intel-foot"><span>{esc(run_date)} · SID ANALYSIS</span>'
                 + (f'<a href="{link}" target="_blank" rel="noopener">SOURCE ↗</a>' if link else "<span>SOURCE N/A</span>")

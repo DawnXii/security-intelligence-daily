@@ -36,12 +36,13 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>82</i></span></div>
 <div class="intel-body">
 <h3>Plex2Shell 漏洞链遭在野利用部署挖矿后门</h3>
-<p class="sum">The Hacker News 报道，威胁行为者已开始利用 Plex Media Server 上被称为 Plex2Shell 的四个漏洞组合投放加密货币挖矿程序与反向代理软件，时间点在公开 PoC 出现一天之后；活动细节由网名 boredhackerblog 的研究者披露。</p>
+<p class="sum">The Hacker News 报道，威胁行为者已开始利用 Plex Media Server 上被称为 Plex2Shell 的四个漏洞组合投放加密货币挖矿程序与反向代理软件，时间点在<i class="hl">公开 <i class="hl">PoC</i></i> 出现一天之后；活动细节由网名 boredhackerblog 的研究者披露。</p>
 
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>暴露于公网且未升级的 Plex 媒体服务器可被直接接管，沦为挖矿算力与代理出口节点，并可能成为进入内网的初始立足点。</p></div>
 <div class="cell"><b>Action</b><p>立即升级 Plex Media Server 到修复版本；不要将服务直接暴露公网，改走带认证的访问路径；排查异常外联、可疑反向代理进程与持续高 CPU 占用。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-20 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/hackers-exploit-plex2shell-flaws-to.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -50,12 +51,13 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>55</i></span></div>
 <div class="intel-body">
 <h3>日立能源 SOI 现 ActiveMQ 代码执行漏洞</h3>
-<p class="sum">CISA 通告 ICSA-26-279-04 指出 Hitachi Energy SOI 产品内置的 Apache ActiveMQ 组件存在远程代码执行漏洞 CVE-2026-34197（CVSS v3 8.8，代码注入类），影响 SOI 2.0.0 至 2.2.0 版本，可被用来破坏产品的机密性、完整性与可用性，部署范围覆盖全球能源行业。</p>
+<p class="sum">CISA 通告 ICSA-26-279-04 指出 Hitachi Energy SOI 产品内置的 Apache ActiveMQ 组件存在远程代码执行漏洞 <i class="hlcve">CVE-2026-34197</i>（CVSS v3 8.8，代码注入类），影响 SOI 2.0.0 至 2.2.0 版本，可被用来破坏产品的机密性、完整性与可用性，部署范围覆盖全球能源行业。</p>
 
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>SOI 常用于能源行业的数据集成层，中间件被攻破后攻击者可在 OT/IT 交汇点获得立足位，进而不受认证依赖地读写流经的消息数据。</p></div>
 <div class="cell"><b>Action</b><p>按通告的 Recommended Immediate Actions 升级或实施缓解；限制 ActiveMQ 监听端口仅在受信网段可达，核查该组件是否被运维网段以外访问。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-20 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-279-04" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -72,6 +74,7 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="cell"><b>Impact</b><p>官方站点与自动更新通道被污染，用户即使只从正规来源获取插件也会中招；站点被长期驻留后门后，可被用于挂马、凭据窃取与二次载荷投放。</p></div>
 <div class="cell"><b>Action</b><p>比对该时间窗内的插件下载与更新记录，按干净版本重装并做文件完整性基线核查；重置站点管理员密码、API 密钥与会话凭据，排查自愈残留与计划任务。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-20 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/popular-wordpress-seo-plugin-rank-math.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -86,6 +89,7 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="cell"><b>Impact</b><p>攻击面从项目仓库转移到维护者终端，开发者凭据一旦外泄会连带污染签名制品与 CI/CD 密钥，形成二次供应链风险。</p></div>
 <div class="cell"><b>Action</b><p>限制未审查的第三方 Actions 与自托管 runner 权限，启用 workflow 审批；对字体、工具包类下载做来源与哈希核对；轮换近期在开发机和 CI 中使用过的 token 与密钥。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-20 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/ghostaction-attackers-plant-credential.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -100,6 +104,7 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="cell"><b>Impact</b><p>区块链与 AI 开发环境被直接感染，钱包密钥、凭据与助记词面临外泄；对 AI Agent 流量的劫持还会把风险扩散到下游自动化与模型调用链路。</p></div>
 <div class="cell"><b>Action</b><p>屏蔽来路不明的 npm 包与镜像源，锁定依赖版本并启用签名/构建溯源校验；开发终端与密钥管理隔离，并部署针对 npm postinstall 与外联行为的检测。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-20 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/fake-web3-accelerator-uses-npm-packages.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -116,6 +121,7 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="cell"><b>Impact</b><p>该团伙处于连续大规模活跃期，受害面覆盖物流、电信、市政水务与零售等行业，被入侵的组织面临数据被公开与业务中断的双重压力。</p></div>
 <div class="cell"><b>Action</b><p>复核对外暴露的远程接入面（VPN、RDP、邮件网关）的补丁与 MFA 状态；清理 MSP/第三方账号通道；确保离线备份可用并更新勒索事件响应预案。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-20 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/qilin" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
@@ -132,6 +138,7 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="cell"><b>Impact</b><p>勒索响应链条中的第三方谈判角色出现信任缺口，企业在事件处置期间交给谈判方的敏感信息可能被回传给攻击方，扩大数据外泄与合规风险。</p></div>
 <div class="cell"><b>Action</b><p>把谈判服务商纳入勒索预案的尽调范围：限定其可访问的最小信息集、要求书面留存审计，并对谈判期间外泄的敏感内容做事后独立复核。</p></div>
 </div>
+
 </div>
 <div class="intel-foot"><span>2026-10-20 · SID ANALYSIS</span><a href="https://krebsonsecurity.com/2026/10/feds-suspect-ransom-negotiator-ran-shinyhunters-extortion-site/" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
