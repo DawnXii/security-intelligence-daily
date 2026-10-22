@@ -409,6 +409,46 @@ def main():
     except Exception as e:
         results.append({"source": "nvd", "status": "fail", "error": str(e)[:150]})
 
+    # ---- OpenPhish 钓鱼页狩猎（每日 feed，300 条级新 URL；落 IoC + 1 条聚合候选）----
+    ph_status = "fail"
+    try:
+        raw = fetch("https://openphish.com/feed.txt")
+        purls = [ln.strip() for ln in raw.splitlines() if ln.strip().startswith("http")]
+        from urllib.parse import urlparse as _up
+        hosts = collections.Counter(_up(u).netloc for u in purls if _up(u).netloc)
+        added_p = 0
+        for u in purls:
+            h = hashlib.sha256(f"ph|{u}".encode()).hexdigest()[:16]
+            if h in seen:
+                continue
+            seen[h] = True; added_p += 1
+            new_items.append({"title": f"OpenPhish 钓鱼页 {u[:52]}", "link": u,
+                              "date": datetime.now(CST).isoformat(),
+                              "summary": "OpenPhish 当日新增钓鱼 URL feed（未逐一人工核实，链接已脱敏托管源可查）：" + u[:300],
+                              "hash": h, "source": "openphish", "source_name": "OpenPhish",
+                              "tags": ["phishing"], "collected_at": datetime.now(CST).isoformat()})
+        slim_p = [{"i": u, "t": "url", "f": "phishing", "k": _up(u).netloc[:60], "c": 80,
+                   "s": run_date, "u": "https://openphish.com/feed.txt", "z": "openphish"} for u in purls]
+        os.makedirs(os.path.join(DATA, "iocs"), exist_ok=True)
+        pp = os.path.join(DATA, "iocs", f"{run_date}-openphish.json")
+        json.dump(slim_p, open(pp + ".tmp", "w"), ensure_ascii=False, indent=0)
+        os.replace(pp + ".tmp", pp)
+        th = hashlib.sha256(f"openphish|{run_date}").hexdigest()[:16]
+        if th not in seen:
+            seen[th] = True
+            top_h = "、".join(f"{h}({n})" for h, n in hosts.most_common(5))
+            new_items.append({"title": f"OpenPhish 当日新增钓鱼页 {len(slim_p)} 条", "link": "https://openphish.com/feed.txt",
+                              "date": datetime.now(CST).isoformat(),
+                              "summary": f"OpenPhish 公开 feed 今日收录 {len(slim_p)} 条新钓鱼 URL，Top 托管主机：{top_h}。",
+                              "hash": th, "source": "openphish", "source_name": "OpenPhish",
+                              "tags": ["phishing", "telemetry"], "collected_at": datetime.now(CST).isoformat()})
+        all_items = existing + new_items
+        ph_status = "ok"
+        results.append({"source": "openphish", "status": "ok", "count": len(slim_p)})
+        cooldown.pop("openphish", None)
+    except Exception as e:
+        results.append({"source": "openphish", "status": "fail", "error": str(e)[:150]})
+
     # ---- X/Twitter 高信号研究账号增量（每日 1 次 search；凭据缺失则 fail 显示，透明披露）----
     x_status = "fail"
     try:
@@ -580,10 +620,10 @@ def main():
     json.dump(cooldown, open(cooldown_file, "w"), indent=1)
 
     ok = sum(1 for r in results if r["status"] == "ok")
-    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem", "threatfox", "urlhaus", "nvd", "x"))
+    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem", "threatfox", "urlhaus", "nvd", "x", "openphish"))
     hard_fail = ok == 0
     status = {"run_id": run_id, "run_date": run_date, "stage": "collect",
-              "sources_total": len(FEEDS) + 8 - (1 if x_status == "skip" else 0), "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0) + (1 if nvd_status == "ok" else 0) + (1 if x_status == "ok" else 0),
+              "sources_total": len(FEEDS) + 9 - (1 if x_status == "skip" else 0), "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0) + (1 if nvd_status == "ok" else 0) + (1 if x_status == "ok" else 0) + (1 if ph_status == "ok" else 0),
               "sources_fail": [r for r in results if r["status"] == "fail"],
               "new_items": len(new_items), "total_items": len(all_items),
               "finished_at": datetime.now(CST).isoformat()}

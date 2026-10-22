@@ -1,0 +1,59 @@
+<div class="iocs reveal" id="ioc-sec">
+<h1 class="ioc-h">指标 IoCs <span class="ioc-sub">近 7 天 · abuse.ch ThreatFox / URLhaus / OpenPhish</span></h1>
+<p class="ioc-meta">共 <b>__N__</b> 条去重指标（每日每源按置信度截顶）。点标签过滤或搜索子串；勾选后可批量复制 / 下载 CSV。
+<a href="https://threatfox.abuse.ch" target="_blank" rel="noopener">ThreatFox</a> ·
+<a href="https://urlhaus.abuse.ch" target="_blank" rel="noopener">URLhaus</a> ·
+<a href="https://openphish.com" target="_blank" rel="noopener">OpenPhish</a></p>
+<div class="ioc-search"><input id="ioc-q" type="text" placeholder="搜索指标子串（域名 / IP / hash）…" aria-label="搜索指标"></div>
+<div class="ichips"><span class="ichip-sep">类型</span>__TP__</div>
+<div class="ichips"><span class="ichip-sep">日期</span>__D__</div>
+<div class="ichips"><span class="ichip-sep">家族</span>__FM__</div>
+<div class="ichips"><span class="ichip-sep">来源</span>__Z__</div>
+<div class="ioc-actions"><button class="ibtn" id="ioc-copy-sel">复制选中</button>
+<button class="ibtn" id="ioc-copy-vis">复制筛选结果</button>
+<button class="ibtn" id="ioc-csv">下载 CSV</button>
+<span class="ioc-act" id="ioc-shown"></span><span class="ioc-act" id="ioc-msg" aria-live="polite"></span></div>
+<table class="iact"><thead><tr><th><input type="checkbox" id="ioc-all" aria-label="全选筛选结果"></th>
+<th>指标</th><th>类型</th><th>家族</th><th>置信</th><th>日期</th><th>来源</th></tr></thead><tbody id="ioc-tb"></tbody></table>
+<p class="ioc-meta" id="ioc-capnote"></p>
+</div>
+<script type="application/json" id="ioc-data">__DATA__</script>
+<script>
+(function(){
+var D=JSON.parse(document.getElementById('ioc-data').textContent);
+var st={tp:'all',d:'all',fm:'all',z:'all',q:''},sel={},tb=document.getElementById('ioc-tb');
+function filt(){return D.filter(function(r){return (st.tp==='all'||r.t===st.tp)&&(st.d==='all'||r.d===st.d)
+ &&(st.fm==='all'||String(r.f||'').toLowerCase()===st.fm)&&(st.z==='all'||r.z===st.z)
+ &&(!st.q||String(r.i).toLowerCase().indexOf(st.q)>=0);});}
+var TMAP={'ip:port':'IP','sha256_hash':'SHA256','url':'URL','domain':'DOMAIN'};
+function draw(){var rs=filt(),CAP=800,sh=rs.slice(0,CAP);
+ document.getElementById('ioc-shown').textContent='筛选 '+rs.length+' 条';
+ document.getElementById('ioc-capnote').textContent=rs.length>CAP?('表格呈现前 '+CAP+' 条；复制/下载覆盖全部筛选结果'):'';
+ var h='';sh.forEach(function(r){
+ h+='<tr><td><input type="checkbox" data-i="'+encodeURIComponent(r.i)+'"'+(sel[r.i]?' checked':'')+'></td>'
+ +'<td class="mono">'+String(r.i).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</td>'
+ +'<td>'+(TMAP[r.t]||r.t||'')+'</td><td><i class="fam">'+String(r.f||'unknown').replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</i></td>'
+ +'<td>'+(r.c||'')+'</td><td>'+r.d+'</td><td>'+r.z+'</td></tr>';});
+ tb.innerHTML=h;
+ tb.querySelectorAll('input[type=checkbox]').forEach(function(c){c.addEventListener('change',function(){
+  var k=decodeURIComponent(c.dataset.i);if(c.checked)sel[k]=1;else delete sel[k];});});}
+document.querySelectorAll('#ioc-sec .ichip').forEach(function(b){b.addEventListener('click',function(){
+ var k=b.dataset.k;st[k]=b.dataset.v;
+ document.querySelectorAll('#ioc-sec .ichip[data-k="'+k+'"]').forEach(function(x){x.classList.toggle('on',x===b);});
+ draw();});});
+document.getElementById('ioc-q').addEventListener('input',function(e){st.q=e.target.value.trim().toLowerCase();draw();});
+document.getElementById('ioc-all').addEventListener('change',function(e){var rs=filt().slice(0,800);
+ rs.forEach(function(r){if(e.target.checked)sel[r.i]=1;else delete sel[r.i];});draw();});
+function say(t){var m=document.getElementById('ioc-msg');m.textContent=t;setTimeout(function(){m.textContent='';},2500);}
+function copyTxt(t){if(navigator.clipboard&&navigator.clipboard.writeText){return navigator.clipboard.writeText(t).then(function(){say('已复制 '+t.split(String.fromCharCode(10)).length+' 行');});}
+ var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();say('已复制');}
+document.getElementById('ioc-copy-sel').addEventListener('click',function(){var ks=Object.keys(sel);
+ ks.length?copyTxt(ks.join(String.fromCharCode(10))):say('未勾选任何行');});
+document.getElementById('ioc-copy-vis').addEventListener('click',function(){copyTxt(filt().map(function(r){return r.i;}).join(String.fromCharCode(10)));});
+document.getElementById('ioc-csv').addEventListener('click',function(){var rs=filt();
+ var head='indicator,type,family,confidence,date,source';
+ var body=rs.map(function(r){return '"'+r.i+'","'+r.t+'","'+(r.f||'')+'",'+(r.c||0)+',"'+r.d+'","'+r.z+'"';}).join(String.fromCharCode(10));
+ var b=new Blob([head+String.fromCharCode(10)+body],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);
+ a.download='sid-iocs.csv';a.click();say('已导出 '+rs.length+' 条');});
+draw();})();
+</script>
