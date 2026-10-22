@@ -3,11 +3,14 @@ layout: post
 title: "安全情报日报 2026-10-13"
 date: 2026-10-13
 events: 10
+headline: "CISA 通告：Citrix NetScaler ADC/Gateway 在野利用的严重零日漏洞"
+dek: "今日入选 10 条，类别分布：漏洞与在野利用×5、供应链 / CI-CD×3、钓鱼与社工×1。"
+brief_stats: ["10 事件", "在野 0", "PoC 0", "4 类别", "顶分 85"]
 ---
 
 <nav class="toc" id="toc" aria-label="目录">
 <h2>目录 <span>Contents</span></h2>
-<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
 <div class="toc-scroll">
 <div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">5</span></p><ol>
 <li><a class="toc-link" href="#vuln-23406"><span class="tc">★</span><span class="tt">CISA 通告：Citrix NetScaler ADC/Gateway 在野利用的严重零日漏洞</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
@@ -37,6 +40,7 @@ events: 10
 <div class="intel-body">
 <h3>CISA 通告：Citrix NetScaler ADC/Gateway 在野利用的严重零日漏洞</h3>
 <p class="sum">CISA 于 10 月 9 日更新告警，纳入 CVE-2026-107406 与已进 KEV 目录的 CVE-2026-88779，并澄清 CVE-2026-88779 与 CVE-2026-88771 可能相关，强调尽快修补 CVE-2026-88771 至 CVE-2026-88779 及 CVE-2026-107406。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>NetScaler ADC/Gateway 是大量企业、云与区块链运维环境的边界组件；零日在野利用意味着未修复设备面临即刻接管风险。</p></div>
 <div class="cell"><b>Action</b><p>立即升级 NetScaler 至官方修复版本；无法打补丁的设备先限制管理面暴露；核查既有访问日志与完整性，联邦机构受 BOD 时限约束。</p></div>
@@ -50,6 +54,7 @@ events: 10
 <div class="intel-body">
 <h3>SonicWall SMA 1000 关键漏洞 CVE-2026-102255（CVSS 10.0）补丁发布后仍遭 135 次利用</h3>
 <p class="sum">新披露的 SonicWall Secure Mobile Access (SMA) 1000 预认证 SSRF 漏洞（CVE-2026-102255，CVSS 10.0）在公开披露数天内即被攻击者利用；观测到 135 次利用尝试。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>SMA 1000 是远程访问入口，被接管即等于攻击者获得内网初始立足点；未打补丁或未重启生效的设备风险极高。</p></div>
 <div class="cell"><b>Action</b><p>升级固件并确认修复实际生效（重启/校验版本）；核查访问日志中来自 SMA 的异常请求；限制管理面暴露。</p></div>
@@ -63,6 +68,7 @@ events: 10
 <div class="intel-body">
 <h3>CISA：MikroTik RouterOS 整数下溢漏洞（CVE-2026-84411，CVSS 9.8）可致远程代码执行</h3>
 <p class="sum">CISA ICS 公告指出 RouterOS &lt;7.24 受 CVE-2026-84411 影响，成功利用可导致远程代码执行或拒绝服务，CVSS v3 9.8，背景标注关键基础设施。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>MikroTik 在 offices、数据中心出口、机房与边缘节点广泛使用，是区块链运维网络里常见但易被忽视的边界设备；RCE 意味着整条网络路径可信度崩塌。</p></div>
 <div class="cell"><b>Action</b><p>升级至 RouterOS 7.24+；审计设备配置与固件完整性；将管理界面置于 VPN 或 ACL 白名单之后。</p></div>
@@ -76,6 +82,7 @@ events: 10
 <div class="intel-body">
 <h3>WordPress Bricksforge 插件 CVSS 10.0 漏洞遭在野利用（未认证 RCE）</h3>
 <p class="sum">Patchstack 报告 WordPress 插件 Bricksforge 的 CVE-2026-85097（CVSS 10.0）正被在野利用，未认证攻击者可上传并执行任意 PHP 代码，实现远程代码执行。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>WordPress 站点（含大量企业官网、活动页、文档站）被攻陷后可作钓鱼载体、恶意软件分发点与内网跳板。</p></div>
 <div class="cell"><b>Action</b><p>立即升级 Bricksforge/停用未必要插件；对站点做文件完整性扫描；检查 Web 服务器日志中异常上传请求。</p></div>
@@ -89,6 +96,7 @@ events: 10
 <div class="intel-body">
 <h3>AhsayCBS 备份系统两漏洞遭利用：部署 WebShell 与伪装的 XMRig 挖矿</h3>
 <p class="sum">攻击者利用 AhsayCBS 备份工具新披露的两个漏洞（含 CVE-2026-105133，CVSS v4 5.5，checkSysPwd() 不当认证）控制设备、部署 WebShell 与伪装成 Microsoft Edge 的 XMRig 挖矿程序。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>备份服务器通常持有跨环境凭据且网络权限高，被接管既是挖矿宿主也是潜在横向移动跳板——备份基础设施本身正成为供应链目标。</p></div>
 <div class="cell"><b>Action</b><p>升级 AhsayCBS；检查进程/计划任务中伪装 Edge 的可疑二进制与出站矿池流量；审计备份服务器存储的服务凭据。</p></div>
@@ -104,6 +112,7 @@ events: 10
 <div class="intel-body">
 <h3>GitHub Actions 配置缺陷被武器化：trivy-action 泄密后门植入 LiteLLM（PyPI）</h3>
 <p class="sum">2026 年 3 月攻击者利用 aquasecurity/trivy-action 的 pull_request_target 错误配置窃取组织与仓库密钥，随后用该凭据在 PyPI 上后门化 LiteLLM。Trail of Bits 为此为 CI/CD 静态分析器 zizmor 补齐了完整 YAML anchor 支持。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>直接命中 CI/CD 供应链：一个流行扫描 Action 的错误配置即可导致密钥外泄并向下游包分发投毒，所有使用 GitHub Actions 的仓库（含区块链项目构建系统）均在暴露面内。</p></div>
 <div class="cell"><b>Action</b><p>在所有仓库启用 zizmor（或其同类）扫描 Actions 工作流；禁用/修正 pull_request_target 向 fork 暴露 secrets 的模式；轮换组织与仓库 secrets 并审计近期运行日志。</p></div>
@@ -117,6 +126,7 @@ events: 10
 <div class="intel-body">
 <h3>Tensorlake npm SDK 被 ChainDrop/Shai-Hulud 供应链攻击攻陷</h3>
 <p class="sum">npm 包 tensorlake（TypeScript SDK）0.5.144 恶意版本在 ChainDrop / Shai-Hulud 供应链攻击中被分发，包含混淆恶意代码：收割凭据、外泄密钥、建立持久化并执行远程命令。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>Shai-Hulud 蠕虫式传播针对开发者凭据与 CI 密钥；使用受影响版本的项目其构建与云环境凭据都应视为已泄露。</p></div>
 <div class="cell"><b>Action</b><p>排查 lockfile 中 tensorlake@0.5.144 与相关 ChainDrop 指标；全量轮换 CI/云/npm 凭据；启用 npm 供应链检测（安装钩子/锁定审查）。</p></div>
@@ -130,6 +140,7 @@ events: 10
 <div class="intel-body">
 <h3>MALFEX：8 个恶意 npm 包累计下载 40,767 次，投放 Overlord RAT 与信息窃取器</h3>
 <p class="sum">CloudSEK 与 Checkmarx 命名的 MALFEX 长期 npm 供应链活动中，单一攻击者自 2023 年 8 月起发布 12 个包，其中 8 个恶意包被下载 40,767 次，投放信息窃取器与 Overlord RAT。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>开发者机器与 CI 环境被植入 RAT，凭据与密钥暴露；下载量说明受影响面不小。</p></div>
 <div class="cell"><b>Action</b><p>审查 npm 依赖树与 typosquatting；比对已知恶意包清单并移除；轮换受影响主机凭据；启用依赖白名单/私有 registry。</p></div>
@@ -145,6 +156,7 @@ events: 10
 <div class="intel-body">
 <h3>CISA 联合通告：中国背景威胁行为者以自动化工具与人工入侵组合窃取敏感数据</h3>
 <p class="sum">CISA（AA26-281A，10 月 8 日原文）指 Integrity Technology Group 支撑的中国政府关联威胁行为者，正结合自动化扫描工具、大规模僵尸网络与手工入侵手法窃取敏感数据。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>自动化侦察扩大初始入口搜索面，人工操作提高纵深渗透成功率；对政企与关键基础设施（含远程运维通道）构成长期威胁。</p></div>
 <div class="cell"><b>Action</b><p>按公告 TTP 对照自查边界暴露面与日志留存；收紧远程访问（零信任/白名单）；对可疑扫描行为建立告警规则。</p></div>
@@ -160,6 +172,7 @@ events: 10
 <div class="intel-body">
 <h3>FBI/USSS 警告：FortiBleed 凭据收割活动仍在活跃，已积累 86,644 台 Fortinet 设备凭据</h3>
 <p class="sum">FBI 与特勤局警告针对互联网暴露的 FortiGate 防火墙与 SSL VPN 网关的 FortiBleed 凭据收割活动仍在持续，活动利用复用或泄露的凭据以及传统 SHA-256 口令存储方式。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>Fortinet 设备是 VPN/边界主力，凭据批量收割意味着后续大规模 VPN 入侵；弱口令存储使撞库成功率进一步升高。</p></div>
 <div class="cell"><b>Action</b><p>强制 MFA 并轮换所有 FortiGate/SSL-VPN 账号口令；清理复用/遗留账号；检查异常登录；升级到禁用旧式口令存储的版本。</p></div>

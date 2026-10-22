@@ -18,14 +18,14 @@ title: 首页
 
 <div class="wrap">
 <p class="section-label" id="issues">Latest Issues</p>
+<div class="ilist">
 {% for post in site.posts %}
-<a class="issue reveal" href="{{ post.url | relative_url }}">
-  <span class="no">{{ post.date | date: '%m·%d' }}</span>
-  <span class="meta">
-    <span class="date">{{ post.date | date: "%Y-%m-%d" }} · Issue {{ forloop.index }}{% if post.events %} · {{ post.events }} 条{% endif %}</span>
-    <span class="t">{{ post.title }}</span>
-  </span>
-  <span class="go">→</span>
+<a class="irow reveal" href="{{ post.url | relative_url }}">
+  <span class="idate">{{ post.date | date: "%m·%d" }}</span>
+  <span class="ititle">{{ post.headline | default: post.title }}</span>
+  {% if post.events %}<span class="iev">{{ post.events }} 条</span>{% endif %}
+  <span class="iarr">→</span>
 </a>
 {% endfor %}
+</div>
 </div>

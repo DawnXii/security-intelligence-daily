@@ -3,11 +3,14 @@ layout: post
 title: "安全情报日报 2026-10-14"
 date: 2026-10-14
 events: 10
+headline: "Ivanti VPN 零日认证绕过遭在野利用"
+dek: "今日入选 10 条 · 5 条确认在野利用，类别分布：漏洞与在野利用×6、攻击战术与技术×1、供应链 / CI-CD×1。"
+brief_stats: ["10 事件", "在野 5", "PoC 0", "5 类别", "顶分 92"]
 ---
 
 <nav class="toc" id="toc" aria-label="目录">
 <h2>目录 <span>Contents</span></h2>
-<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
 <div class="toc-scroll">
 <div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
 <li><a class="toc-link" href="#vuln-93499"><span class="tc">★</span><span class="tt">Ivanti VPN 零日认证绕过遭在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
@@ -39,6 +42,7 @@ events: 10
 <div class="intel-body">
 <h3>Ivanti VPN 零日认证绕过遭在野利用</h3>
 <p class="sum">CISA 确认 CVE-2026-104935（Ivanti Connect Secure 认证绕过零日）已遭在野利用，影响 25.1.1.1、25.1.2.2 及 22.8R2.4 之前的版本。攻击者可未经认证远程执行任意命令，用于凭据窃取与数据外泄，该 CVE 已于 10 月 13 日列入 KEV 目录。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>面向公网的 VPN 网关被直接攻陷，等同于内网入口失守，须按 KEV 与 BOD 26-04 时限完成处置。</p></div>
 <div class="cell"><b>Action</b><p>立即升级至厂商修复版本；无法打补丁的资产断开公网暴露，并排查凭据外泄与入侵迹象。</p></div>
@@ -52,6 +56,7 @@ events: 10
 <div class="intel-body">
 <h3>Ivanti 三枚零日被链式利用取 Root</h3>
 <p class="sum">Volexity 披露攻击者将 Ivanti Connect Secure 中三枚零日漏洞链式组合，在未认证情况下以 root 权限执行命令。Ivanti 已修复其中两枚，第三枚补丁仍未发布，官方要求受影响版本客户立即行动。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>打了部分补丁仍可能被完整攻陷，未修复的第三枚零日构成长期暴露面。</p></div>
 <div class="cell"><b>Action</b><p>部署现有两枚修复并持续跟踪第三枚补丁；高危环境临时收敛 VPN 暴露面、强化监控。</p></div>
@@ -65,6 +70,7 @@ events: 10
 <div class="intel-body">
 <h3>GitLab 修复 CVSS 10 未授权 RCE</h3>
 <p class="sum">GitLab 修复满分漏洞 CVE-2026-97229（CVSS 10.0），未认证攻击者可在其服务器上执行代码，影响 Community Edition 等版本。来源未提及在野利用，但自托管且暴露网络的 GitLab 风险极高。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>代码托管平台被攻陷意味着仓库、CI 凭据与源码资产整体失窃风险。</p></div>
 <div class="cell"><b>Action</b><p>立即升级 GitLab 至修复版本；审计近期异常作业、令牌与对外暴露面。</p></div>
@@ -78,6 +84,7 @@ events: 10
 <div class="intel-body">
 <h3>SonicWall SMA 1000 满分漏洞已现攻击</h3>
 <p class="sum">SonicWall SMA 1000 的 CVE-2026-102255（CVSS 10.0，无需登录的 SSRF）公开披露仅数天即出现利用攻击，SonicWall 已发布补丁。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>SSL VPN 集中器属高价值入口，SSRF 无需凭据即可触发，未打补丁设备面临现实攻陷风险。</p></div>
 <div class="cell"><b>Action</b><p>立即升级 SMA 1000 固件；无法即时修复的设备限制管理面暴露并回查入侵迹象。</p></div>
@@ -91,6 +98,7 @@ events: 10
 <div class="intel-body">
 <h3>Windows 高危漏洞确认在野利用入 KEV</h3>
 <p class="sum">CISA 将 CVE-2026-96951（Microsoft Windows）于 10 月 13 日列入 KEV 目录，确认存在在野利用，要求按 BOD 26-04 与取证排查要求处置。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>Windows 基础组件漏洞被利用将波及海量终端与服务器，横向移动风险高。</p></div>
 <div class="cell"><b>Action</b><p>按 KEV 时限完成 Windows 补丁；对未更新资产加密监控与隔离。</p></div>
@@ -104,6 +112,7 @@ events: 10
 <div class="intel-body">
 <h3>SAP Python SDK 满分漏洞可窃 OAuth2 凭据</h3>
 <p class="sum">SAP Cloud SDK for Python（BTP 官方 Python 客户端）存在 CVSS 10.0 缺陷：攻击者可利用租户子域控制，使应用的 OAuth2 客户端凭据被发送到其控制的服务器，影响 BTP 上使用 SDK 的多租户应用。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>云平台机器身份凭据外泄，可能被用于冒用应用身份访问 BTP 服务。</p></div>
 <div class="cell"><b>Action</b><p>升级 Cloud SDK for Python 至修复版本；审查租户域名校验逻辑与 OAuth2 令牌日志。</p></div>
@@ -119,6 +128,7 @@ events: 10
 <div class="intel-body">
 <h3>tensorlake npm 遭投毒传播 Shai-Hulud</h3>
 <p class="sum">npm 包 tensorlake（Tensorlake 平台 TypeScript SDK）遭 ChainDrop / Shai-Hulud 供应链攻击投毒，恶意版本 0.5.144 内含混淆恶意代码，可收集凭据、外泄密钥、建立持久化并执行远程下发的代码。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>使用受影响版本的项目与 CI 环境中令牌、密钥可能已被批量窃取。</p></div>
 <div class="cell"><b>Action</b><p>回滚 tensorlake 至未受影响版本；全量轮换可能暴露的 npm/cloud 凭据；排查依赖树异常。</p></div>
@@ -134,6 +144,7 @@ events: 10
 <div class="intel-body">
 <h3>勒索团伙 n0n 一周新增 59 名受害者</h3>
 <p class="sum">RansomLook 跟踪数据显示，勒索团伙 n0n 近 7 天在泄密站发布 59 条受害者帖子，最新发现于 10 月 14 日。受害者集中在航运、港口、物流与大宗商品领域，如 Apical Group、Asyaport、BNCT 等。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>该团伙对航运/物流供应链展开规模化攻击，行业性风险明显上升。</p></div>
 <div class="cell"><b>Action</b><p>航运、港口与物流企业核查备份可用性与网络分段，关注该团伙 TTP 与勒索信特征。</p></div>
@@ -149,6 +160,7 @@ events: 10
 <div class="intel-body">
 <h3>P7 DarkSword iOS 套件新增钱包窃密</h3>
 <p class="sum">iVerify 披露 DarkSword iOS 漏洞利用工具包新变体 P7 DarkSword：缩减设备端足迹，新增钥匙串与加密钱包数据窃取，并加入与攻击者基础设施的双向 C2 通信。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>移动设备上加密资产凭据面临定向窃取，企业 iOS 环境也可能成为渗透入口。</p></div>
 <div class="cell"><b>Action</b><p>关注 iVerify 报告 IOC；对高价值岗位设备检查异常配置描述文件与越狱迹象。</p></div>
@@ -164,6 +176,7 @@ events: 10
 <div class="intel-body">
 <h3>CISA：中国关联团伙自动化加人工入侵窃密</h3>
 <p class="sum">CISA 发布通告：依托 Integrity Technology Group 的中国政府关联威胁组织，结合自动化扫描工具、大规模僵尸网络与人工渗透手法，针对全球组织（含美国关键基础设施）窃取敏感数据。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>覆盖多行业的系统性窃密活动，自动化与人工手法混合，传统单点检测难以发现。</p></div>
 <div class="cell"><b>Action</b><p>对照通告 IOC 回溯排查；收敛边界设备与已知漏洞资产；加强出站流量与凭据异常监控。</p></div>

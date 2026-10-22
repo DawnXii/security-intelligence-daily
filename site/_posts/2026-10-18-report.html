@@ -3,11 +3,14 @@ layout: post
 title: "安全情报日报 2026-10-18"
 date: 2026-10-18
 events: 8
+headline: "BeyondTrust远程支持漏洞遭在野利用"
+dek: "今日入选 8 条 · 2 条确认在野利用，类别分布：漏洞与在野利用×6、恶意软件与僵尸网络×1、勒索软件与数据泄露×1。"
+brief_stats: ["8 事件", "在野 2", "PoC 0", "3 类别", "顶分 90"]
 ---
 
 <nav class="toc" id="toc" aria-label="目录">
 <h2>目录 <span>Contents</span></h2>
-<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> &lt;75</p>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
 <div class="toc-scroll">
 <div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
 <li><a class="toc-link" href="#vuln-15696"><span class="tc">★</span><span class="tt">BeyondTrust远程支持漏洞遭在野利用</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
@@ -33,6 +36,7 @@ events: 8
 <div class="intel-body">
 <h3>BeyondTrust远程支持漏洞遭在野利用</h3>
 <p class="sum">CISA 通报 BeyondTrust Remote Support（原 Bomgar）26.2.3 及更早版本存在严重认证绕过漏洞 CVE-2026-102764，威胁组织已在主动利用该漏洞获取初始访问，随后建立持久化、提权并横向移动。受支持版本（24.3.1 及以后）已提供补丁，使用更旧版本的组织必须先升级；CISA 已于 10 月 16 日将其列入 KEV 目录。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>远程支持/特权访问管理系统是企业对外运维的统一通道，被攻破后攻击者可获得合法的远程控屏与会话能力，波及该通道所服务的全部内网资产，且流量看起来像正常运维。</p></div>
 <div class="cell"><b>Action</b><p>立即将 BeyondTrust Remote Support 升级到修复版本，无法修补则断开对外暴露；对照 KEV 要求限期处置，排查异常运维会话、新增持久化账户与提权痕迹，对已暴露实例按取证流程全面审查。</p></div>
@@ -46,6 +50,7 @@ events: 8
 <div class="intel-body">
 <h3>Magento最高危漏洞可远程执行代码</h3>
 <p class="sum">BleepingComputer 报道，研究人员警告 Magento 与 Adobe Commerce 的 BlockStrap 相关缺陷为最高严重级漏洞 CVE-2026-103849，攻击者可借此在商店服务器上执行任意 PHP 代码，且利用可能很快就会出现在攻击者手中。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>电商前台直连公网并接触支付与客户数据，任意 PHP 代码执行可被用于植入收款劫持、卡片窃取脚本并把商店服务器当作进入企业内网的跳板。</p></div>
 <div class="cell"><b>Action</b><p>核查 Magento/Adobe Commerce 实例是否受影响，立即升级到修复版本或临时移除相关组件；加强文件完整性监控与结账页脚本审计，排查异常管理员与新增 CMS 块。</p></div>
@@ -59,6 +64,7 @@ events: 8
 <div class="intel-body">
 <h3>LMCache未认证反序列化RCE</h3>
 <p class="sum">GitHub 公告（CVSS 9.8）：LMCache（pip 包）多进程/分布式模式会打开一个无认证的 ZeroMQ ROUTER 端口供工作进程注册共享 KV 缓存块，没有 CURVE、ZAP、口令等任何防护，且存在不安全 Pickle 反序列化，未认证攻击者可直接实现远程代码执行，修复版本 0.5.6。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>LMCache 部署在 LLM 推理/KV 缓存加速这类 GPU 基础设施内部，一旦 ROUTER 端口可达，攻击者即在推理主机上获得代码执行，可能连带泄露缓存的业务数据并横向扩散到集群其他节点。</p></div>
 <div class="cell"><b>Action</b><p>升级 lmcache 至 0.5.6；确保多进程模式的 ZMQ 端口绝不暴露于不可信网络，用主机防火墙/网络策略限定仅同机组件可达，并审查推理节点上的异常进程与出站连接。</p></div>
@@ -72,6 +78,7 @@ events: 8
 <div class="intel-body">
 <h3>Nginx UI面板MCP接口可执行任意代码</h3>
 <p class="sum">GitHub 公告（CVSS 8.8，CVE-2026-84318）：Nginx UI 的 MCP 工具 nginx_config_add 会把配置写盘并触发 nginx reload，但跳过了 REST API 中存在的 config.ValidateConfigFile 校验，认证用户因此可写入被禁止的危险指令（如 perl 等）实现远程代码执行；公告给出 1.9.10 系列修复版本。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>Nginx UI 是轻量服务器常用的 Web 管理面板，绕过指令白名单后攻击者可让 nginx worker 以特权执行任意代码，等同直接拿下托管该面板的 Web 服务器与其中 TLS 私钥、转发凭据。</p></div>
 <div class="cell"><b>Action</b><p>升级 Nginx UI 到公告的修复版本；限制 MCP/配置接口的访问面，面板本身不对公网裸开并使用强认证；审查现有 nginx 配置与 reload 历史中是否出现被禁指令。</p></div>
@@ -85,6 +92,7 @@ events: 8
 <div class="intel-body">
 <h3>TanStack框架现严重反射型XSS</h3>
 <p class="sum">GitHub 公告（CVSS 9.3，CVE-2026-102989）：TanStack Start 的 server function 响应存在未认证反射型 XSS，攻击者构造指向受影响应用的链接，即可让应用从自身源站返回攻击者控制的 HTML 并在访客会话中运行其 JavaScript；影响 @tanstack/react-start、solid-start、vue-start 等 npm 包，修复版本 1.168.56/1.168.57/1.168.60。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>TanStack Start 是 React/Solid/Vue 主流全栈框架，脚本在应用同源执行意味着可读取访客可见的同源数据并冒用其会话发请求，可用于批量窃取登录态与敏感信息。</p></div>
 <div class="cell"><b>Action</b><p>将 @tanstack/*-start 相关依赖升级到公告列出的修复版本；对 server function 的响应内容做输出编码/白名单校验，启用严格 CSP 与 SameSite 会话策略作纵深防御。</p></div>
@@ -98,6 +106,7 @@ events: 8
 <div class="intel-body">
 <h3>EseeCloud摄像头现硬编码凭据漏洞</h3>
 <p class="sum">CISA ICS 公告（ICSA-26-288-02）：广州九安 EseeCloud 平台存在硬编码凭据等三个漏洞（CVE-2026-107617、CVE-2026-97858、CVE-2026-105664，CVSS 9.8），影响 EseeCloud App ≤4.9.6 与固件 ≤4.9.86.0，成功利用可使攻击者控制受影响 IP 摄像头。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>监控摄像头大量部署在网络边缘且常年不更新，硬编码凭据类缺陷一旦被利用，设备可被批量接管，成为窥探现场画面、内网横移或组建僵尸网络的基础。</p></div>
 <div class="cell"><b>Action</b><p>升级 EseeCloud App 与固件到修复版本；将摄像头置于独立 VLAN 并禁止管理端口公网暴露，审计存量设备异常登录与出站连接。</p></div>
@@ -113,6 +122,7 @@ events: 8
 <div class="intel-body">
 <h3>n0n团伙一周新增86名受害者</h3>
 <p class="sum">RansomLook 跟踪数据显示，勒索团伙 n0n 近 7 天在泄密站发布 86 条帖子、涉及受害者 86 家；列出的受害者样例大量集中在港口与航运物流链，包括码头操作公司 Asyaport、BNCT Busan New Container Terminal、内陆集装箱堆场 BKH ICD、港口代理 April Asia 等。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>集装箱码头、内河堆场、船代与航运检验公司构成贸易物流关键节点，该行业被团伙集中攻陷会带来港口作业中断、舱单与供应链数据泄露，并向上下游货主扩散。</p></div>
 <div class="cell"><b>Action</b><p>港口、航运与物流企业应重点收敛 VPN/远程接入暴露面、启用 MFA 与离线备份，复查对外业务系统的补丁状态，并针对 n0n 活动特征加强入侵与外传数据检测。</p></div>
@@ -128,6 +138,7 @@ events: 8
 <div class="intel-body">
 <h3>Fortinet漏洞入选CISA KEV目录</h3>
 <p class="sum">Security Affairs 报道，CISA 本周将 Fortinet 多产品与 BeyondTrust Remote Support 的在野利用漏洞加入 KEV 目录；Palo Alto Networks 研究人员此前披露 PEERSTITCH 恶意软件利用 FortiManager，导致 500 多台防火墙暴露。</p>
+
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>PEERSTITCH 这类驻留内存的定向恶意软件以 Fortinet 边界与管理中心为目标，FortiManager 被控意味着其纳管的全部防火墙可被批量改配置、开洞，单点失陷放大为整片边界失守。</p></div>
 <div class="cell"><b>Action</b><p>按 KEV 与厂商公告限期升级 Fortinet 相关产品；盘点 FortiManager 纳管设备清单，核查防火墙配置变更、异常管理连接与未知会话，暴露面上的实例优先隔离与取证。</p></div>
