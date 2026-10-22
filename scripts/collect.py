@@ -27,6 +27,20 @@ FEEDS = [
     {"id": "chainalysis", "name": "Chainalysis Blog", "url": "https://www.chainalysis.com/blog/feed/", "tags": ["crypto", "web3"]},
     {"id": "rwlive", "name": "Ransomware.live", "url": "https://api.ransomware.live/rss", "tags": ["ransomware", "incident"]},
     {"id": "derp", "name": "Derp.ca Research", "url": "https://www.derp.ca/feed", "tags": ["malware", "research"]},
+    {"id": "microsoft", "name": "Microsoft Security Blog", "url": "https://www.microsoft.com/en-us/security/blog/feed/", "tags": ["vendor", "vuln"]},
+    {"id": "crowdstrike", "name": "CrowdStrike Blog", "url": "https://www.crowdstrike.com/blog/feed/", "tags": ["vendor", "threat"]},
+    {"id": "talos", "name": "Cisco Talos", "url": "https://blog.talosintelligence.com/rss/", "tags": ["vendor", "threat"]},
+    {"id": "eset", "name": "ESET Research", "url": "https://www.welivesecurity.com/feed/", "tags": ["research", "malware"]},
+    {"id": "kaspersky", "name": "Kaspersky Securelist", "url": "https://www.securelist.com/feed", "tags": ["research", "apt"]},
+    {"id": "qualys", "name": "Qualys Blog", "url": "https://blog.qualys.com/feed", "tags": ["vendor", "vuln"]},
+    {"id": "horizon3", "name": "Horizon3.ai", "url": "https://www.horizon3.ai/feed/", "tags": ["research", "exploit"]},
+    {"id": "checkpoint", "name": "Check Point Research", "url": "https://research.checkpoint.com/feed/", "tags": ["research", "threat"]},
+    {"id": "sophos", "name": "Sophos Blog", "url": "https://www.sophos.com/en-us/blog/feed", "tags": ["vendor", "threat"]},
+    {"id": "snyk", "name": "Snyk Security", "url": "https://snyk.io/blog/feed/", "tags": ["supplychain", "vuln"]},
+    {"id": "ncsc", "name": "UK NCSC Alerts", "url": "https://www.ncsc.gov.uk/api/1/services/v1/report-rss-feed.xml", "tags": ["gov", "alert"]},
+    {"id": "darkreading", "name": "Dark Reading", "url": "https://www.darkreading.com/rss.xml", "tags": ["general"]},
+    {"id": "securityweek", "name": "SecurityWeek", "url": "https://www.securityweek.com/feed/", "tags": ["general"]},
+    {"id": "malwarebytes", "name": "Malwarebytes Labs", "url": "https://blog.malwarebytes.com/feed/", "tags": ["malware", "research"]},
     {"id": "phpnet", "name": "PHP.net News", "url": "https://www.php.net/feed.atom", "tags": ["vuln", "vendor"]},
     {"id": "wpsec", "name": "WordPress News", "url": "https://wordpress.org/news/feed/", "tags": ["vuln", "vendor"]},
 ]
@@ -435,7 +449,12 @@ def main():
         results.append({"source": "x", "status": "ok", "count": added_x, "fetched": len(posts)})
         cooldown.pop("x", None)
     except Exception as e:
-        results.append({"source": "x", "status": "fail", "error": str(e)[:150]})
+        msg = str(e)
+        if "NoAuthMethod" in msg or "No apps registered" in msg:
+            x_status = "skip"
+            results.append({"source": "x", "status": "skip", "error": "credentials not configured (deferred)"})
+        else:
+            results.append({"source": "x", "status": "fail", "error": msg[:150]})
 
     # ---- abuse.ch 指标遥测（风控纪律：每端点每日仅 1 次查询、无重试、key 不落任何输出）----
     def _abusech_key():
@@ -481,6 +500,16 @@ def main():
                     all_items = existing + new_items
                 tf_status = "ok"
                 results.append({"source": "threatfox", "status": "ok", "count": len(rows)})
+                os.makedirs(os.path.join(DATA, "iocs"), exist_ok=True)
+                slim = [{"i": r.get("ioc"), "t": r.get("ioc_type"),
+                         "f": r.get("malware_printable") or r.get("malware") or "unknown",
+                         "k": r.get("threat_type"), "c": r.get("confidence_level"),
+                         "s": (r.get("first_seen") or "")[:10],
+                         "u": f"https://threatfox.abuse.ch/ioc/{r.get('id')}", "z": "threatfox"}
+                        for r in rows if r.get("ioc")]
+                tf_path = os.path.join(DATA, "iocs", f"{run_date}-threatfox.json")
+                json.dump(slim, open(tf_path + ".tmp", "w"), ensure_ascii=False, indent=0)
+                os.replace(tf_path + ".tmp", tf_path)
             else:
                 results.append({"source": "threatfox", "status": "fail", "error": str(d.get("query_status", "no data"))})
         except Exception as e:
@@ -497,7 +526,10 @@ def main():
             with urllib.request.urlopen(req, timeout=40) as r:
                 csv_text = r.read().decode("utf-8", "replace")
             import csv as _csv, io as _io
-            rows = list(_csv.DictReader(_io.StringIO(csv_text)))
+            _lines = csv_text.splitlines()
+            _hi = next(i for i, ln in enumerate(_lines) if ln.startswith("# ") and "id," in ln)
+            _data = [_lines[_hi][2:].strip()] + [ln for ln in _lines[_hi + 1:] if ln.strip() and not ln.startswith("#")]
+            rows = list(_csv.DictReader(_data))
             if rows:
                 import collections as _C
                 mal = _C.Counter((x.get("malware") or "unknown").lower() for x in rows)
@@ -516,6 +548,21 @@ def main():
                     all_items = existing + new_items
                 uh_status = "ok"
                 results.append({"source": "urlhaus", "status": "ok", "count": len(rows)})
+                os.makedirs(os.path.join(DATA, "iocs"), exist_ok=True)
+                uh = []
+                rows_s = sorted(rows, key=lambda x: (x.get("url_status") or "").lower() != "online")
+                for x in rows_s[:800]:
+                    url = (x.get("url") or "").strip()
+                    if not url:
+                        continue
+                    uh.append({"i": url, "t": "url",
+                               "f": (x.get("threat") or "unknown"),
+                               "k": (x.get("tags") or "")[:60], "c": 90 if (x.get("url_status") or "").lower() == "online" else 60,
+                               "s": (x.get("dateadded") or "")[:10], "u": (x.get("urlhaus_link") or "https://urlhaus.abuse.ch/"),
+                               "z": "urlhaus"})
+                uh_path = os.path.join(DATA, "iocs", f"{run_date}-urlhaus.json")
+                json.dump(uh, open(uh_path + ".tmp", "w"), ensure_ascii=False, indent=0)
+                os.replace(uh_path + ".tmp", uh_path)
             else:
                 results.append({"source": "urlhaus", "status": "fail", "error": "empty export"})
         except urllib.error.HTTPError as e:
@@ -536,8 +583,8 @@ def main():
     ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem", "threatfox", "urlhaus", "nvd", "x"))
     hard_fail = ok == 0
     status = {"run_id": run_id, "run_date": run_date, "stage": "collect",
-              "sources_total": len(FEEDS) + 8, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0) + (1 if nvd_status == "ok" else 0) + (1 if x_status == "ok" else 0),
-              "sources_fail": [r for r in results if r["status"] not in ("ok",)],
+              "sources_total": len(FEEDS) + 8 - (1 if x_status == "skip" else 0), "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0) + (1 if nvd_status == "ok" else 0) + (1 if x_status == "ok" else 0),
+              "sources_fail": [r for r in results if r["status"] == "fail"],
               "new_items": len(new_items), "total_items": len(all_items),
               "finished_at": datetime.now(CST).isoformat()}
     json.dump(status, open(status_file + ".tmp", "w"), ensure_ascii=False, indent=1)

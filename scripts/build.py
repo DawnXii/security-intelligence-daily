@@ -3,7 +3,7 @@
 输入: data/analysis/<date>.json (已通过 validate) + data/status/<date>.json
 输出: site/_posts/<date>.md, data/runs/<date>/run.json
 状态分级：analysis_done / saved_local / git_committed / site_built / site_deployed 分开记录。"""
-import json, os, sys, zlib, re
+import collections, json, os, sys, zlib, re
 from datetime import datetime, timezone, timedelta
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -12,6 +12,85 @@ CST = timezone(timedelta(hours=8))
 CATS = {"vuln": "漏洞与在野利用", "supplychain": "供应链 / CI-CD", "ransomware": "勒索软件与数据泄露",
         "malware": "恶意软件与僵尸网络", "ttp": "攻击战术与技术", "phishing": "钓鱼与社工",
         "incident": "重大安全事件", "crypto-infra": "区块链基础设施"}
+
+
+def ioc_block(run_date):
+    from html import escape as esc
+    """Indicators section: dedup+rank today's IOCs, render filterable table with copy/download."""
+    import glob as _g
+    rows, seen_i = [], set()
+    for f in sorted(_g.glob(os.path.join(DATA, "iocs", f"{run_date}-*.json"))):
+        try:
+            for r in json.load(open(f)):
+                i = (r.get("i") or "").strip()
+                if i and i not in seen_i:
+                    seen_i.add(i); rows.append(r)
+        except Exception:
+            continue
+    if not rows:
+        return ""
+    rows.sort(key=lambda r: -(r.get("c") or 0))
+    total = len(rows)
+    show = rows[:500]
+    TMAP = {"ip:port": "IP", "sha256_hash": "SHA256", "url": "URL", "domain": "DOMAIN"}
+    fams = collections.Counter((r.get("f") or "unknown") for r in show)
+    top_fams = [f for f, _ in fams.most_common(8)]
+    L = ['<p class="section-label" id="sec-iocs"><span class="n">I</span>今日指标 IoCs</p>', ""]
+    L.append('<div class="iocs reveal" id="ioc-sec">')
+    L.append(f'<p class="ioc-meta">采集自 abuse.ch ThreatFox / URLhaus（近 24h 新增，按置信度排序）：全量 {total} 条，'
+             f'页面呈现前 {len(show)} 条；点标签过滤，勾选后可批量复制或下载 CSV。</p>')
+    chips = ['<button class="ichip on" data-k="tp" data-v="all">全部类型</button>']
+    for t, lab in TMAP.items():
+        chips.append(f'<button class="ichip" data-k="tp" data-v="{esc(t)}">{lab}</button>')
+    chips.append('<span class="ichip-sep">家族</span>')
+    chips.append('<button class="ichip on" data-k="fm" data-v="all">全部</button>')
+    for f in top_fams:
+        chips.append(f'<button class="ichip" data-k="fm" data-v="{esc(f)}">{esc(f)}</button>')
+    L.append('<div class="ichips">' + "".join(chips) + "</div>")
+    L.append('<div class="ioc-actions"><button class="ibtn" id="ioc-copy-sel">复制选中</button>'
+             '<button class="ibtn" id="ioc-copy-vis">复制当前筛选</button>'
+             '<button class="ibtn" id="ioc-csv">下载 CSV</button>'
+             f'<span class="ioc-act" id="ioc-msg" aria-live="polite"></span></div>')
+    L.append('<table class="iact"><thead><tr><th><input type="checkbox" id="ioc-all" aria-label="全选"></th>'
+             "<th>指标</th><th>类型</th><th>家族</th><th>置信</th><th>首见</th><th>来源</th></tr></thead><tbody>")
+    for r in show:
+        i = r.get("i") or ""
+        disp = i if len(i) <= 84 else i[:81] + "…"
+        L.append(f'<tr class="ioc" data-tp="{esc(r.get("t") or "")}" data-fm="{esc((r.get("f") or "unknown").lower())}" '
+                 f'data-i="{esc(i)}">'
+                 f'<td><input type="checkbox"></td>'
+                 f'<td class="mono" title="{esc(i)}">{esc(disp)}</td>'
+                 f'<td>{TMAP.get(r.get("t"), esc(r.get("t") or ""))}</td>'
+                 f'<td><i class="fam">{esc(r.get("f") or "unknown")}</i></td>'
+                 f'<td>{esc(str(r.get("c") or ""))}</td>'
+                 f'<td>{esc(str(r.get("s") or ""))}</td>'
+                 f'<td><a href="{esc(r.get("u") or "#")}" target="_blank" rel="noopener">{esc(r.get("z") or "")}</a></td></tr>')
+    L.append("</tbody></table>")
+    L.append("""<script>
+(function(){var sec=document.getElementById('ioc-sec');if(!sec)return;
+var rows=[].slice.call(sec.querySelectorAll('tr.ioc')),flt={tp:'all',fm:'all'},msg=document.getElementById('ioc-msg');
+function vis(){rows.forEach(function(r){r.style.display=((flt.tp==='all'||r.dataset.tp===flt.tp)&&(flt.fm==='all'||r.dataset.fm===flt.fm))?'':'none';});}
+sec.querySelectorAll('.ichip').forEach(function(b){b.addEventListener('click',function(){var k=b.dataset.k,v=b.dataset.v;
+ flt[k]=v;sec.querySelectorAll('.ichip[data-k="'+k+'"]').forEach(function(x){x.classList.toggle('on',x===b);});vis();});});
+function shown(){return rows.filter(function(r){return r.style.display!=='none';});}
+document.getElementById('ioc-all').addEventListener('change',function(e){shown().forEach(function(r){r.querySelector('input').checked=e.target.checked;});});
+function say(t){msg.textContent=t;setTimeout(function(){msg.textContent='';},2500);}
+function copyTxt(t){if(navigator.clipboard&&navigator.clipboard.writeText){return navigator.clipboard.writeText(t).then(function(){say('已复制 '+t.split('\n').length+' 行');});}
+ var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();say('已复制');}
+function lines(rs){return rs.map(function(r){return r.dataset.i;}).join('\n');}
+document.getElementById('ioc-copy-sel').addEventListener('click',function(){var rs=rows.filter(function(r){return r.querySelector('input').checked;});
+ rs.length?copyTxt(lines(rs)):say('未勾选任何行');});
+document.getElementById('ioc-copy-vis').addEventListener('click',function(){copyTxt(lines(shown()));});
+document.getElementById('ioc-csv').addEventListener('click',function(){
+ var rs=shown(),head='indicator,type,family,confidence,first_seen,source\n';
+ var body=rs.map(function(r){return '"'+r.dataset.i+'","'+r.dataset.tp+'","'+(r.querySelector('.fam').textContent)+'",'+(r.cells[4].textContent||0)+',"'+r.cells[5].textContent+'","'+r.cells[6].textContent+'"';}).join('\n');
+ var b=new Blob([head+body],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);
+ a.download='sid-iocs-""" + run_date + """.csv';a.click();say('已导出 '+rs.length+' 条');});
+vis();})();
+</script>""")
+    L.append("</div>")
+    L.append("")
+    return "\n".join(L)
 
 def main():
     run_date = sys.argv[1] if len(sys.argv) > 1 else datetime.now(CST).strftime("%Y-%m-%d")
@@ -174,6 +253,9 @@ def main():
         lines += ['<div class="empty">今日无达到发布标准的条目，请查阅往期。</div>', ""]
 
     if items:
+        ib = ioc_block(run_date)
+        if ib:
+            lines.append(ib)
         lines.append('</div>')  # /feed-col
 
     fm = f"""---
