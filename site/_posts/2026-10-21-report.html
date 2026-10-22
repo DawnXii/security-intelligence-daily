@@ -4,7 +4,7 @@ title: "安全情报日报 2026-10-21"
 date: 2026-10-21
 events: 10
 headline: "<i class=\"hl\">PHP</i> 预告双 9.2 漏洞：补丁发布即利用窗口"
-dek: "本周信号密度最高的一天：<i class=\"hl\">PHP</i> 安全团队罕见提前公告——两枚 <i class=\"hl\">9.2 分</i> RCE 定于次日 14:00 UTC 计划外发版，意味着补丁公开即利用窗口打开；同日 <i class=\"hl\">OVHcloud</i> 官方 CLI <i class=\"hl\">被投毒</i>窃取开发密钥、<i class=\"hl\">Plex</i> 四枚漏洞当日入 <i class=\"hl\">KEV</i>、西门子软件中心 <i class=\"hl\">DLL 侧加载</i>确认遭 <i class=\"hl\">ClickFix</i> 链<i class=\"hl\">在野利用</i>。国家级方向 <i class=\"hl\">APT28</i> 转攻北约成员国家造船企业；<i class=\"hl\">Oracle</i> 十月补丁日多枚组件评分 10.0。今日入选 10 条：在野 3、<i class=\"hl\">公开 <i class=\"hl\">PoC</i></i> 1，PHP/媒体服务器/开发工具链需把修补时限压到小时级。"
+dek: "本周信号密度最高的一天：<i class=\"hl\">PHP</i> 安全团队罕见提前公告——两枚 9.2 分 RCE 定于次日 14:00 UTC 计划外发版，意味着补丁公开即利用窗口打开；同日 <i class=\"hl\">OVHcloud</i> 官方 CLI 被投毒窃取开发密钥、<i class=\"hl\">Plex</i> 四枚漏洞当日入 <i class=\"hl\">KEV</i>、西门子软件中心 <i class=\"hl\">DLL 侧加载</i>确认遭 <i class=\"hl\">ClickFix</i> 链在野利用。国家级方向 <i class=\"hl\">APT28</i> 转攻北约成员国家造船企业；<i class=\"hl\">Oracle</i> 十月补丁日多枚组件评分 10.0。今日入选 10 条：在野 3、公开 PoC 1，PHP/媒体服务器/开发工具链需把修补时限压到小时级。"
 brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 ---
 
@@ -57,11 +57,11 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="intel reveal" id="vuln-22979">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
 <div class="intel-body">
-<h3>Plex 媒体服务器四漏洞入<i class="hl">KEV</i></h3>
-<p class="sum">Plex Media Server 漏洞 <i class="hl kcve">CVE-2026-96656</i> 已被 CISA 列入已知被利用漏洞目录（<i class="hl">KEV</i>），dateAdded 2026-10-20；同批还有 96655/96654/96652 等条目（当日清单内共 4 条同产品 KEV 新增），要求按 BOD 26-04 修复或停用。</p>
+<h3>Plex 媒体服务器四漏洞入KEV</h3>
+<p class="sum">Plex Media Server 漏洞 <i class="hl kcve">CVE-2026-96656</i> 已被 CISA 列入已知被利用漏洞目录（KEV），dateAdded 2026-10-20；同批还有 96655/96654/96652 等条目（当日清单内共 4 条同产品 KEV 新增），要求按 BOD 26-04 修复或停用。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-96656</b><b class="fct fout">4 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Plex Media Server</span></div></div>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>Plex 在家庭实验室与企业内网广泛部署，暴露于 LAN/公网的管理面确认被<i class="hl">在野利用</i>。</p></div>
+<div class="cell"><b>Impact</b><p>Plex 在家庭实验室与企业内网广泛部署，暴露于 LAN/公网的管理面确认被在野利用。</p></div>
 <div class="cell"><b>Action</b><p>立即升级 Plex Media Server 至修复版本；无法修补的实例断网或停用，并对外暴露实例做入侵回溯。</p></div>
 </div>
 
@@ -72,12 +72,12 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="intel reveal" id="vuln-36165">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
 <div class="intel-body">
-<h3>FortiSIEM 9.4漏洞现公开<i class="hl">PoC</i></h3>
-<p class="sum">研究人员发布了针对 Fortinet FortiSIEM 关键漏洞 <i class="hl kcve">CVE-2026-106173</i>（<i class="hl">CVSS 9.4</i>，路径穿越类）的无认证 RCE 利用 <i class="hl">PoC</i>，该漏洞厂商已发布补丁；此前已有同类威胁情报。</p>
+<h3>FortiSIEM 9.4漏洞现公开PoC</h3>
+<p class="sum">研究人员发布了针对 Fortinet FortiSIEM 关键漏洞 <i class="hl kcve">CVE-2026-106173</i>（CVSS 9.4，路径穿越类）的无认证 RCE 利用 PoC，该漏洞厂商已发布补丁；此前已有同类威胁情报。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-106173</b><b class="fct fcvss">CVSS 9.4</b><div class="fvers"><span class="fv"><b>受影响</b> Fortinet FortiSIEM</span><span class="fv"><b>修复</b> 已发布补丁</span></div></div>
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p><i class="hl">公开 <i class="hl">PoC</i></i> 大幅降低利用门槛，集中部署 FortiSIEM 的 SOC/托管环境面临批量扫描利用风险。</p></div>
-<div class="cell"><b>Action</b><p>确认所有 FortiSIEM 实例升级到官方修复版本，管理口不对公网开放；用<i class="hl">公开 <i class="hl">PoC</i></i> 特征（路径穿越请求）在 WAF/日志中排查扫描行为。</p></div>
+<div class="cell"><b>Impact</b><p>公开 PoC 大幅降低利用门槛，集中部署 FortiSIEM 的 SOC/托管环境面临批量扫描利用风险。</p></div>
+<div class="cell"><b>Action</b><p>确认所有 FortiSIEM 实例升级到官方修复版本，管理口不对公网开放；用公开 PoC 特征（路径穿越请求）在 WAF/日志中排查扫描行为。</p></div>
 </div>
 
 </div>
@@ -134,11 +134,11 @@ brief_stats: ["10 事件", "在野 3", "PoC 1", "5 类别", "顶分 92"]
 <div class="intel reveal" id="supplychain-15053">
 <div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>84</i></span></div>
 <div class="intel-body">
-<h3>OVHcloud CLI <i class="hl">被投毒</i>窃取开发密钥</h3>
+<h3>OVHcloud CLI 被投毒窃取开发密钥</h3>
 <p class="sum">法国云厂商 OVHcloud 公告其开源命令行工具（GitHub 发布的 CLI release）遭攻击者入侵并植入信息窃取恶意软件，用于窃取开发者密钥等凭据。</p>
 
 <div class="intel-grid">
-<div class="cell"><b>Impact</b><p>官方发布通道<i class="hl">被投毒</i>意味着下载即中招，云厂商 CLI 通常持有高权限凭据，横向风险延伸到客户云环境。</p></div>
+<div class="cell"><b>Impact</b><p>官方发布通道被投毒意味着下载即中招，云厂商 CLI 通常持有高权限凭据，横向风险延伸到客户云环境。</p></div>
 <div class="cell"><b>Action</b><p>核查开发/CI 环境中 OVHcloud CLI 的来源与哈希，替换为可信版本并轮换其保存的云凭据、令牌；对构建机做异常外联排查。</p></div>
 </div>
 

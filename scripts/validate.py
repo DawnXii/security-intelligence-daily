@@ -14,6 +14,9 @@ CATEGORIES = {"vuln", "supplychain", "ransomware", "malware", "ttp", "phishing",
 CONF = {"high", "medium", "low"}
 
 KTAG_RE = __import__("re").compile(r"<k>([^<>]*)</k>")
+GENERIC_BAN = ("在野利用", "在野", "窃密器", "窃密木马", "勒索软件", "钓鱼", "零日", "漏洞",
+               "后门", "木马", "恶意软件", "僵尸网络", "攻击队", "应用网关", "代码执行",
+               "远程执行", "提权", "凭证", "恶意")
 
 def check_ktags(analysis):
     """AI markup discipline: balanced, short, count-capped; evidence/cve fields untouched."""
@@ -30,8 +33,13 @@ def check_ktags(analysis):
             if n_open > 6:
                 bad.append(f"{h}.{fld} k标记超量: {n_open}>6")
             for m in KTAG_RE.finditer(t):
-                if not (1 <= len(m.group(1)) <= 44):
-                    bad.append(f"{h}.{fld} k内容长度越界: {len(m.group(1))}")
+                inner = m.group(1)
+                if not (1 <= len(inner) <= 44):
+                    bad.append(f"{h}.{fld} k内容长度越界: {len(inner)}")
+                for g in GENERIC_BAN:
+                    if g in inner:
+                        bad.append(f"{h}.{fld} k标记了通用类别词: <{inner}> 含[{g}]——只允许专有实体")
+                        break
         for fld in ("evidence", "cve", "cvss"):
             t = str(a.get(fld, "") or "")
             if "<k>" in t or "</k>" in t:

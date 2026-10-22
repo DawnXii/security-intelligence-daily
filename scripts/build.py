@@ -92,18 +92,16 @@ def build_iocs_page(run_date):
 WEEK_CN = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
 
 
-HL_KEYS = ["在野利用", "遭在野", "公开 PoC", "PoC", "KEV", "零日", "紧急补丁", "被投毒", "窃密器", "勒索软件", "钓鱼"]
+GENERIC_BAN = ("在野利用", "在野", "窃密器", "窃密木马", "勒索软件", "勒索", "钓鱼", "零日", "漏洞",
+               "后门", "木马", "恶意软件", "僵尸网络", "攻击", "应用网关", "供应链攻击", "代码执行",
+               "远程执行", "提权", "信息窃取", "凭证")
 K_RE = re.compile(r"<k>([^<>]{1,44})</k>")
 
 def _mech(part):
-    """Escape plain segment then apply machine highlights (single visual language)."""
+    """Escape plain segment; machine highlight = CVE identifiers ONLY (entities are AI-marked via <k>)."""
     from html import escape as _e
     t = _e(part)
     t = re.sub(r"(CVE-\d{4}-\d+)", r'<i class="hl kcve">\1</i>', t)
-    t = re.sub(r"(\d\.\d) 分", r'<i class="hl">\1 分</i>', t)
-    t = re.sub(r"(CVSS[\s:=]{0,3}\d\.\d)", r'<i class="hl">\1</i>', t)
-    for k in HL_KEYS:
-        t = t.replace(k, '<i class="hl">' + k + "</i>", 1)
     return t
 
 def rich(raw):
