@@ -51,7 +51,7 @@ def build_iocs_page(run_date):
     z_chips = chip("z", "all", "全部", True) + "".join(chip("z", z, z) for z in srcs)
     d_chips = chip("d", "all", "近7天", True) + "".join(chip("d", x, x) for x in dlist)
     data_json = json.dumps(merged, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\u002f")
-    page = "---\\nlayout: default\\n---\\n" + open(os.path.join(BASE, "templates", "iocpage.html"), encoding="utf-8").read()
+    page = "---\nlayout: default\n---\n" + open(os.path.join(BASE, "templates", "iocpage.html"), encoding="utf-8").read()
     page = (page.replace("__N__", str(len(merged))).replace("__TP__", tp_chips)
             .replace("__D__", d_chips).replace("__FM__", fm_chips).replace("__Z__", z_chips)
             .replace("__DATA__", data_json))
