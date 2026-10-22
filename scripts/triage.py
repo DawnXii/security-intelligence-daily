@@ -11,7 +11,7 @@ MAX_ITEMS = 40
 
 SRC_W = {"cisa": 8, "ghsec": 6, "trailofbits": 5, "cloudflare": 4, "aws": 4, "google": 4,
          "bleo": 3, "thn": 3, "secaff": 3, "register": 3, "krebs": 3, "isc": 2, "chainalysis": 2, "netsec": 2,
-         "kev": 9, "ghsa": 5, "rwlive": 4, "ransomlook": 6, "derp": 6, "derptelem": 8, "threatfox": 7, "urlhaus": 7, "phpnet": 6, "wpsec": 6, "nvd": 5}
+         "kev": 9, "ghsa": 5, "rwlive": 4, "ransomlook": 6, "derp": 6, "derptelem": 8, "threatfox": 7, "urlhaus": 7, "phpnet": 6, "wpsec": 6, "nvd": 5, "x": 4}
 PAT = [
     (r"cve-\d{4}-\d+|exploit(ed|ing)?|in the wild|active(ly)? exploit|zero.?day", 10, "vuln"),
     (r"remote code execution|\brce\b|unauthenticated|privilege escalation|code execution|memory corruption|use-after-free|sandbox escape|vm escape", 9, "vuln"),

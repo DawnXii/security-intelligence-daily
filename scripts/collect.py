@@ -350,8 +350,16 @@ def main():
         while total is None or (start < total and start < 4000):
             q = ("https://services.nvd.nist.gov/rest/json/cves/2.0"
                  f"?pubStartDate={ps}&pubEndDate={pe}&resultsPerPage=2000&startIndex={start}")
-            with urllib.request.urlopen(urllib.request.Request(q, headers={"User-Agent": "SID-Daily/1.0"}), timeout=60) as r:
-                d = json.loads(r.read())
+            d = None
+            for _try in range(3):
+                try:
+                    with urllib.request.urlopen(urllib.request.Request(q, headers={"User-Agent": "SID-Daily/1.0"}), timeout=90) as r:
+                        d = json.loads(r.read())
+                    break
+                except Exception:
+                    if _try == 2:
+                        raise
+                    time.sleep(8)
             total = d.get("totalResults", 0); batch = d.get("vulnerabilities", [])
             rows += batch; start += len(batch)
             if not batch or start >= total or start >= 4000:
@@ -386,6 +394,48 @@ def main():
         cooldown.pop("nvd", None)
     except Exception as e:
         results.append({"source": "nvd", "status": "fail", "error": str(e)[:150]})
+
+    # ---- X/Twitter 高信号研究账号增量（每日 1 次 search；凭据缺失则 fail 显示，透明披露）----
+    x_status = "fail"
+    try:
+        import datetime as _dt
+        import subprocess as _sp
+        X_ACCTS = ["googleprojectzero", "CISAgov", "vxunderground", "malwrhunterteam",
+                   "GossiTheDog", "unit42", "splunkresearch", "elasticsecurit",
+                   "badrabbit", "GroupIB_", "avast_ars", "treddun", "GeloSchnyder",
+                   "craiu", "s4xbyr", "n1zzo", "d1ruba"]
+        since = (_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        q = "(" + " ".join(f"from:{a}" for a in X_ACCTS) + \
+            ' (CVE OR PoC OR zero-day OR "in the wild" OR exploited OR KEV OR breach OR ransomware)' + \
+            f" -is:retweet lang:en since:{since})"
+        r = _sp.run(["xurl", "search", q, "-n", "100"], capture_output=True, text=True, timeout=90)
+        out = (r.stdout or "").strip()
+        if r.returncode != 0 or not out.startswith("{"):
+            raise RuntimeError((r.stderr or out)[:150])
+        posts = json.loads(out).get("data") or []
+        SIGNAL = re.compile(r"(CVE-\d{4}-\d+|\bPoC\b|zero-?day|exploited|in the wild|KEV|breach)", re.I)
+        added_x = 0
+        for p in posts:
+            txt = (p.get("text") or "").strip()
+            if len(txt) < 40 or not SIGNAL.search(txt):
+                continue
+            tid = str(p.get("id", ""))
+            h = hashlib.sha256(f"x|{tid}".encode()).hexdigest()[:16]
+            if h in seen:
+                continue
+            seen[h] = True; added_x += 1
+            author = p.get("author_id") or ""
+            new_items.append({"title": f"X 快讯 {txt[:60]}",
+                              "link": f"https://x.com/i/status/{tid}", "date": datetime.now(CST).isoformat(),
+                              "summary": ("X 帖（未交叉证实，以官方来源为准）：" + txt[:400]),
+                              "hash": h, "source": "x", "source_name": "X curated researchers",
+                              "tags": ["social"], "collected_at": datetime.now(CST).isoformat()})
+        all_items = existing + new_items
+        x_status = "ok"
+        results.append({"source": "x", "status": "ok", "count": added_x, "fetched": len(posts)})
+        cooldown.pop("x", None)
+    except Exception as e:
+        results.append({"source": "x", "status": "fail", "error": str(e)[:150]})
 
     # ---- abuse.ch 指标遥测（风控纪律：每端点每日仅 1 次查询、无重试、key 不落任何输出）----
     def _abusech_key():
@@ -483,10 +533,10 @@ def main():
     json.dump(cooldown, open(cooldown_file, "w"), indent=1)
 
     ok = sum(1 for r in results if r["status"] == "ok")
-    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem", "threatfox", "urlhaus", "nvd"))
+    ok_feed = sum(1 for r in results if r["status"] == "ok" and r["source"] not in ("kev", "ghsa", "ransomlook", "derptelem", "threatfox", "urlhaus", "nvd", "x"))
     hard_fail = ok == 0
     status = {"run_id": run_id, "run_date": run_date, "stage": "collect",
-              "sources_total": len(FEEDS) + 7, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0) + (1 if nvd_status == "ok" else 0),
+              "sources_total": len(FEEDS) + 8, "sources_ok": ok_feed + (1 if kev_status == "ok" else 0) + (1 if ghsa_status == "ok" else 0) + (1 if rl_status == "ok" else 0) + (1 if dtm_status == "ok" else 0) + (1 if tf_status == "ok" else 0) + (1 if uh_status == "ok" else 0) + (1 if nvd_status == "ok" else 0) + (1 if x_status == "ok" else 0),
               "sources_fail": [r for r in results if r["status"] not in ("ok",)],
               "new_items": len(new_items), "total_items": len(all_items),
               "finished_at": datetime.now(CST).isoformat()}
