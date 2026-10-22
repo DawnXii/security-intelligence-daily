@@ -315,8 +315,9 @@ footer.site{margin-top:80px;border-top:2px solid var(--ink);background:var(--pap
   var rev=document.querySelectorAll('.reveal');
   if('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion:reduce)').matches){
     var io=new IntersectionObserver(function(es){es.forEach(function(e){
-      if(e.isIntersecting){e.target.classList.add('shown');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px'});
+      if(e.isIntersecting){e.target.classList.add('shown');io.unobserve(e.target);}});});
     rev.forEach(function(el){io.observe(el);});
+    setTimeout(function(){rev.forEach(function(el){el.classList.add('shown');});},1200);
   }else{rev.forEach(function(el){el.classList.add('shown');});}
 
   // toc scrollspy
