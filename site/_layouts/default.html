@@ -95,6 +95,21 @@ nav a.cta:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
 .ioc-sub{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;color:var(--gray);text-transform:uppercase}
 .ioc-search{margin-bottom:12px}
 .ioc-search input{width:100%;max-width:420px;font-family:var(--f-mono);font-size:12px;padding:8px 12px;border:2px solid var(--ink);background:var(--paper);box-shadow:3px 3px 0 var(--ink)}
+
+/* ── modern brief layer ── */
+.post-dek{font-size:13px;color:var(--ink);max-width:720px;margin:10px 0 0;line-height:1.75}
+.post-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pchip{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;border:2px solid var(--ink);padding:3px 10px;background:var(--paper)}
+.pchip:first-child{background:var(--ink);color:var(--amber)}
+.todaycard{position:relative;margin-top:26px;background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--amber);padding:22px 26px}
+.todaycard .kicker{margin-bottom:8px}
+.td-h{font-family:var(--f-serif);font-size:clamp(24px,3.4vw,38px);font-weight:900;line-height:1.25;margin:0 0 10px;color:var(--ink)}
+.td-dek{font-size:12.5px;color:#3a3a3a;line-height:1.8;margin:0 0 4px;max-width:760px}
+.td-cta{display:inline-block;margin-top:14px;font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--amber);border:2px solid var(--ink);padding:8px 16px;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .1s ease}
+.td-cta:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+a.stat{text-decoration:none;cursor:pointer}
+a.stat:hover b{color:var(--amber)}
+
 /* ── iocs section ── */
 .iocs{background:var(--paper);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:18px 20px;margin-bottom:26px}
 .ioc-meta{font-size:11px;color:var(--gray);letter-spacing:.05em;margin:0 0 12px}
@@ -251,7 +266,7 @@ footer.site{margin-top:80px;border-top:2px solid var(--ink);background:var(--pap
     <nav>
       <ul>
         <li><a href="{{ '/' | relative_url }}">Issues</a></li>
-        <li><a href="{{ '/' | relative_url }}#sources">Sources</a></li>
+        <li><a href="{{ '/sources/' | relative_url }}">Sources</a></li>
         <li><a href="{{ '/iocs/' | relative_url }}">IoCs</a></li>
         <li><a class="cta" href="https://github.com/DawnXii/security-intelligence-daily" target="_blank" rel="noopener">GitHub ↗</a></li>
       </ul>

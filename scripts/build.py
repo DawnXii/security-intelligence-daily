@@ -88,6 +88,56 @@ def build_iocs_page(run_date):
     open(os.path.join(od, "index.html"), "w", encoding="utf-8").write(page)
     return len(merged)
 
+
+WEEK_CN = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+
+def mech_brief(items, run_date):
+    """Mechanical situation brief from the day's selected items (no new facts)."""
+    n = len(items)
+    if not n:
+        return None
+    wild = sum(1 for a in items if a.get("exploit") == "wild")
+    poc = sum(1 for a in items if a.get("exploit") == "poc")
+    cats = collections.Counter(a.get("category", "") for a in items)
+    top = items[0]
+    dist = "、".join(f"{CATS.get(c, c)}×{k}" for c, k in cats.most_common(3))
+    parts = [f"入选 {n} 条"]
+    if wild:
+        parts.append(f"{wild} 条确认在野利用")
+    if poc:
+        parts.append(f"{poc} 条公开 PoC")
+    dek = "今日" + " · ".join(parts) + f"，类别分布：{dist}。"
+    chips = [f"{n} 事件", f"在野 {wild}", f"PoC {poc}", f"{len(cats)} 类别", f"顶分 {top.get('score', '—')}"]
+    return {"headline": top.get("title_zh", ""), "dek": dek, "chips": chips, "wild": wild, "n": n}
+
+
+def yaml_q(t):
+    return str(t).replace('"', '\\"').replace("\n", " ").replace("\r", " ")
+
+
+def refresh_home_slot(run_date, brief):
+    idx = os.path.join(SITE, "index.html")
+    src = open(idx, encoding="utf-8").read()
+    if "<!--TODAY_START-->" not in src:
+        return False
+    if brief:
+        wd = WEEK_CN[datetime.strptime(run_date, "%Y-%m-%d").weekday()]
+        inner = ('<div class="todaycard reveal">\n'
+                 f'<p class="kicker">TODAY · {run_date}（{wd}）</p>\n'
+                 f'<h2 class="td-h">{brief["headline"]}</h2>\n'
+                 f'<p class="td-dek">{brief["dek"]}</p>\n'
+                 '<div class="post-chips">' + "".join(f'<span class="pchip">{c}</span>' for c in brief["chips"]) + '</div>\n'
+                 f'<a class="td-cta" href="{{{{ \'/{run_date}/report.html\' | relative_url }}}}">阅读今日简报 →</a>\n'
+                 '</div>')
+    else:
+        inner = ('<div class="todaycard reveal"><p class="kicker">TODAY</p>'
+                 '<h2 class="td-h">今日简报生成中</h2><p class="td-dek">每日 04:00 自动更新。</p></div>')
+    out = re.sub(r"<!--TODAY_START-->.*?<!--TODAY_END-->",
+                 "<!--TODAY_START-->\n" + inner + "\n<!--TODAY_END-->", src, flags=re.S)
+    open(idx, "w", encoding="utf-8").write(out)
+    return True
+
+
 def main():
     run_date = sys.argv[1] if len(sys.argv) > 1 else datetime.now(CST).strftime("%Y-%m-%d")
     ana_path = os.path.join(DATA, "analysis", f"{run_date}.json")
@@ -251,14 +301,17 @@ def main():
     if items:
         lines.append('</div>')  # /feed-col
 
+    brief = mech_brief(items, run_date)
     fm = f"""---
 layout: post
 title: "安全情报日报 {run_date}"
 date: {run_date}
 events: {len(items)}
----
-
 """
+    if brief:
+        fm += f'headline: "{yaml_q(brief["headline"])}"\ndek: "{yaml_q(brief["dek"])}"\n'
+        fm += "brief_stats: [" + ", ".join(f'"{yaml_q(c)}"' for c in brief["chips"]) + "]\n"
+    fm += "---\n\n"""
     os.makedirs(os.path.join(SITE, "_posts"), exist_ok=True)
     # 输出 .html：Jekyll 不跑 markdown 处理器，卡片 HTML 原样渲染（URL 不变 /YYYY/MM/DD/report.html）
     post = os.path.join(SITE, "_posts", f"{run_date}-report.html")
@@ -283,6 +336,7 @@ events: {len(items)}
     rdir = os.path.join(DATA, "runs", run_date); os.makedirs(rdir, exist_ok=True)
     json.dump(run_log, open(os.path.join(rdir, "run.json"), "w"), ensure_ascii=False, indent=1)
     run_log["ioc_page_rows"] = build_iocs_page(run_date)
+    run_log["home_slot"] = refresh_home_slot(run_date, brief)
     print(json.dumps(run_log, ensure_ascii=False))
 
 if __name__ == "__main__":
