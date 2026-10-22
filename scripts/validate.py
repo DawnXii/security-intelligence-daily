@@ -13,6 +13,36 @@ FIELDS = ["hash", "include", "score", "category", "title_zh", "summary_zh", "imp
 CATEGORIES = {"vuln", "supplychain", "ransomware", "malware", "ttp", "phishing", "incident", "crypto-infra"}
 CONF = {"high", "medium", "low"}
 
+def check_brief(run_date, analysis):
+    """Optional brief file gate: recomputable counts + verbatim CVE/number trace."""
+    import os, re, json
+    bp = os.path.join(os.path.dirname(__file__), "..", "data", "analysis", f"{run_date}-brief.json")
+    bp = os.path.normpath(bp)
+    if not os.path.exists(bp):
+        return []
+    b = json.load(open(bp))
+    inc = [a for a in analysis if a.get("include")]
+    t = (b.get("headline", "") + " " + b.get("pulse", ""))
+    pool = " ".join(str(a.get("title_zh", "")) + str(a.get("summary_zh", "")) + str(a.get("impact", "")) +
+                    str(a.get("cvss", "")) + str(a.get("outlets", "")) + str(a.get("fixed", "")) +
+                    str(a.get("action", "")) for a in inc)
+    wild = sum(1 for a in inc if a.get("exploit") == "wild")
+    bad = []
+    for m in re.findall(r"CVE-\d{4}-\d+", t):
+        if m not in pool:
+            bad.append(f"brief CVE 越界: {m}")
+    mm = re.search(r"入选 ?(\d+) 条", t)
+    if mm and int(mm.group(1)) != len(inc):
+        bad.append(f"brief 入选数不可回算: {mm.group(1)} != {len(inc)}")
+    mm = re.search(r"在野 ?(\d+)", t)
+    if mm and int(mm.group(1)) != wild:
+        bad.append(f"brief 在野数不可回算: {mm.group(1)} != {wild}")
+    for num in set(re.findall(r"\d+(?:\.\d+)?", re.sub(r"入选 ?\d+ 条|在野 ?\d+|CVE-\d{4}-\d+", "", t))):
+        if num not in pool:
+            bad.append(f"brief 数字无来源文本: {num}")
+    return bad
+
+
 def norm(s):
     return re.sub(r"[^a-z0-9\u4e00-\u9fff]+", "", s.lower())
 
@@ -106,6 +136,7 @@ def main():
             stats["excluded"] += 1
 
     # 覆盖检查：候选集里高分来源不应完全未出现在分析中
+    errors += check_brief(run_date, analysis)
     out = {"run_date": run_date, "ok": len(errors) == 0, "errors": errors[:50],
            "analyzed": len(seen_hashes), "candidates": len(by_hash), **stats,
            "validated_at": datetime.now(CST).isoformat()}

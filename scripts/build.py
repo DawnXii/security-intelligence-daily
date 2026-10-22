@@ -115,27 +115,42 @@ def yaml_q(t):
     return str(t).replace('"', '\\"').replace("\n", " ").replace("\r", " ")
 
 
-def refresh_home_slot(run_date, brief):
+def refresh_home_slot(run_date, brief, ai_brief=None):
     idx = os.path.join(SITE, "index.html")
     src = open(idx, encoding="utf-8").read()
     if "<!--TODAY_START-->" not in src:
         return False
     if brief:
         wd = WEEK_CN[datetime.strptime(run_date, "%Y-%m-%d").weekday()]
-        inner = ('<div class="todaycard reveal">\n'
-                 f'<p class="kicker">TODAY · {run_date}（{wd}）</p>\n'
-                 f'<h2 class="td-h">{brief["headline"]}</h2>\n'
-                 f'<p class="td-dek">{brief["dek"]}</p>\n'
-                 '<div class="post-chips">' + "".join(f'<span class="pchip">{c}</span>' for c in brief["chips"]) + '</div>\n'
-                 f'<a class="td-cta" href="{{{{ \'/{run_date}/report.html\' | relative_url }}}}">阅读今日简报 →</a>\n'
-                 '</div>')
+        hl = ai_brief["headline"] if ai_brief else brief["headline"]
+        body = ai_brief["pulse"] if ai_brief else brief["dek"]
+        stats = [(str(brief["n"]), "事件 今日"), (str(brief["wild"]), "在野利用"),
+                 (str(brief["chips"][3].split()[0]), "类别数"),
+                 (str(brief["chips"][4].split()[-1]), "顶分")]
+        inner = ('<p class="td-date">' + run_date + f"（{wd}）</p>\n"
+                 f'<h1 class="td-h">{hl}</h1>\n'
+                 f'<p class="td-pulse">{body}</p>\n'
+                 '<div class="td-stats">' + "".join(f'<div class="stat"><b>{v}</b><span>{lab}</span></div>' for v, lab in stats) + '</div>\n'
+                 f'<a class="td-cta" href="{{{{ \'/{run_date}/report.html\' | relative_url }}}}">阅读今日完整简报 →</a>')
     else:
-        inner = ('<div class="todaycard reveal"><p class="kicker">TODAY</p>'
-                 '<h2 class="td-h">今日简报生成中</h2><p class="td-dek">每日 04:00 自动更新。</p></div>')
+        inner = ('<p class="td-date">' + run_date + '</p>\n'
+                 '<h1 class="td-h">今日简报生成中</h1>\n'
+                 '<p class="td-pulse">每日 04:00 自动聚合分析后更新。</p>')
     out = re.sub(r"<!--TODAY_START-->.*?<!--TODAY_END-->",
                  "<!--TODAY_START-->\n" + inner + "\n<!--TODAY_END-->", src, flags=re.S)
     open(idx, "w", encoding="utf-8").write(out)
     return True
+
+def load_brief(run_date):
+    """AI situation brief (optional): {headline, pulse}. Preferred over mech fallback."""
+    p = os.path.join(DATA, "analysis", f"{run_date}-brief.json")
+    try:
+        b = json.load(open(p, encoding="utf-8"))
+        if b.get("headline") and b.get("pulse"):
+            return b
+    except Exception:
+        pass
+    return None
 
 
 def main():
@@ -302,6 +317,7 @@ def main():
         lines.append('</div>')  # /feed-col
 
     brief = mech_brief(items, run_date)
+    ai_brief = load_brief(run_date)
     fm = f"""---
 layout: post
 title: "安全情报日报 {run_date}"
@@ -309,7 +325,9 @@ date: {run_date}
 events: {len(items)}
 """
     if brief:
-        fm += f'headline: "{yaml_q(brief["headline"])}"\ndek: "{yaml_q(brief["dek"])}"\n'
+        hl = ai_brief["headline"] if ai_brief else brief["headline"]
+        dk = ai_brief["pulse"] if ai_brief else brief["dek"]
+        fm += f'headline: "{yaml_q(hl)}"\ndek: "{yaml_q(dk)}"\n'
         fm += "brief_stats: [" + ", ".join(f'"{yaml_q(c)}"' for c in brief["chips"]) + "]\n"
     fm += "---\n\n"""
     os.makedirs(os.path.join(SITE, "_posts"), exist_ok=True)
@@ -336,7 +354,7 @@ events: {len(items)}
     rdir = os.path.join(DATA, "runs", run_date); os.makedirs(rdir, exist_ok=True)
     json.dump(run_log, open(os.path.join(rdir, "run.json"), "w"), ensure_ascii=False, indent=1)
     run_log["ioc_page_rows"] = build_iocs_page(run_date)
-    run_log["home_slot"] = refresh_home_slot(run_date, brief)
+    run_log["home_slot"] = refresh_home_slot(run_date, brief, ai_brief)
     print(json.dumps(run_log, ensure_ascii=False))
 
 if __name__ == "__main__":
