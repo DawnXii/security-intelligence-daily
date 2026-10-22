@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% if page.title %}{{ page.title }} · {% endif %}安全情报日报 SID</title>
 <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | relative_url }}">
+<meta name="color-scheme" content="light dark">
 <link rel="alternate icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32.png' | relative_url }}">
 <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}">
 <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
@@ -20,7 +21,7 @@
 :root{
   --bg:#FAFAF8; --paper:#FFFFFF; --ink:#0A0A0A;
   --amber:#FDB913; --amber-soft:#FCE08A; --gray:#5C5C57; --hairline:#D8D8D2;
-  --red:#FF5B4A;
+  --red:#FF5B4A; --fg-body:#3A3A36; --row-hover:#FBF6E3; --blk-bg:#0A0A0A; --on-amber:#0F0F0E;
   --f-serif:Georgia,'Times New Roman','Songti SC','Noto Serif CJK SC','Source Han Serif SC','STSong','SimSun','PingFang SC','Microsoft YaHei',serif;
   --f-mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,Consolas,'Courier New','Noto Sans CJK SC','Source Han Sans SC','PingFang SC','Microsoft YaHei',monospace;
 }
@@ -52,8 +53,10 @@ header.site{background:transparent;border-bottom:none;position:static}
 .pfx{color:var(--amber);font-weight:700;font-size:13px}
 .inlinenav a{font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;color:var(--gray);text-decoration:none;transition:color .12s ease;position:relative}
 .inlinenav a:hover{color:var(--ink)}
-.inlinenav a.on{color:var(--ink);font-weight:700;background:var(--amber);padding:1px 6px;margin:-1px -6px}
+.inlinenav a.on{color:var(--on-amber);font-weight:700;background:var(--amber);padding:1px 6px;margin:-1px -6px}
 .inlinenav a[href*="iocs"]{color:var(--ink);font-weight:700}
+.tbtn{font-family:var(--f-mono);font-size:13px;background:none;border:none;color:var(--gray);cursor:pointer;padding:0 2px;line-height:1;transition:color .12s ease}
+.tbtn:hover{color:var(--ink)}
 .livedot{display:inline-block;width:6px;height:6px;background:var(--red);margin-left:5px;vertical-align:2px;animation:blink 1.2s steps(2,start) infinite}
 /* ── hero ── */
 .hero{padding:56px 0 22px;text-align:left}
@@ -76,7 +79,7 @@ header.site{background:transparent;border-bottom:none;position:static}
 /* ── section label ── */
 .section-label{display:flex;align-items:center;gap:16px;margin:56px 0 22px;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gray);scroll-margin-top:24px}
 .section-label::after{content:"";flex:1;border-top:1px solid var(--hairline)}
-.section-label .n{font-family:var(--f-serif);letter-spacing:0;text-transform:none;font-size:13px;color:var(--ink);background:var(--amber);border:2px solid var(--ink);padding:0 8px;line-height:1.5}
+.section-label .n{font-family:var(--f-serif);letter-spacing:0;text-transform:none;font-size:13px;color:var(--on-amber);background:var(--amber);border:2px solid var(--ink);padding:0 8px;line-height:1.5}
 
 /* ── risk/exploit chips ── */
 .rp{font-style:normal;font-weight:700;font-size:9px;letter-spacing:.1em;border:1.5px solid var(--ink);padding:1px 6px;line-height:1.4}
@@ -100,7 +103,7 @@ header.site{background:transparent;border-bottom:none;position:static}
 /* ── modern brief layer ── */
 .td-date{font-family:var(--f-mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);margin:18px 0 10px}
 .td-date::before{content:"";display:inline-block;width:9px;height:9px;background:var(--amber);border:2px solid var(--ink);margin-right:10px;vertical-align:1px}
-.td-pulse{font-size:14.5px;line-height:2.05;color:#3d3d3d;max-width:700px;margin:0;text-align:left}
+.td-pulse{font-size:14.5px;line-height:2.05;color:var(--fg-body);max-width:700px;margin:0;text-align:left}
 .td-stats{display:flex;margin:30px 0 0;flex-wrap:wrap}
 .td-stats .stat{border-right:none;text-align:left;padding:2px 0 2px 16px;margin-right:34px;border-left:3px solid var(--amber)}
 .td-stats .stat b{font-size:30px}
@@ -117,7 +120,7 @@ header.site{background:transparent;border-bottom:none;position:static}
 .todaycard .kicker{margin-bottom:8px}
 .td-h{font-family:var(--f-serif);font-size:clamp(26px,3.6vw,42px);font-weight:900;line-height:1.3;margin:0 0 18px;color:var(--ink);max-width:860px;text-wrap:balance}
 .td-dek{font-size:12.5px;color:#3a3a3a;line-height:1.8;margin:0 0 4px;max-width:760px}
-.td-cta{display:inline-block;margin-top:14px;font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--amber);border:2px solid var(--ink);padding:8px 16px;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .1s ease}
+.td-cta{display:inline-block;margin-top:14px;font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--amber);border:2px solid var(--ink);padding:8px 16px;color:var(--on-amber);box-shadow:3px 3px 0 var(--ink);transition:transform .1s ease}
 .td-cta:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
 a.stat{text-decoration:none;cursor:pointer}
 a.stat:hover b{color:var(--amber)}
@@ -130,7 +133,7 @@ a.stat:hover b{color:var(--amber)}
 .ichip.on{background:var(--ink);color:var(--amber)}
 .ichip-sep{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-left:8px}
 .ioc-actions{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.ibtn{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;padding:6px 14px;border:2px solid var(--ink);background:var(--amber);color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.ibtn{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;padding:6px 14px;border:2px solid var(--ink);background:var(--amber);color:var(--on-amber);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
 .ibtn:active{transform:translate(2px,2px);box-shadow:none}
 .ioc-act{font-size:10px;color:var(--gray);letter-spacing:.1em}
 .iact{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:11px}
@@ -138,9 +141,27 @@ a.stat:hover b{color:var(--amber)}
 .iact td{border-bottom:1px dashed var(--gray);padding:5px 8px;vertical-align:top}
 .iact .mono{word-break:break-all;max-width:520px}
 .iact .fam{font-style:normal;background:var(--amber-soft);padding:1px 7px;font-size:9.5px;letter-spacing:.08em}
-.iact tr:hover{background:#FBF6E3}
+.iact tr:hover{background:var(--row-hover)}
 .iact .fam2{font-style:normal;border:1px solid var(--gray);padding:1px 6px;font-size:9px;letter-spacing:.06em;color:var(--gray)}
 
+
+
+/* ── dark theme ── */
+html[data-theme="dark"]{
+  --bg:#121210; --paper:#1B1B18; --ink:#E8E5DC;
+  --amber:#FDB913; --amber-soft:rgba(253,185,19,.13); --gray:#9B978B; --hairline:#34332C;
+  --red:#FF6B5A; --fg-body:#C9C5B9; --row-hover:rgba(253,185,19,.07); --blk-bg:#0D0D0B;
+  --on-amber:#141410;
+}
+html[data-theme="dark"] .fcve,html[data-theme="dark"] .pchip:first-child,html[data-theme="dark"] .ichip.on,html[data-theme="dark"] .fam i,html[data-theme="dark"] .iact .fam{color:#141410}
+html[data-theme="dark"] .srcchip i{background:var(--amber);color:#141410}
+html[data-theme="dark"] .toc .legend{background:#171714}
+html[data-theme="dark"] img,html[data-theme="dark"] .mark{filter:none}
+html[data-theme="dark"] .brand .mark{background:var(--amber);color:#141410}
+html[data-theme="dark"] .intel .chip{color:#141410}
+html[data-theme="dark"] .iact .fam2{color:var(--fg-body);border-color:var(--gray)}
+html[data-theme="dark"] .todaycard{box-shadow:8px 8px 0 rgba(253,185,19,.5)}
+html[data-theme="dark"] .xw{color:#fff}
 
 /* ── sources table ── */
 .srcttl{letter-spacing:.1em;text-transform:none;font-size:11px;color:var(--gray);margin-left:6px}
@@ -152,10 +173,10 @@ a.stat:hover b{color:var(--amber)}
 /* ── highlight & ioc code block ── */
 .hl{font-style:normal;font-weight:800;color:inherit;border-bottom:2.5px solid var(--amber);padding:0 1px}
 .kcve{font-family:var(--f-mono);font-size:.9em;letter-spacing:.02em}
-.iocblk{margin:2px 0 18px;border:2px solid var(--ink);background:var(--ink)}
-.iocblk-h{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid #3a3a3a;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.18em;color:var(--gray);text-transform:uppercase}
+.iocblk{margin:2px 0 18px;border:2px solid var(--ink);background:var(--blk-bg)}
+.iocblk-h{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.18);font-family:var(--f-mono);font-size:9.5px;letter-spacing:.18em;color:var(--gray);text-transform:uppercase}
 .iocblk-h em{font-style:normal;color:var(--amber)}
-.iocblk-c{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;background:var(--amber);color:var(--ink);border:none;padding:3px 10px;cursor:pointer;text-transform:uppercase}
+.iocblk-c{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;background:var(--amber);color:var(--on-amber);border:none;padding:3px 10px;cursor:pointer;text-transform:uppercase}
 .iocblk-c:active{opacity:.7}
 .iocblk pre{margin:0;padding:11px 14px;font-family:var(--f-mono);font-size:11.5px;line-height:1.85;color:#D8F0C8;white-space:pre-wrap;word-break:break-all}
 
@@ -190,7 +211,7 @@ a.stat:hover b{color:var(--amber)}
 .toc li{font-size:12.5px;padding:2px 0;min-width:0}
 .toc a{display:flex;gap:9px;align-items:baseline;min-width:0;padding:3px 6px;border-left:3px solid transparent;transition:background .12s ease,border-color .12s ease}
 .toc a:hover{background:var(--amber-soft)}
-.toc a.active{background:var(--amber);border-left-color:var(--ink);font-weight:700}
+.toc a.active{background:var(--amber);border-left-color:var(--ink);font-weight:700;color:var(--on-amber)}
 .toc .tc{font-family:var(--f-serif);font-size:14px;color:var(--gray);flex:none;width:14px;text-align:center}
 .toc a.active .tc{color:var(--ink)}
 .toc .tt{flex:1 1 auto;min-width:0;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -214,7 +235,7 @@ a.stat:hover b{color:var(--amber)}
 .issue .meta{flex:1;min-width:0}
 .issue .date{font-size:10.5px;letter-spacing:.18em;color:var(--gray);text-transform:uppercase;display:block}
 .issue .t{font-family:var(--f-serif);font-size:22px;display:block;margin-top:3px}
-.issue .go{flex:none;border:2px solid var(--ink);background:var(--amber);width:44px;height:44px;display:grid;place-items:center;font-size:19px;box-shadow:3px 3px 0 var(--ink);transition:all .12s ease}
+.issue .go{flex:none;border:2px solid var(--ink);background:var(--amber);width:44px;height:44px;display:grid;place-items:center;font-size:19px;color:var(--on-amber);box-shadow:3px 3px 0 var(--ink);transition:all .12s ease}
 .issue:hover .go{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
 
 /* ── post hero ── */
@@ -236,12 +257,12 @@ a.stat:hover b{color:var(--amber)}
 .intel.focus .score i{background:var(--paper)}
 .intel-body{padding:20px 22px 8px}
 .intel h3{font-size:clamp(20px,2.6vw,25px);line-height:1.35;margin:0 0 13px}
-.intel .sum{margin:0 0 18px;font-size:15px;color:#1C1C1A;line-height:1.9}
+.intel .sum{margin:0 0 18px;font-size:15px;color:var(--fg-body);line-height:1.9}
 .intel-grid{display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--ink);margin:0 0 18px}
 .cell{padding:13px 16px 15px}
 .cell + .cell{border-left:2px solid var(--ink)}
 .cell b{display:block;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gray);margin-bottom:7px}
-.cell p{margin:0;font-size:14px;line-height:1.75}
+.cell p{margin:0;font-size:14px;line-height:1.75;color:var(--fg-body)}
 .intel-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 16px;border-top:2px solid var(--ink);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray)}
 .intel-foot a{border-bottom:2px solid var(--ink);padding-bottom:1px;transition:background .1s ease}
 .intel-foot a:hover{background:var(--amber)}
@@ -289,6 +310,7 @@ footer.site{margin-top:80px;border-top:2px solid var(--ink);background:var(--pap
   .ticker{font-size:10px}
 }
 </style>
+<script>(function(){try{var t=localStorage.getItem('sid-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 </head>
 <body>
 
@@ -306,6 +328,7 @@ footer.site{margin-top:80px;border-top:2px solid var(--ink);background:var(--pap
       </span>
     </a>
     <nav class="inlinenav"><span class="pfx">&gt;</span>
+      <button class="tbtn" id="theme-toggle" title="切换配色" aria-label="切换配色">◐</button>
       <a {% if page.url contains '/sources' %}class="on"{% endif %} href="{{ '/sources/' | relative_url }}">[SOURCES]</a>
       <a {% if page.url contains '/iocs' %}class="on"{% endif %} href="{{ '/iocs/' | relative_url }}">[IOCs]<span class="livedot"></span></a>
       <a href="https://github.com/DawnXii/security-intelligence-daily" target="_blank" rel="noopener">[GITHUB↗]</a>
@@ -348,6 +371,12 @@ footer.site{margin-top:80px;border-top:2px solid var(--ink);background:var(--pap
     function ok(){b.textContent='已复制 ✓';setTimeout(function(){b.textContent='复制';},1600);}
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok);}
     else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();ok();}});
+  // theme toggle
+  var tb=document.getElementById('theme-toggle');
+  if(tb)tb.addEventListener('click',function(){
+    var cur=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',cur);
+    try{localStorage.setItem('sid-theme',cur);}catch(e){}});
   // toc scrollspy
   var links=[].slice.call(document.querySelectorAll('.toc-link'));
   if(links.length){
