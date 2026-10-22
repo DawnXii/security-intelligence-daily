@@ -13,6 +13,32 @@ FIELDS = ["hash", "include", "score", "category", "title_zh", "summary_zh", "imp
 CATEGORIES = {"vuln", "supplychain", "ransomware", "malware", "ttp", "phishing", "incident", "crypto-infra"}
 CONF = {"high", "medium", "low"}
 
+KTAG_RE = __import__("re").compile(r"<k>([^<>]*)</k>")
+
+def check_ktags(analysis):
+    """AI markup discipline: balanced, short, count-capped; evidence/cve fields untouched."""
+    bad = []
+    for a in analysis:
+        if not a.get("include"):
+            continue
+        h = a.get("hash", "?")[:8]
+        for fld in ("title_zh", "summary_zh", "impact", "action"):
+            t = str(a.get(fld, "") or "")
+            n_open, n_close = t.count("<k>"), t.count("</k>")
+            if n_open != n_close:
+                bad.append(f"{h}.{fld} k标签不配对: {n_open}/{n_close}")
+            if n_open > 6:
+                bad.append(f"{h}.{fld} k标记超量: {n_open}>6")
+            for m in KTAG_RE.finditer(t):
+                if not (1 <= len(m.group(1)) <= 44):
+                    bad.append(f"{h}.{fld} k内容长度越界: {len(m.group(1))}")
+        for fld in ("evidence", "cve", "cvss"):
+            t = str(a.get(fld, "") or "")
+            if "<k>" in t or "</k>" in t:
+                bad.append(f"{h}.{fld} 不应含 k 标签")
+    return bad
+
+
 def check_brief(run_date, analysis):
     """Optional brief file gate: recomputable counts + verbatim CVE/number trace."""
     import os, re, json
@@ -137,6 +163,7 @@ def main():
 
     # 覆盖检查：候选集里高分来源不应完全未出现在分析中
     errors += check_brief(run_date, analysis)
+    errors += check_ktags(analysis)
     out = {"run_date": run_date, "ok": len(errors) == 0, "errors": errors[:50],
            "analyzed": len(seen_hashes), "candidates": len(by_hash), **stats,
            "validated_at": datetime.now(CST).isoformat()}

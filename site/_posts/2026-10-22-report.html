@@ -3,8 +3,8 @@ layout: post
 title: "安全情报日报 2026-10-22"
 date: 2026-10-22
 events: 7
-headline: "工具链接连失守：当日三条在野利用"
-dek: "今日三条在野利用全部指向开发与运行时基础设施：AI 应用网关 LiteLLM 官方发布渠道被投毒并在野分发窃密器与后门；PHP 紧急补丁发布次日即出现 PHP2Shell 攻击尝试，未升级实例已进入高危窗口；GitLab 曝出横跨 12 年版本的未授权 RCE，代码托管平台首次成为当日焦点。CISA 确认 Plex 四漏洞遭链式在野利用，勒索面 sovcali 周增 7 名受害者并公开拍卖数据。今日入选 7 条、在野 3 条：LLM 网关、PHP、GitLab 三类资产按应急补丁流程处理。"
+headline: "工具链接连失守：当日三条<i class=\"hl\">在野利用</i>"
+dek: "今日三条<i class=\"hl\">在野利用</i>全部指向开发与运行时基础设施：<i class=\"hl\">AI 应用网关</i> <i class=\"hl\">LiteLLM</i> 官方发布渠道<i class=\"hl\">被投毒</i>并在野分发<i class=\"hl\">窃密器</i>与后门；PHP <i class=\"hl\">紧急补丁</i>发布次日即出现 <i class=\"hl\">PHP2Shell</i> 攻击尝试，未升级实例已进入高危窗口；<i class=\"hl\">GitLab</i> 曝出横跨 12 年版本的未授权 RCE，代码托管平台首次成为当日焦点。<i class=\"hl\">CISA</i> 确认 <i class=\"hl\">Plex</i> 四漏洞遭链式<i class=\"hl\">在野利用</i>，勒索面 <i class=\"hl\">sovcali</i> 周增 7 名受害者并公开拍卖数据。今日入选 7 条、在野 3 条：LLM 网关、PHP、GitLab 三类资产按应急补丁流程处理。"
 brief_stats: ["7 事件", "在野 3", "PoC 0", "3 类别", "顶分 85"]
 ---
 
@@ -35,7 +35,7 @@ brief_stats: ["7 事件", "在野 3", "PoC 0", "3 类别", "顶分 85"]
 <div class="intel reveal" id="vuln-82561">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
 <div class="intel-body">
-<h3>PHP2Shell现攻击尝试PHP发紧急补丁</h3>
+<h3>PHP2Shell现攻击尝试PHP发<i class="hl">紧急补丁</i></h3>
 <p class="sum">PHP 发布紧急更新修复语言自身两个严重漏洞（合称 PHP2Shell），允许无账号攻击者在 Web 服务器执行代码；修复版本为 8.5.12、8.4.27、8.3.36 和 8.2.35，PHP 团队称只有完整升级才能保护服务器。漏洞位于 PHP runtime 而非应用层，报道标题显示已出现利用尝试。</p>
 <div class="intel-facts"><b class="fct fout">4 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> PHP runtime（应用无关）</span><span class="fv"><b>修复</b> 8.5.12, 8.4.27, 8.3.36, 8.2.35</span></div></div>
 <div class="intel-grid">
@@ -65,7 +65,7 @@ brief_stats: ["7 事件", "在野 3", "PoC 0", "3 类别", "顶分 85"]
 <div class="intel reveal" id="vuln-24461">
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
 <div class="intel-body">
-<h3>CISA警告Plex四漏洞遭链式在野利用</h3>
+<h3>CISA警告Plex四漏洞遭链式<i class="hl">在野利用</i></h3>
 <p class="sum">CISA 警告：攻击者正在主动利用 Plex Media Server 的四个漏洞发起被称作 Plex2Shell 的攻击链、攻陷服务器（BleepingComputer 2026-10-22 报道）；当日 CISA <i class="hl">KEV</i> 清单同步收录相关条目（同事件重复条目已去重）。</p>
 <div class="intel-facts"><b class="fct fout">5 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Plex Media Server</span></div></div>
 <div class="intel-grid">
@@ -81,7 +81,7 @@ brief_stats: ["7 事件", "在野 3", "PoC 0", "3 类别", "顶分 85"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>55</i></span></div>
 <div class="intel-body">
 <h3>Moxa工业边缘网关硬编码密钥漏洞</h3>
-<p class="sum">CISA ICS 通告（2026-10-20，ICSA-26-293-03）：Moxa AIG-302 ThingsPro Edge 固件 ≤1.4.0 存在 2 个漏洞（<i class="hlcve">CVE-2026-109812</i>、<i class="hlcve">CVE-2026-109813</i>），涉及缺失授权与硬编码加密密钥，厂商 <i class="hlv">CVSS 8.1</i>；成功利用可获取并泄露敏感信息，部署场景覆盖关键制造、能源、水务等领域。</p>
+<p class="sum">CISA ICS 通告（2026-10-20，ICSA-26-293-03）：Moxa AIG-302 ThingsPro Edge 固件 ≤1.4.0 存在 2 个漏洞（<i class="hl kcve">CVE-2026-109812</i>、<i class="hl kcve">CVE-2026-109813</i>），涉及缺失授权与硬编码加密密钥，厂商 <i class="hl">CVSS 8.1</i>；成功利用可获取并泄露敏感信息，部署场景覆盖关键制造、能源、水务等领域。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-109812</b><b class="fct fcvss">CVSS 8.1</b><div class="fvers"><span class="fv"><b>受影响</b> Moxa AIG-302 ThingsPro Edge firmware 1.4.0 及更早</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>运行 ThingsPro Edge 的 OT 边缘设备（5G 网关）全球部署，凭据/密钥类泄露可成为进入制造与能源、水务网络的跳板。</p></div>
@@ -96,7 +96,7 @@ brief_stats: ["7 事件", "在野 3", "PoC 0", "3 类别", "顶分 85"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>55</i></span></div>
 <div class="intel-body">
 <h3>Eclipse Milo漏洞可窃取凭据仿冒用户</h3>
-<p class="sum">CISA ICS 通告（2026-10-15，ICSA-26-288-01）：OPC UA 开源实现 Eclipse Milo 共 5 个漏洞（0.6.0 至 1.1.4 及 1.0.0 至 1.1.4 两组范围，含 <i class="hlcve">CVE-2026-63252</i>、<i class="hlcve">CVE-2026-62927</i> 等），厂商 <i class="hlv">CVSS 8.2</i>；成功利用可删除受保护数据、恢复用户凭据并仿冒合法用户，或使服务器对所有客户端停止响应。</p>
+<p class="sum">CISA ICS 通告（2026-10-15，ICSA-26-288-01）：OPC UA 开源实现 Eclipse Milo 共 5 个漏洞（0.6.0 至 1.1.4 及 1.0.0 至 1.1.4 两组范围，含 <i class="hl kcve">CVE-2026-63252</i>、<i class="hl kcve">CVE-2026-62927</i> 等），厂商 <i class="hl">CVSS 8.2</i>；成功利用可删除受保护数据、恢复用户凭据并仿冒合法用户，或使服务器对所有客户端停止响应。</p>
 <div class="intel-facts"><b class="fct fcve">CVE-2026-63252</b><b class="fct fcvss">CVSS 8.2</b><div class="fvers"><span class="fv"><b>受影响</b> Eclipse Milo &gt;=0.6.0 &lt;=1.1.4 及 &gt;=1.0.0 &lt;=1.1.4</span></div></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>大量工业软件与 OT 平台基于 Eclipse Milo 实现 OPC UA 通信，凭据可被恢复意味着工控身份体系被仿冒；全球部署、总部比利时。</p></div>
@@ -112,7 +112,7 @@ brief_stats: ["7 事件", "在野 3", "PoC 0", "3 类别", "顶分 85"]
 <div class="intel focus reveal" id="supplychain-16102">
 <div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
 <div class="intel-body">
-<h3>LiteLLM遭投毒投递窃密器与后门</h3>
+<h3>LiteLLM遭投毒投递<i class="hl">窃密器</i>与后门</h3>
 <p class="sum">LiteLLM Python 包遭软件供应链攻击：1.107.0 版本经 PyPI wheel 与 Docker 镜像投递凭据窃取器和后门，SafeDep、Socket、StepSecurity、Upwind 等监测方披露。该包随后在 PyPI 被隔离（quarantined）。</p>
 <div class="intel-facts"><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> LiteLLM 1.107.0</span><span class="fv"><b>修复</b> 已隔离（quarantined）于 PyPI</span></div></div>
 <div class="intel-grid">
@@ -130,11 +130,11 @@ brief_stats: ["7 事件", "在野 3", "PoC 0", "3 类别", "顶分 85"]
 <div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>58</i></span></div>
 <div class="intel-body">
 <h3>sovcali周增7受害者拍卖Lucid数据</h3>
-<p class="sum">RansomLook 数据显示，勒索团伙 sovcali 近 7 天在泄密站发布 7 条帖子、涉及 7 家受害者，最新发现时间 2026-10-21。受害者样例中出现 Lucid Motors：团伙挂出"5 TB 工程数据与源代码拍卖"帖，并声称两天内Drop了 100GB。</p>
+<p class="sum">RansomLook 数据显示，勒索团伙 sovcali 近 7 天在泄密站发布 7 条帖子、涉及 7 家受害者，最新发现时间 2026-10-21。受害者样例中出现 Lucid Motors：团伙挂出&quot;5 TB 工程数据与源代码拍卖&quot;帖，并声称两天内Drop了 100GB。</p>
 <div class="intel-facts"><b class="fct factor">sovcali</b></div>
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>泄密站帖子直接面向买家公开出售，被点名企业面临工程数据与源代码外泄确认；中小商户（如托管/记账公司）同样在受害者列表中。</p></div>
-<div class="cell"><b>Action</b><p>被点名的组织应核验 RansomLook 团伙页条目、启动泄露数据应急评估与取证；常规面：收敛暴露的备份与凭据、核查钓鱼入口。</p></div>
+<div class="cell"><b>Action</b><p>被点名的组织应核验 RansomLook 团伙页条目、启动泄露数据应急评估与取证；常规面：收敛暴露的备份与凭据、核查<i class="hl">钓鱼</i>入口。</p></div>
 </div>
 
 </div>

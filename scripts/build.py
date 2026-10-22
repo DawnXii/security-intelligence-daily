@@ -92,24 +92,43 @@ def build_iocs_page(run_date):
 WEEK_CN = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
 
 
-HL_KEYS = ["在野利用", "遭在野", "公开 PoC", "PoC", "KEV", "零日", "紧急补丁", "被投毒", "窃密器"]
+HL_KEYS = ["在野利用", "遭在野", "公开 PoC", "PoC", "KEV", "零日", "紧急补丁", "被投毒", "窃密器", "勒索软件", "钓鱼"]
+K_RE = re.compile(r"<k>([^<>]{1,44})</k>")
+
+def _mech(part):
+    """Escape plain segment then apply machine highlights (single visual language)."""
+    from html import escape as _e
+    t = _e(part)
+    t = re.sub(r"(CVE-\d{4}-\d+)", r'<i class="hl kcve">\1</i>', t)
+    t = re.sub(r"(\d\.\d) 分", r'<i class="hl">\1 分</i>', t)
+    t = re.sub(r"(CVSS[\s:=]{0,3}\d\.\d)", r'<i class="hl">\1</i>', t)
+    for k in HL_KEYS:
+        t = t.replace(k, '<i class="hl">' + k + "</i>", 1)
+    return t
+
+def rich(raw):
+    """Field -> html: AI <k>entity markup</k> becomes .hl, rest gets machine fallback."""
+    raw = str(raw or "")
+    out, pos = [], 0
+    for m in K_RE.finditer(raw):
+        out.append(_mech(raw[pos:m.start()]))
+        from html import escape as _e
+        out.append('<i class="hl">' + _e(m.group(1)) + "</i>")
+        pos = m.end()
+    out.append(_mech(raw[pos:]))
+    return "".join(out)
+
+def highlight(t):  # legacy name kept for card calls
+    return t
+
+
 IOC_PATTERNS = [
-    ("url",   re.compile(r"https?://[A-Za-z0-9._\-/:~%+?=&#@\[\]]{8,140}")),
+    ("url",   re.compile(r"https?://[A-Za-z0-9.\-/:~%+?=&#@_\[\]]{8,140}")),
     ("ipv4",  re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}(?::\d{2,5})?\b")),
     ("onion", re.compile(r"\b[a-z2-7]{56,59}\.onion\b")),
     ("sha256", re.compile(r"\b[0-9a-f]{64}\b")),
     ("md5",   re.compile(r"\b[0-9a-f]{32}\b")),
 ]
-
-def highlight(esc_text):
-    """Keyword/CVE highlighting on ALREADY-escaped text (render layer only)."""
-    t = esc_text
-    t = re.sub(r"(CVE-\d{4}-\d+)", r'<i class="hlcve">\1</i>', t)
-    t = re.sub(r"(\d\.\d) 分", r'<i class="hlv">\1 分</i>', t)
-    t = re.sub(r"(CVSS[\s:=]{0,3}\d\.\d)", r'<i class="hlv">\1</i>', t)
-    for k in HL_KEYS:
-        t = t.replace(k, '<i class="hl">' + k + '</i>', 1)
-    return t
 
 def ioc_extract(raw_text):
     """Verbatim IOC extraction from the item's own texts; conservative, dedup, cap 8."""
@@ -195,8 +214,8 @@ def refresh_home_slot(run_date, brief, ai_brief=None):
         return False
     if brief:
         wd = WEEK_CN[datetime.strptime(run_date, "%Y-%m-%d").weekday()]
-        hl = ai_brief["headline"] if ai_brief else brief["headline"]
-        body = ai_brief["pulse"] if ai_brief else brief["dek"]
+        hl = rich(ai_brief["headline"] if ai_brief else brief["headline"])
+        body = rich(ai_brief["pulse"] if ai_brief else brief["dek"])
         stats = [(str(brief["n"]), "今日事件"), (str(brief["wild"]), "在野利用"),
                  (str(brief["chips"][3].split()[0]), "类别数"),
                  (str(brief["chips"][4].split()[-1]), "顶分")]
@@ -369,12 +388,12 @@ def main():
                 f'<div class="intel-head"><span class="chip">{tag or CATS[cat]}</span>{xchip}'
                 f'<span class="score">处置 <i class="rp {rt.lower()}">{rt}</i> · CONF {esc(a.get("confidence","?"))}<i>{esc(a.get("score","?"))}</i></span></div>',
                 '<div class="intel-body">',
-                f'<h3>{esc(a["title_zh"])}</h3>',
-                f'<p class="sum">{highlight(esc(a.get("summary_zh","")))}</p>',
+                f'<h3>{rich(a["title_zh"])}</h3>',
+                f'<p class="sum">{rich(a.get("summary_zh",""))}</p>',
                 facts,
                 '<div class="intel-grid">',
-                f'<div class="cell"><b>Impact</b><p>{highlight(esc(a.get("impact","")))}</p></div>',
-                f'<div class="cell"><b>Action</b><p>{highlight(esc(a.get("action","")))}</p></div>',
+                f'<div class="cell"><b>Impact</b><p>{rich(a.get("impact",""))}</p></div>',
+                f'<div class="cell"><b>Action</b><p>{rich(a.get("action",""))}</p></div>',
                 '</div>',
                 iocblk(a, aid),
                 '</div>',
@@ -401,7 +420,7 @@ events: {len(items)}
     if brief:
         hl = ai_brief["headline"] if ai_brief else brief["headline"]
         dk = ai_brief["pulse"] if ai_brief else brief["dek"]
-        fm += f'headline: "{yaml_q(hl)}"\ndek: "{yaml_q(dk)}"\n'
+        fm += f'headline: "{yaml_q(rich(hl))}"\ndek: "{yaml_q(rich(dk))}"\n'
         fm += "brief_stats: [" + ", ".join(f'"{yaml_q(c)}"' for c in brief["chips"]) + "]\n"
     fm += "---\n\n"""
     os.makedirs(os.path.join(SITE, "_posts"), exist_ok=True)

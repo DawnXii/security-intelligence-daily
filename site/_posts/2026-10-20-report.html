@@ -4,7 +4,7 @@ title: "安全情报日报 2026-10-20"
 date: 2026-10-20
 events: 7
 headline: "供应链投毒潮：三条可信下载路径同日失守"
-dek: "今日入选 7 条中 3 条为供应链投毒：WordPress SEO 插件 Rank Math PRO 官方包被植后门、GhostAction 团伙投毒 94 个字体仓库、假 Web3 加速器借 npm 包投放窃密木马——攻击面集中在你信任的下载路径本身。在野利用方面 Plex2Shell 漏洞链被用于部署挖矿后门；勒索生态一周内 Qilin 新增 35 名受害者，ShinyHunters 泄密站疑由谈判公司高管运营。今日在野 1 条、供应链 3 条，优先核查插件/包管理与字体类依赖的来源完整性。"
+dek: "今日入选 7 条中 3 条为供应链投毒：WordPress SEO 插件 <i class=\"hl\">Rank Math PRO</i> 官方包被植后门、<i class=\"hl\">GhostAction</i> 团伙投毒 94 个字体仓库、假 <i class=\"hl\">Web3</i> 加速器借 <i class=\"hl\">npm</i> 包投放窃密木马——攻击面集中在你信任的下载路径本身。<i class=\"hl\">在野利用</i>方面 <i class=\"hl\">Plex2Shell</i> 漏洞链被用于部署挖矿后门；勒索生态一周内 <i class=\"hl\">Qilin</i> 新增 35 名受害者，<i class=\"hl\">ShinyHunters</i> 泄密站疑由谈判公司高管运营。今日在野 1 条、供应链 3 条，优先核查插件/包管理与字体类依赖的来源完整性。"
 brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 ---
 
@@ -35,7 +35,7 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="intel focus reveal" id="vuln-86021">
 <div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>82</i></span></div>
 <div class="intel-body">
-<h3>Plex2Shell 漏洞链遭在野利用部署挖矿后门</h3>
+<h3>Plex2Shell 漏洞链遭<i class="hl">在野利用</i>部署挖矿后门</h3>
 <p class="sum">The Hacker News 报道，威胁行为者已开始利用 Plex Media Server 上被称为 Plex2Shell 的四个漏洞组合投放加密货币挖矿程序与反向代理软件，时间点在<i class="hl">公开 <i class="hl">PoC</i></i> 出现一天之后；活动细节由网名 boredhackerblog 的研究者披露。</p>
 
 <div class="intel-grid">
@@ -51,7 +51,7 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>55</i></span></div>
 <div class="intel-body">
 <h3>日立能源 SOI 现 ActiveMQ 代码执行漏洞</h3>
-<p class="sum">CISA 通告 ICSA-26-279-04 指出 Hitachi Energy SOI 产品内置的 Apache ActiveMQ 组件存在远程代码执行漏洞 <i class="hlcve">CVE-2026-34197</i>（CVSS v3 8.8，代码注入类），影响 SOI 2.0.0 至 2.2.0 版本，可被用来破坏产品的机密性、完整性与可用性，部署范围覆盖全球能源行业。</p>
+<p class="sum">CISA 通告 ICSA-26-279-04 指出 Hitachi Energy SOI 产品内置的 Apache ActiveMQ 组件存在远程代码执行漏洞 <i class="hl kcve">CVE-2026-34197</i>（CVSS v3 8.8，代码注入类），影响 SOI 2.0.0 至 2.2.0 版本，可被用来破坏产品的机密性、完整性与可用性，部署范围覆盖全球能源行业。</p>
 
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>SOI 常用于能源行业的数据集成层，中间件被攻破后攻击者可在 OT/IT 交汇点获得立足位，进而不受认证依赖地读写流经的消息数据。</p></div>
@@ -83,7 +83,7 @@ brief_stats: ["7 事件", "在野 1", "PoC 0", "4 类别", "顶分 82"]
 <div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
 <div class="intel-body">
 <h3>GhostAction 团伙用假字体投毒 94 个仓库</h3>
-<p class="sum">发起 GhostAction 供应链攻击的威胁行为者已从向被入侵项目注入恶意 GitHub Actions 工作流，扩展到对开源开发者实施钓鱼并投递伪装成字体文件的凭据窃取木马；OpenSourceMalware 详细披露了这一手法演进，涉及 94 个 GitHub 仓库。</p>
+<p class="sum">发起 GhostAction 供应链攻击的威胁行为者已从向被入侵项目注入恶意 GitHub Actions 工作流，扩展到对开源开发者实施<i class="hl">钓鱼</i>并投递伪装成字体文件的凭据窃取木马；OpenSourceMalware 详细披露了这一手法演进，涉及 94 个 GitHub 仓库。</p>
 
 <div class="intel-grid">
 <div class="cell"><b>Impact</b><p>攻击面从项目仓库转移到维护者终端，开发者凭据一旦外泄会连带污染签名制品与 CI/CD 密钥，形成二次供应链风险。</p></div>
