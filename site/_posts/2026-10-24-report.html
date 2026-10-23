@@ -1,0 +1,192 @@
+---
+layout: post
+title: "安全情报日报 2026-10-24"
+date: 2026-10-24
+events: 10
+headline: "Web 运行时与 AI 供应链成攻防焦点"
+dek: "今日两条主线：运行时层，PHP2Shell 补丁后即刻出现批量利用尝试（<i class=\"hl kcve\">CVE-2026-109618</i>），Node.js 的 <i class=\"hl kcve\">CVE-2026-111497</i> 修复刚出即被 Node2Shell PoC 验证，PHP 又曝未修复的 <i class=\"hl kcve\">CVE-2026-115560</i>；供应链层，Storm-0940 借 ARTEX 滥用 ConnectWise 凭据波及 Microsoft 365 租户，LiteLLM 发布渠道再遭令牌盗用投毒；Arista VeloCloud 的 <i class=\"hl kcve\">CVE-2026-114625</i> 入选 KEV 确认在野。口径：优先升级 PHP 与 Node.js、轮换被窃凭据，KEV 项限期处置。"
+brief_stats: ["10 事件", "在野 2", "PoC 1", "3 类别", "顶分 86"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
+<li><a class="toc-link" href="#vuln-72623"><span class="tc">★</span><span class="tt">&lt;k&gt;PHP2Shell&lt;/k&gt; 漏洞遭批量利用尝试</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-01823"><span class="tc">·</span><span class="tt">&lt;k&gt;Node.js&lt;/k&gt; 修复 &lt;k&gt;Brotli&lt;/k&gt; 解码器 RCE</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-39305"><span class="tc">·</span><span class="tt">Imperva 演示 &lt;k&gt;Node2Shell&lt;/k&gt; 利用代码</span><span class="meta"><i class="rp p2">P2</i><i class="xs xp">PoC 公开</i></span></a></li>
+<li><a class="toc-link" href="#vuln-84339"><span class="tc">·</span><span class="tt">VeloCloud 编排器漏洞入选 &lt;k&gt;KEV&lt;/k&gt;</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-90847"><span class="tc">·</span><span class="tt">&lt;k&gt;GitLab&lt;/k&gt; 最高危代码执行缺陷已修补</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-26080"><span class="tc">·</span><span class="tt">&lt;k&gt;PHP2Shell&lt;/k&gt; 补丁后再曝未修复缺陷</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#supplychain-88401"><span class="tc">·</span><span class="tt">微软归因 &lt;k&gt;ConnectWise&lt;/k&gt; 供应链事件</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+<li><a class="toc-link" href="#supplychain-56501"><span class="tc">·</span><span class="tt">&lt;k&gt;LiteLLM&lt;/k&gt; 遭供应链投毒</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-malware">恶意软件与僵尸网络</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#malware-63636"><span class="tc">·</span><span class="tt">&lt;k&gt;Sandworm&lt;/k&gt; 新型网状后门擦除攻击</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#malware-12060"><span class="tc">·</span><span class="tt">窃密恶意软件专采 AI 工具凭据</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-72623">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>86</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">PHP2Shell</i> 漏洞遭批量利用尝试</h3>
+<p class="sum">跟进 2026-10-23 PHP2Shell 补丁报道：现已观测到攻击者尝试利用 <i class="hl">PHP2Shell</i>（<i class="hl kcve">CVE-2026-109618</i> / <i class="hl kcve">CVE-2026-109619</i>，CVSS 9.2）将失陷主机拉入名为 <i class="hl">Potassium</i> 的 Mirai 僵尸网络变体；来源明确称利用尝试未成功，武器化难度高于预期。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-109618</b><b class="fct fcvss">CVSS 9.2</b><b class="fct fout">4 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群为所有对外提供 Web 请求的 PHP 服务器；已确认后果限于攻击尝试被观测到，尚无成功利用的记录。</p></div>
+<div class="cell"><b>Action</b><p>确认 PHP 已升级至 PHP2Shell 修复版本；在网络侧回溯 <i class="hl kcve">CVE-2026-109618</i> 相关利用尝试流量，并按 Potassium/Mirai 变体排查落地痕迹（原文未给出具体检测规则）。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/php2shell-exploit-attempts-hit-millions.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-01823">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>74</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Node.js</i> 修复 <i class="hl">Brotli</i> 解码器 RCE</h3>
+<p class="sum"><i class="hl">Node.js</i> 于 October 21, 2026 就 22.x、24.x、26.x 三条支持线发布 10 个漏洞修复，其中 4 个 High；最严重 <i class="hl kcve">CVE-2026-111497</i> 为捆绑 <i class="hl">Brotli</i> 解码器越界写，官方称可致远程代码执行。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111497</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Node.js 22.x、24.x、26.x</span><span class="fv"><b>修复</b> 2026-10-21 发布修复（22.x、24.x、26.x 三条支持线）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>漏洞位于 Node.js 运行时本体而非第三方模块，所有运行未打补丁 Node.js 的服务与容器均在暴露面内。</p></div>
+<div class="cell"><b>Action</b><p>将 22.x、24.x、26.x 三条支持线升级至 2026-10-21 之后发布的修复版本，并先扫描清点仍脆弱的运行时实例。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://blog.qualys.com/product-tech/2026/10/23/node-js-patches-brotli-remote-code-execution-flaw-find-vulnerable-runtimes-before-attackers-do" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-39305">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3>Imperva 演示 <i class="hl">Node2Shell</i> 利用代码</h3>
+<p class="sum">Imperva 研究者在官方 <i class="hl">Node.js</i> 24.22.0 Linux arm64 镜像上演示 <i class="hl">Node2Shell</i> PoC：向内建 Brotli 解码器（<i class="hl kcve">CVE-2026-111497</i>）投喂构造数据即可执行攻击者代码，无需调试器或定制构建。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111497</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Node.js 24.22.0（Linux arm64）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>凡以官方构建接收不可信压缩数据的 Node.js 服务都进入可被复现验证的 RCE 暴露面；目前为 PoC 阶段，来源未报在野利用。</p></div>
+<div class="cell"><b>Action</b><p>参照当日 Node.js 补丁条目尽快升级修复版本；排查以 Brotli 解压外部输入的应用面。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/researchers-demonstrate-node2shell-rce.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-84339">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
+<div class="intel-body">
+<h3>VeloCloud 编排器漏洞入选 <i class="hl">KEV</i></h3>
+<p class="sum"><i class="hl kcve">CVE-2026-114625</i>（<i class="hl">Arista VeloCloud Orchestrator</i>）于 2026-10-23 被 CISA 列入已知被利用漏洞目录，官方确认在野利用；处置要求按厂商指引执行并遵循 BOD 26-04 与取证留存要求，无缓解手段时停用。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-114625</b><div class="fvers"><span class="fv"><b>受影响</b> Arista VeloCloud Orchestrator</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>SD-WAN 编排器是分支互联的枢纽组件，运行 VeloCloud 的企业网络整体暴露；已确认存在在野利用。</p></div>
+<div class="cell"><b>Action</b><p>按 Arista 厂商指引升级或缓解 VeloCloud Orchestrator，按 BOD 26-04 时限完成处置与取证留存。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-114625" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-90847">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>70</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">GitLab</i> 最高危代码执行缺陷已修补</h3>
+<p class="sum">GitLab 就一个最高危（maximum-severity）的 Regular Expression Compiler 缺陷发布安全补丁，远程攻击者可在脆弱服务器上运行任意代码；通报未给出 CVE 编号与具体受影响版本。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> GitLab</span><span class="fv"><b>修复</b> 已发布安全补丁（原文未给版本号）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>自建 GitLab 实例是源码与 CI/CD 中枢，暴露面大；来源未确认在野利用。</p></div>
+<div class="cell"><b>Action</b><p>立即更新至 GitLab 最新安全版本，并对照官方安全公告核实修补范围（原文未给版本号）。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/gitlab-warns-of-new-max-severity-code-execution-vulnerability/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-26080">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">PHP2Shell</i> 补丁后再曝未修复缺陷</h3>
+<p class="sum">在 <i class="hl">PHP2Shell</i> 紧急补丁发布两天后，PHP 项目警告新代码执行漏洞 <i class="hl kcve">CVE-2026-115560</i>：仅影响特定少见配置、被评为不太可能的风险，官方不发紧急补丁，建议在修复版发布前关闭 session upload progress 特性。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-115560</b><b class="fct fout">2 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群限于启用该上传进度且以异常方式服务 Web 请求的 PHP 应用；来源未报在野利用。</p></div>
+<div class="cell"><b>Action</b><p>在官方修复发布前关闭 session upload progress；盘点启用该配置的实例并纳入优先修补。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="vuln-26080-ioc">复制</button></div><pre id="vuln-26080-ioc">https://securityaffairs.com/201595/security/php-warns-of-new-code-execution-flaw-days-after-php2shell-patches.html</pre></div>
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://securityaffairs.com/201595/security/php-warns-of-new-code-execution-flaw-days-after-php2shell-patches.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-88401">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>82</i></span></div>
+<div class="intel-body">
+<h3>微软归因 <i class="hl">ConnectWise</i> 供应链事件</h3>
+<p class="sum">Microsoft 发布详细技术报告，将 <i class="hl">ConnectWise</i> Cloud Backup 供应链失陷归因于中国背景团伙 <i class="hl">Storm-0940</i>；该团伙滥用被盗 ConnectWise 凭据，借助开源 AI 渗透测试框架 <i class="hl">ARTEX</i> 以机器速度发动攻击，波及 2,250 个 Microsoft 365 租户。</p>
+<div class="intel-facts"><b class="fct factor">Storm-0940</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> ConnectWise Cloud Backup、Microsoft 365</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Microsoft 365 租户与 ConnectWise 备份链上下游的身份与应用凭据体系暴露，应用凭据滥用已实际发生。</p></div>
+<div class="cell"><b>Action</b><p>轮换 ConnectWise 相关凭据与应用密钥；按 Microsoft 技术报告在 Microsoft 365 环境内审计 Storm-0940 的活动迹象。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="supplychain-88401-ioc">复制</button></div><pre id="supplychain-88401-ioc">https://securityaffairs.com/201501/apt/microsoft-links-connectwise-breach-to-china-linked-group-using-ai-pentesting-tool-artex.html</pre></div>
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://securityaffairs.com/201501/apt/microsoft-links-connectwise-breach-to-china-linked-group-using-ai-pentesting-tool-artex.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="supplychain-56501">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>76</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">LiteLLM</i> 遭供应链投毒</h3>
+<p class="sum">SecurityWeek 报道 <i class="hl">LiteLLM</i> 遭新一轮供应链攻击：攻击者使用被窃取的 GitHub CLI OAuth 令牌，在 <i class="hl">PyPI</i> 和 Docker 上推送并通过审批恶意包。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> LiteLLM</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>从 PyPI/Docker 拉取 LiteLLM 相关包的 AI 网关与密钥管理环境面临恶意包落地；来源确认恶意包已被推送并通过审批。</p></div>
+<div class="cell"><b>Action</b><p>校验 LiteLLM 的 PyPI 包与 Docker 镜像来源及完整性；轮换 GitHub CLI OAuth 授权并收紧发布审批权限。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://www.securityweek.com/litellm-compromised-in-fresh-supply-chain-attack/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-malware"><span class="n">03</span>恶意软件与僵尸网络</p>
+
+<div class="intel reveal" id="malware-63636">
+<div class="intel-head"><span class="chip">恶意软件与僵尸网络</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>66</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Sandworm</i> 新型网状后门擦除攻击</h3>
+<p class="sum">ESET 披露：俄背景团伙 <i class="hl">Sandworm</i> 与 <i class="hl">UAC-0099</i>（aka Earth Sirrush）合谋，于 July 16, 2025 经带恶意附件的定向邮件取得一家乌克兰物流公司初始访问，随后部署新型 mesh 网络后门并发动破坏性擦除攻击。</p>
+<div class="intel-facts"><b class="fct factor">Sandworm / UAC-0099</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>已确认后果为该物流企业的破坏性擦除失陷；定向钓鱼+mesh 后门的组合可迁移至其他目标。</p></div>
+<div class="cell"><b>Action</b><p>对照 ESET 披露回溯 spear-phishing 投递链与 mesh 后门驻留迹象（原文未给出具体 IOC 清单）。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/russian-linked-hackers-used-new-mesh.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="malware-12060">
+<div class="intel-head"><span class="chip">恶意软件与僵尸网络</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>64</i></span></div>
+<div class="intel-body">
+<h3>窃密恶意软件专采 AI 工具凭据</h3>
+<p class="sum">Check Point Research 披露一款窃密软件在浏览器密码、session cookies、加密钱包等常规目标之外，新增针对 <i class="hl">Claude</i>、ChatGPT Desktop、Codex、Cursor、Windsurf、GitHub Copilot 等 AI 应用与开发工具的专用收集逻辑，并同时采集云凭据与本地开发环境敏感文件。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> Claude、ChatGPT Desktop、Codex、Cursor、Windsurf、GitHub Copilot</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>重度使用 AI 编码/代理工具的开发者与挂载其凭据的云环境成为主要暴露人群，凭据与本地敏感文件面临外泄。</p></div>
+<div class="cell"><b>Action</b><p>按 Check Point 披露更新终端检测覆盖（AI 应用配置目录与凭据路径）；对疑似失陷终端轮换浏览器密码、会话与云凭据。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-24 · SID ANALYSIS</span><a href="https://research.checkpoint.com/2026/infostealer-riding-the-ai-train/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
