@@ -1,0 +1,176 @@
+---
+layout: post
+title: "安全情报日报 2026-10-26"
+date: 2026-10-26
+events: 9
+headline: "PHP2Shell确认失陷供应链收口"
+dek: "今日入选 9 条：漏洞面上 PHP2Shell 从大规模扫描尝试升级为欧洲政府机构确认失陷（在野 2 条），CISA 更新通告补上 SIGMA 检测规则，修补与回溯为第一优先级；组件面新增 MLflow、happy-dom、Mercury 高危通告，供应链面 LiteLLM 凭据被卷走引信，勒索面泄密站受害统计 2 条、活动回落但仍高。"
+brief_stats: ["9 事件", "在野 2", "PoC 0", "3 类别", "顶分 88"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
+<li><a class="toc-link" href="#vuln-75452"><span class="tc">★</span><span class="tt">PHP2Shell政府机构失陷AI辅助收尾</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-39751"><span class="tc">·</span><span class="tt">CISA增补PHP2Shell检测规则</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-85153"><span class="tc">·</span><span class="tt">Mercury未授权远程代码执行9.8分</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-98625"><span class="tc">·</span><span class="tt">MLflow未授权路径穿越任意写文件</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-37500"><span class="tc">·</span><span class="tt">SiteGuard漏洞被确认在野利用</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-20191"><span class="tc">·</span><span class="tt">happy-dom修复不全仍可执行宿主代码</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-87012"><span class="tc">·</span><span class="tt">LiteLLM供应链攻击卷走密码密钥</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#ransomware-99444"><span class="tc">·</span><span class="tt">n0n 团伙周受害者降至46家</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#ransomware-62638"><span class="tc">·</span><span class="tt">whitearmor点名海信惠而浦等受害</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-75452">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
+<div class="intel-body">
+<h3>PHP2Shell政府机构失陷AI辅助收尾</h3>
+<p class="sum">跟进 2026-10-24 的 PHP2Shell 在野报道：攻击者已确认借 <i class="hl kcve">CVE-2026-109618</i> 与 <i class="hl kcve">CVE-2026-109619</i> 成功攻破一家欧洲政府机构——初始利用后两小时内即拿到密码哈希与多因素认证相关数据，且后渗透阶段观察到使用 agentic AI 平台执行操作，全球扫描仍在持续。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-109618</b><b class="fct fout">6 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>从大规模扫描尝试升级为确认成功的政府机构失陷：凭据与多因素材料被成批拿走，AI 代理压缩了从突破到横向收集的时间窗，面向公网的 PHP 站点防御窗口显著缩短。</p></div>
+<div class="cell"><b>Action</b><p>仍在应急补丁外的 PHP 安装立即升级并按 KEV 口径留证；重置 Web 层可能暴露的凭据与多因素绑定，收紧 /api 面与出网策略，用 SIGMA 类检测规则复盘初始利用时间线。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/php2shell-exploitation-hits-government.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-39751">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3>CISA增补PHP2Shell检测规则</h3>
+<p class="sum"><i class="hl">CISA</i> 于 2026-10-23 更新 PHP2Shell（<i class="hl kcve">CVE-2026-109618</i>、<i class="hl kcve">CVE-2026-109619</i>）紧急通告：新增 SIGMA 检测规则用于识别可疑活动、并入合作伙伴资源、重申缓解要求；强烈要求立即修补所有对外提供 web 请求的 PHP 安装，含 Apache with mod_php 形态。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-109618</b><b class="fct fout">6 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> all PHP installations serving web requests</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>官方通告从修补呼吁升级到可落地的检测内容，为缺乏流量侧可见性的团队提供直接检测抓手；影响面覆盖所有 serving web requests 的 PHP 部署。</p></div>
+<div class="cell"><b>Action</b><p>套用 CISA 更新版通告中的 SIGMA 规则回扫历史日志；对 Apache with mod_php 等全量 PHP 安装执行官方应急补丁，复核修补时限与暴露清单。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-85153">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>64</i></span></div>
+<div class="intel-body">
+<h3>Mercury未授权远程代码执行9.8分</h3>
+<p class="sum">GitHub 通告 <i class="hl">Mercury</i>（<i class="hl kcve">CVE-2026-111058</i>，CVSS 9.8，critical）：其内置的 JupyterLab 服务默认匿名访问——未显式给 token 时设 --IdentityProvider.token=&#x27;&#x27; 并关闭 XSRF 检查，仅靠 /lab、/api/terminals 等路径 blocklist 兜底，攻击者可经 /api/kernels 实现未授权远程代码执行。修复版本 3.2.6。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111058</b><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>修复</b> 3.2.6</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Mercury 是面向数据应用的 Python 框架，默认配置即把 JupyterLab 内核 API 暴露给匿名访问；公网运行的数据应用与内部实验平台一旦命中即直接交出主机执行权。</p></div>
+<div class="cell"><b>Action</b><p>升级 mercury 至 3.2.6；暴露实例设置 --token/MERCURY_TOKEN、关闭匿名访问与 blocklist 依赖，公网部署先收口。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-rv4m-xm3f-3ccq" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-98625">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>60</i></span></div>
+<div class="intel-body">
+<h3>MLflow未授权路径穿越任意写文件</h3>
+<p class="sum">GitHub 安全通告 <i class="hl">MLflow</i>（<i class="hl kcve">CVE-2026-53995</i>，CVSS 8.2）：3.17.1 及更早版本的 FileStore 跟踪后端存在路径穿越，未认证攻击者向 POST /api/3.0/mlflow/traces 提交含穿越序列的构造 trace ID，即可借 FileStore.start_trace() 写入 attacker-control 的 trace_info.yaml 等文件。修复版本 3.17.2。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-53995</b><b class="fct fcvss">CVSS 8.2</b><div class="fvers"><span class="fv"><b>受影响</b> MLflow 3.17.1 and earlier</span><span class="fv"><b>修复</b> 3.17.2</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露面为公网可达、启用 FileStore 的自托管 MLflow 跟踪服务——典型见于机器学习实验平台与内网 AI 工具链，任意文件写入可进一步用于落地恶意内容。</p></div>
+<div class="cell"><b>Action</b><p>升级 mlflow 至 3.17.2；升级前限制 /api/3.0/mlflow/traces 的网络暴露并审计跟踪后端的异常写入。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-wqmh-qccw-pqwf" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-37500">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>58</i></span></div>
+<div class="intel-body">
+<h3>SiteGuard漏洞被确认在野利用</h3>
+<p class="sum">CISA 将 <i class="hl">SiteGuard Server Edition</i> 的 <i class="hl kcve">CVE-2026-106931</i> 收进已知被利用漏洞目录（KEV），dateAdded 2026-10-20，厂商为 EG Secure Solutions。处置要求按厂商指引应用缓解、遵循 BOD 26-04，无法缓解时停止使用。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-106931</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>KEV 收录即代表确认存在在野利用；该产品是网络边界安全设备，直接暴露于攻击面的部署一旦失陷即成初始 foothold。</p></div>
+<div class="cell"><b>Action</b><p>按 EG Secure Solutions 厂商指引完成 SiteGuard Server Edition 缓解与升级，按 BOD 26-04 口径评估资产暴露并留存取证线索。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-106931" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-20191">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>56</i></span></div>
+<div class="intel-body">
+<h3>happy-dom修复不全仍可执行宿主代码</h3>
+<p class="sum"><i class="hl">happy-dom</i> 新通告（<i class="hl kcve">CVE-2026-115895</i>，CVSS 8.8）指出 <i class="hl kcve">CVE-2026-33943</i> 的修复不完整：happy-dom@20.14.5 的 ESM 编译器在校验导入别名前将其拼入生成的 JavaScript，非法 import alias 可被转化为合法解构默认初始化器执行，构成替代注入路径。修复版本 21.0.4。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-115895</b><b class="fct fcvss">CVSS 8.8</b><div class="fvers"><span class="fv"><b>受影响</b> happy-dom@20.14.5</span><span class="fv"><b>修复</b> 21.0.4</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>happy-dom 是常见的前端 DOM 模拟库，广泛用于测试渲染链路；凡以旧版渲染不可信 HTML/脚本的场景都构成宿主代码执行面，且此前按旧通告做的缓解可能失效。</p></div>
+<div class="cell"><b>Action</b><p>升级 happy-dom 至 21.0.4；依赖其做沙箱渲染/测试的流水线复查此前基于 <i class="hl kcve">CVE-2026-33943</i> 修复的缓解是否仍有效。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-834v-8h66-3h79" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-87012">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF low<i>60</i></span></div>
+<div class="intel-body">
+<h3>LiteLLM供应链攻击卷走密码密钥</h3>
+<p class="sum"><i class="hl">The Register</i> 报道 LiteLLM 供应链攻击：攻击者借官方分发链路卷走密码与 secrets，并附带部署了 RAT，报道口径为需要立即开展威胁狩猎。条目正文信息量有限，细节以原文与通告为准。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>LiteLLM 位于 AI 网关与密钥管理链路正中，凭据与 API key 被成批卷走意味着下游模型服务与云凭据可能连带暴露，且 RAT 落地代表持久化通道已建立。</p></div>
+<div class="cell"><b>Action</b><p>锁定受影响分发窗口的 LiteLLM 版本来源完整性；对运行主机做 RAT 排查与威胁狩猎，全量轮换经手密码、API key 与云凭据。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://www.theregister.com/security/2026/10/21/litellm-supply-chain-attack-hoovers-up-passwords-and-secrets/5304548" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-99444">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>62</i></span></div>
+<div class="intel-body">
+<h3>n0n 团伙周受害者降至46家</h3>
+<p class="sum">跟进 <i class="hl">n0n</i> 于 2026-10-18 的推送：近 7 天泄密站新增受害者由 86 降至 46，活动量回落但仍持续发帖。本期受害者样例含 Adirondack Networks, Inc. 与 Amagi Media Labs 等，最新发现时间 2026-10-25。</p>
+<div class="intel-facts"><b class="fct factor">n0n</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>距上次跟踪已 8 天，按跨天规则跟进；周新增 46 家仍属高活跃区间，托管/IT 服务与媒体技术公司是本期点名受害方向，被公布即面临数据外泄曝光与二次勒索。</p></div>
+<div class="cell"><b>Action</b><p>关注 n0n 泄密页新增名单的外部暴露监测；IT/托管服务商核查被点名同类资产，重置可能外泄的凭据并核验备份完整性。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/n0n" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="ransomware-62638">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>56</i></span></div>
+<div class="intel-body">
+<h3>whitearmor点名海信惠而浦等受害</h3>
+<p class="sum">RansomLook 跟踪：<i class="hl">whitearmor</i> 近 7 天在泄密站发布 8 条帖子、涉及 8 家受害者，名单含 Hisense、JB Hunt 与 Whirlpool 等知名品牌，最新发现时间 2026-10-25。</p>
+<div class="intel-facts"><b class="fct factor">whitearmor</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>受害名单出现大型家电与物流上市企业，说明该团伙瞄准高赔付能力目标；被公布企业面临数据曝光与业务中断风险，供应链下游关联方可能被连带施压。</p></div>
+<div class="cell"><b>Action</b><p>对照 whitearmor 泄密页核查自身是否被挂名；受影响的制造业与物流企业复核远程接入与备份隔离状态。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-26 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/whitearmor" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
