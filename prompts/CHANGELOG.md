@@ -39,3 +39,10 @@
 - 动因：机器正则追不上开放词表实体；用户要求统一高亮视觉并扩到首页 TODAY 卡。
 - 变更：字段内 <k>实体</k> 标记契约；build rich() 统一渲染（AI 标记 + 机器兜底 CVE/分数字/状态词，单一 .hl 样式）；validate.check_ktags 校验配对/长度/数量/禁入字段。
 - 风险：标签滥用破坏排版——数量与长度上限+禁入字段双层闸。
+
+## analyze-v1.6 (stable, 启用 2026-10-26)
+- 本版含两个增量：<k> 风险主体标记规则（先前已入 stable/v1.6）+ qu-ai-wei 中文简报去 AI 味复检（本次合并追加）。
+- 动因：用户要求优化 AI 日报文风；英文 humanizer 已在库但对中文无效，收编 qu-ai-wei (MIT, upstream SHA 1d32e80) 为 magpie skill，v1.6 增补节将其在 brief 环节接入流水线。
+- 约束：事实 token 冻结、check_brief 机械闸优先、禁假人味。
+- 首跑（手动）：2026-10-26 日报 pulse/headline 重写，validate 通过（含 sabotage 反证：改计数即 FAIL），已发布线上。
+- 教训：candidates/v1.6 与 stable/v1.6 命名撞车（前者基于旧 candidates/v1.5，缺 stable 已有的 <k> 节）——合并修复；未来增量必须先 diff stable 现状。
