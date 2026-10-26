@@ -6,11 +6,11 @@ title: 首页
   <div class="wrap">
     <p class="kicker">Security Intelligence Daily</p>
     <!--TODAY_START-->
-<p class="td-date">2026-10-26（周一）</p>
-<h1 class="td-h">PHP2Shell 首次确认失陷</h1>
-<p class="td-pulse">今日入选 9 条。变化最大的是 PHP2Shell：此前它还只是大规模扫描尝试，现在欧洲一家政府机构确认失陷（在野 2 条），CISA 更新通告补上了 SIGMA 检测规则，该做的是打补丁并回溯排查入侵痕迹。组件面 MLflow、happy-dom、Mercury 各添新的高危通告，LiteLLM 则把凭据被卷走引信写进了供应链账上。勒索面泄密站受害统计 2 条，活动回落，但水位仍高。</p>
-<div class="td-stats"><div class="stat"><b>9</b><span>今日事件</span></div><div class="stat"><b>2</b><span>在野利用</span></div><div class="stat"><b>3</b><span>类别数</span></div><div class="stat"><b>88</b><span>顶分</span></div></div>
-<a class="td-cta" href="{{ '/2026-10-26/report.html' | relative_url }}">阅读今日完整简报 →</a>
+<p class="td-date">2026-10-27（周二）</p>
+<h1 class="td-h">默认不认证成当天共同暴露面</h1>
+<p class="td-pulse">入选 9 条，没有新增在野利用。缺口反复出现在同一处：OpenHands 智能体 SDK 把沙箱服务绑到 0.0.0.0、session_api_keys 留空，MCP Toolbox for Databases 1.2.0 through 1.4.0 的 cloud-storage source 能把主机文件直接外送。凭据那条线是 Gheist，拿 GitHub 令牌换云端密钥；mem0 让写进记忆的内容在 Databricks 上执行 SQL。Teams 外部聊天仍是冒充 IT 支持的投递通道。先收认证与令牌暴露面，再补版本。</p>
+<div class="td-stats"><div class="stat"><b>9</b><span>今日事件</span></div><div class="stat"><b>0</b><span>在野利用</span></div><div class="stat"><b>4</b><span>类别数</span></div><div class="stat"><b>78</b><span>顶分</span></div></div>
+<a class="td-cta" href="{{ '/2026-10-27/report.html' | relative_url }}">阅读今日完整简报 →</a>
 <!--TODAY_END-->
     <p class="td-foot"><a href="{{ '/sources/' | relative_url }}">41 个信源</a> · 每日约 600 条候选 · AI 分析后逐条证据机械校验 · 跨天指纹去重，旧闻不重推</p>
   </div>

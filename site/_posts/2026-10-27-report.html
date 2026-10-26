@@ -1,0 +1,180 @@
+---
+layout: post
+title: "安全情报日报 2026-10-27"
+date: 2026-10-27
+events: 9
+headline: "默认不认证成当天共同暴露面"
+dek: "入选 9 条，没有新增在野利用。缺口反复出现在同一处：OpenHands 智能体 SDK 把沙箱服务绑到 0.0.0.0、session_api_keys 留空，MCP Toolbox for Databases 1.2.0 through 1.4.0 的 cloud-storage source 能把主机文件直接外送。凭据那条线是 Gheist，拿 GitHub 令牌换云端密钥；mem0 让写进记忆的内容在 Databricks 上执行 SQL。Teams 外部聊天仍是冒充 IT 支持的投递通道。先收认证与令牌暴露面，再补版本。"
+brief_stats: ["9 事件", "在野 0", "PoC 0", "4 类别", "顶分 78"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
+<li><a class="toc-link" href="#vuln-30439"><span class="tc">★</span><span class="tt">&lt;k&gt;MCP Toolbox&lt;/k&gt; 可外泄主机文件</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-04239"><span class="tc">·</span><span class="tt">&lt;k&gt;OpenHands&lt;/k&gt; 智能体 SDK 未认证 RCE</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-21641"><span class="tc">·</span><span class="tt">&lt;k&gt;Pillow&lt;/k&gt; FPX 解码堆溢出可致执行</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-82945"><span class="tc">·</span><span class="tt">&lt;k&gt;MSAL Node&lt;/k&gt; 授权码流程参数外泄</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-97193"><span class="tc">·</span><span class="tt">&lt;k&gt;mem0&lt;/k&gt; Databricks 向量库 SQL 注入</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-46910"><span class="tc">·</span><span class="tt">&lt;k&gt;PHP&lt;/k&gt; 五天内二次重发 Windows 包</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-71238"><span class="tc">·</span><span class="tt">&lt;k&gt;Gheist&lt;/k&gt; 用 GitHub 令牌窃云端密钥</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-28796"><span class="tc">·</span><span class="tt">团伙 &lt;k&gt;the gentlemen&lt;/k&gt; 周受害 44 家</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-phishing">钓鱼与社工</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#phishing-68160"><span class="tc">·</span><span class="tt">攻击者借 &lt;k&gt;Teams&lt;/k&gt; 冒充 IT 支持投递</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-30439">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">MCP Toolbox</i> 可外泄主机文件</h3>
+<p class="sum">NVD 于 2026-10-26 收录 <i class="hl kcve">CVE-2026-93328</i>，评分 9.3：Google Cloud MCP Toolbox for Databases（googleapis/mcp-toolbox）versions 1.2.0 through 1.4.0 的 cloud-storage source 同时存在路径穿越与缺失授权，未认证远程攻击者通过构造的 tool invocation 参数即可把主机文件外泄到外部 Google Cloud Storage 桶，并覆写任意本地文件。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-93328</b><b class="fct fcvss">CVSS 9.3</b><div class="fvers"><span class="fv"><b>受影响</b> googleapis/mcp-toolbox versions 1.2.0 through 1.4.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是网络可达的 MCP Toolbox 部署，尤其是配置了 cloud-storage source 的推理与数据服务；来源确认的后果是主机文件被外送与本地文件被任意覆写。</p></div>
+<div class="cell"><b>Action</b><p>核对 googleapis/mcp-toolbox 版本是否落在 1.2.0 through 1.4.0，升级到厂商修复版本；同时限制 cloud-storage source 可读写路径与可访问的 Google Cloud Storage 桶，按未授权可达的口径排查存量资产。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-93328" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-04239">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">OpenHands</i> 智能体 SDK 未认证 RCE</h3>
+<p class="sum">NVD 于 2026-10-26 收录 <i class="hl kcve">CVE-2026-112346</i>，评分 9.8：OpenHands Software Agent SDK before 1.52.0 存在未认证远程代码执行问题——DockerWorkspace 与 Apptainer workspace 启动器把 sandbox agent server 绑定到所有网络接口（0.0.0.0），并把 session_api_keys 置为空列表，等于默认关闭认证。能访问到发布端口的攻击者可发送未认证的 HTTP 与 WebSocket 请求。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-112346</b><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>受影响</b> OpenHands Software Agent SDK before 1.52.0</span><span class="fv"><b>修复</b> 1.52.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是把智能体沙箱端口直接放到网络上、又沿用默认空 session_api_keys 的 OpenHands 部署；这类入口在无任何凭据的情况下即可被执行侧请求。</p></div>
+<div class="cell"><b>Action</b><p>升级到 1.52.0 及以上；同时检查 DockerWorkspace/Apptainer 启动方式，避免 agent server 监听 0.0.0.0，并为 session_api_keys 配置非空密钥。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="vuln-04239-ioc">复制</button></div><pre id="vuln-04239-ioc">0.0.0.0</pre></div>
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-112346" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-21641">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Pillow</i> FPX 解码堆溢出可致执行</h3>
+<p class="sum">GitHub 安全公告 GHSA-5x8w-8jj5-q52h（<i class="hl kcve">CVE-2026-112398</i>）定级 critical：Pillow 的 FlashPix (FPX) JPEG-tile 解码器存在堆缓冲区溢出，应用只要用 Image.open() 打开一个精心构造的文件就可能被任意代码执行。由于该文件是按内容（OLE2 magic）而非扩展名被识别，任何打开或给不可信上传做缩略图的服务都在受影响范围内；修复版本为 13.0.0。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-112398</b><div class="fvers"><span class="fv"><b>受影响</b> pillow</span><span class="fv"><b>修复</b> 13.0.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是用 Pillow 处理用户上传图像的服务，如缩略图、预览与格式转换流水线；入口只需一次打开构造文件，且按扩展名过滤无法拦住。</p></div>
+<div class="cell"><b>Action</b><p>升级到 pillow 13.0.0；排查所有以 Image.open() 接收不可信上传的服务面，公告中 CVSS 数值未给出（CVSS 0），按 critical 等级排修复优先级。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-5x8w-8jj5-q52h" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-82945">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>64</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">MSAL Node</i> 授权码流程参数外泄</h3>
+<p class="sum">GitHub 公告 GHSA-xcx6-jx8p-x3h5（<i class="hl kcve">CVE-2026-109461</i>）定级 high、CVSS 7.5：@azure/msal-node 因 Origin 校验错误，在 auth_code 流程中可能把参数透露给攻击者控制的端点，让未授权攻击者通过网络获取信息。Version 7.1.0 and higher are patched，临时缓解是调用 acquireTokenByCode 时只传入 auth_code。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-109461</b><b class="fct fcvss">CVSS 7.5</b><div class="fvers"><span class="fv"><b>受影响</b> @azure/msal-node</span><span class="fv"><b>修复</b> 7.1.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是用 MSAL Node 实现授权码登录的 Node.js 应用，包括企业 SSO 与内部工具；来源确认的后果限于信息泄露，未提及在野利用或凭据被滥用的实例。</p></div>
+<div class="cell"><b>Action</b><p>升级到 @azure/msal-node 7.1.0 及以上；暂不能升级时按公告 workaround 只向 acquireTokenByCode 传入 auth_code，并复核回调端点的 Origin 校验。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-xcx6-jx8p-x3h5" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-97193">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>62</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">mem0</i> Databricks 向量库 SQL 注入</h3>
+<p class="sum">GitHub 公告 GHSA-7587-9684-52r6（<i class="hl kcve">CVE-2026-115324</i>）定级 critical、CVSS 8.1：mem0 0.1.117 before 1.0.8 的 mem0/vector_stores/databricks.py 未对存储的记忆内容做转义，攻击者通过构造的 memory text、metadata 或 message name 影响 insert() 与 update() 的字符串拼接，即可在配置好的 Databricks SQL warehouse 上执行注入的 SQL。修复版本 1.0.8。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-115324</b><b class="fct fcvss">CVSS 8.1</b><div class="fvers"><span class="fv"><b>受影响</b> mem0 0.1.117 before 1.0.8</span><span class="fv"><b>修复</b> 1.0.8</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是接入 Databricks 后端的 mem0 记忆层部署：任何可让外部内容写入记忆的入口，都可能被转化为在 SQL warehouse 上执行攻击者提供的 SQL。</p></div>
+<div class="cell"><b>Action</b><p>升级到 mem0ai 1.0.8；约束可写入记忆的 memory text、metadata 与 message name 来源，并收紧 Databricks SQL warehouse 侧账号权限。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-7587-9684-52r6" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-46910">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>60</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">PHP</i> 五天内二次重发 Windows 包</h3>
+<p class="sum">跟进 2026-10-24 关于同一 Brotli 缺陷的报道：PHP 在五天内第二次更新官方 Windows 安全包，为 PHP 8.2 through 8.5 重新构建以修复 <i class="hl kcve">CVE-2026-111497</i>。该缺陷位于包内自带的 Brotli 压缩库，可造成内存破坏并可能执行代码。PHP 说明它可经 cURL 扩展在自动解压 HTTP 响应时被触达，而该行为在 cURL 默认配置中是关闭的。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111497</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> PHP 8.2 through 8.5</span><span class="fv"><b>修复</b> 重建后的官方 Windows packages</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是在 Windows 上运行 PHP 官方构建、并显式开启 cURL 自动解压 HTTP 响应的服务端；未开启该行为时按来源口径风险显著降低。</p></div>
+<div class="cell"><b>Action</b><p>Windows 侧 PHP 8.2 through 8.5 使用者重新下载并安装重建后的官方包；暂不能更新时确认 cURL 扩展未开启自动解压 HTTP 响应。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/php-issues-second-windows-security.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-71238">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>74</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Gheist</i> 用 GitHub 令牌窃云端密钥</h3>
+<p class="sum">来源报道披露一场仍在进行的供应链攻击：攻击者把窃取到的 GitHub 令牌武器化，用来窃取云端机密。报道描述该行动正在从数千个开发者仓库中收割凭据与敏感数据；来源未给出攻击载体、受害清单、时间起点与修复方案。</p>
+<div class="intel-facts"><b class="fct factor">Gheist</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是持有 GitHub 令牌、且仓库或流水线可触达云凭据的开发团队与 CI 环境；来源已确认的后果是凭据与敏感数据被批量收割，目标是云侧密钥。</p></div>
+<div class="cell"><b>Action</b><p>按令牌维度全量轮换与吊销，清点可读取云 Secrets 的 GitHub 令牌与第三方授权；来源未提供具体工具或版本号，先收敛令牌暴露面并核查仓库访问日志。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://www.darkreading.com/cyberattacks-data-breaches/gheist-stolen-github-tokens-cloud-secrets" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-28796">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>56</i></span></div>
+<div class="intel-body">
+<h3>团伙 <i class="hl">the gentlemen</i> 周受害 44 家</h3>
+<p class="sum">跟进 2026-10-19 关于同一团伙的推送：RansomLook 数据显示 the gentlemen 近 7 天在泄密站发布 44 条帖子、涉及受害者 44 家，较上次推送时的 37 家增加 7 家，最新发现时间 2026-10-26。受害者样例包括 Atlas Stamping Manufacturing、Belmont Resorts、Conax Technologies 等。</p>
+<div class="intel-facts"><b class="fct factor">the gentlemen</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是被公布的中小型制造、酒店与网络服务商主体，来源给出的样例含 Atlas Stamping Manufacturing、Belmont Resorts；已确认后果是相关主体名出现在泄密站帖子中。</p></div>
+<div class="cell"><b>Action</b><p>对照 the gentlemen 泄密站公布清单核查自身供应链与客户重合度；来源未给出该团伙的入侵手法与工具版本，按勒索暴露面通用口径处置。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/the%20gentlemen" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-phishing"><span class="n">04</span>钓鱼与社工</p>
+
+<div class="intel reveal" id="phishing-68160">
+<div class="intel-head"><span class="chip">钓鱼与社工</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>68</i></span></div>
+<div class="intel-body">
+<h3>攻击者借 <i class="hl">Teams</i> 冒充 IT 支持投递</h3>
+<p class="sum">研究者指出一种反复出现的社工模式：在数百起案例中，攻击者使用 Microsoft Teams 的外部聊天创建功能实施冒充诈骗或投递恶意软件。来源提到这些事件里行为高度一致——复用同一批一次性 tenant、使用同一套 IT 支持身份话术，标题层面还点名其被用于投放勒索软件。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> Microsoft Teams</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是接受 Teams 外部联系人或陌生会话的企业与机构终端；已确认后果是用户被诱导执行远程协助类操作，进而被投递恶意软件与勒索软件。</p></div>
+<div class="cell"><b>Action</b><p>收紧租户的外部聊天与陌生人联系策略，明确一线 IT 支持不会通过外部陌生聊天发起远程协助；来源未给出具体版本号，处置口径落在租户策略与用户核验流程。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-27 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-use-microsoft-teams-it.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
