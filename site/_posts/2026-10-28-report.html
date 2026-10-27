@@ -1,0 +1,168 @@
+---
+layout: post
+title: "安全情报日报 2026-10-28"
+date: 2026-10-28
+events: 9
+headline: "在野利用扩面，AI 网关与认证库同批告急"
+dek: "入选 9 条，在野 4：CISA 把 PHP2Shell 两枚 9.2 分缺陷、Brotli 的 <i class=\"hl kcve\">CVE-2026-111497</i> 与 Adobe Commerce 的 <i class=\"hl kcve\">CVE-2026-48356</i> 收进 KEV，Apple 则把 8.8 分 CoreGraphics 修复回补到旧机型。另一条线在 AI 与身份组件——LiteLLM 9.9 分能把 internal_user 直升 Proxy Admin，Authlib 9.1 分空签名也当验证通过，Agno 与 NeMo 各留一处可执行代码的入口。修补顺序按 KEV 项优先，再回清 pip 依赖版本。"
+brief_stats: ["9 事件", "在野 4", "PoC 0", "1 类别", "顶分 82"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">9</span></p><ol>
+<li><a class="toc-link" href="#vuln-61527"><span class="tc">★</span><span class="tt">&lt;k&gt;PHP2Shell&lt;/k&gt; 两枚漏洞入选 KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-59914"><span class="tc">·</span><span class="tt">&lt;k&gt;LiteLLM&lt;/k&gt; 低权限可升 Proxy Admin</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-71207"><span class="tc">·</span><span class="tt">&lt;k&gt;Brotli&lt;/k&gt; 缺陷入选 KEV</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-49670"><span class="tc">·</span><span class="tt">&lt;k&gt;Authlib&lt;/k&gt; 空签名 JWS 被当作已验签</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-13515"><span class="tc">·</span><span class="tt">&lt;k&gt;Adobe Commerce&lt;/k&gt; 与 &lt;k&gt;Magento&lt;/k&gt; 入 KEV</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-80917"><span class="tc">·</span><span class="tt">&lt;k&gt;Apple&lt;/k&gt; 回补已被利用的 CoreGraphics 修复</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-54921"><span class="tc">·</span><span class="tt">&lt;k&gt;Agno&lt;/k&gt; field_type 被直接交给 eval</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-19616"><span class="tc">·</span><span class="tt">&lt;k&gt;NeMo&lt;/k&gt; 智能体工具包缺认证满分收录</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-73228"><span class="tc">·</span><span class="tt">&lt;k&gt;Tailscale&lt;/k&gt; 称正修补十余项缺陷</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-61527">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>82</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">PHP2Shell</i> 两枚漏洞入选 KEV</h3>
+<p class="sum">跟进 2026-10-26 的 <i class="hl">PHP2Shell</i> 在野报道：CISA 于周一正式确认这两个近期已修补的 PHP 缺陷存在在野利用，并把 <i class="hl kcve">CVE-2026-109618</i> 与 <i class="hl kcve">CVE-2026-109619</i> 收进已知被利用漏洞目录（KEV）。两枚缺陷评分均为 9.2，均可造成未认证远程代码执行，其中 <i class="hl kcve">CVE-2026-109618</i> 为 out-of-memory 类问题。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-109618</b><b class="fct fcvss">CVSS 9.2</b><b class="fct fout">9 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是所有对外提供 web 请求的 PHP 部署；入选 KEV 把优先级从厂商通告提升到美国联邦限期处置口径，也意味着这条缺陷已不是理论风险，未打补丁的实例应直接按已暴露处理。</p></div>
+<div class="cell"><b>Action</b><p>立即把 PHP 升级到厂商已发布的修复版本（含 Windows 包重建后的版本），无法及时修补时按 BOD 26-04 口径加缓解或停用，并核查 Web 层是否已有未授权执行痕迹。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/cisa-confirms-active-exploitation-of.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-59914">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">LiteLLM</i> 低权限可升 Proxy Admin</h3>
+<p class="sum">GitHub 通告 <i class="hl kcve">CVE-2026-114612</i>（CVSS 9.9，high）：<i class="hl">LiteLLM</i> Proxy 把同一把 salt key 同时用于密封静态 secrets 与签发会话令牌，持有 internal_user 权限的已认证用户可在申请 API key 时于构造的 metadata 字段里放入伪造的管理凭据，从而升级为 proxy_admin 并达成远程代码执行。修复版本 1.100.4、1.101.3、1.102.2。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-114612</b><b class="fct fcvss">CVSS 9.9</b><div class="fvers"><span class="fv"><b>受影响</b> litellm</span><span class="fv"><b>修复</b> 1.100.4, 1.101.3, 1.102.2</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是自建 <i class="hl">LiteLLM</i> 网关并开放内部账号的组织——这类网关通常集中存放各家模型的 API key 与云侧凭据；密钥跨用途复用使单个低权限账号即可换来管理员身份与代码执行，等于把整个密钥库与下游模型调用交出去。</p></div>
+<div class="cell"><b>Action</b><p>升级 litellm 至 1.100.4、1.101.3 或 1.102.2；收紧 internal_user 权限账号范围，排查异常签发的 API key 与会话令牌，并轮换被同一把密钥覆盖的 secrets 与令牌材料。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-7hp6-4w63-5g45" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-71207">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>74</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Brotli</i> 缺陷入选 KEV</h3>
+<p class="sum">跟进 2026-10-24 与 2026-10-27 的 <i class="hl">Brotli</i> 报道：CISA 于 2026-10-27 把 <i class="hl kcve">CVE-2026-111497</i> 列入 KEV，厂商/产品记为 <i class="hl">Google Brotli</i>，正式确认这枚开源压缩库缺陷已被在野利用。目录备注说明该缺陷位于可被不同产品复用的开源组件或第三方库。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111497</b><b class="fct fout">3 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Google Brotli</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露面不止单一厂商产品：同一枚缺陷会随 <i class="hl">Brotli</i> 被不同运行时与打包分发各自复现（Node.js 与 PHP 侧此前均因它重发版本），KEV 确认在野意味着这条解码路径已被实际攻击使用，而非仅研究演示。</p></div>
+<div class="cell"><b>Action</b><p>按 KEV 与厂商指引升级到已修复 <i class="hl kcve">CVE-2026-111497</i> 的运行时与包版本，无法缓解时按目录口径停用；同时清点自有镜像与依赖中内嵌的 <i class="hl">Brotli</i> 版本，按 BOD 26-04 做暴露面评估与取证留存。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-111497" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-49670">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Authlib</i> 空签名 JWS 被当作已验签</h3>
+<p class="sum">GitHub 通告 <i class="hl kcve">CVE-2026-96760</i>（CVSS 9.1，critical）：<i class="hl">Authlib</i> 1.9.0 之前的 JsonWebSignature.deserialize_json() 接收 JSON Serialization 形式的 JWS 对象时，既不检查签名也不需要密钥，就直接把 payload 作为验证成功返回，构成签名验证绕过。根因代码位于 authlib/jose/rfc7515/jws.py，在已安装的 1.8.0 制品上确认；修复版本 1.9.0。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-96760</b><b class="fct fcvss">CVSS 9.1</b><div class="fvers"><span class="fv"><b>受影响</b> Authlib prior to 1.9.0</span><span class="fv"><b>修复</b> 1.9.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是所有以 <i class="hl">Authlib</i> 解析 JSON 序列化 JWS 做认证或授权判定的服务：攻击者提交空签名对象即可让伪造载荷被当成已验签通过，验证环节形同不存在，属可直接击穿认证判定的缺陷类型。</p></div>
+<div class="cell"><b>Action</b><p>升级 authlib 至 1.9.0；自查代码中走 deserialize_json 的校验路径，改为强制要求非空签名与密钥校验，并对依赖该库的令牌校验做回归测试。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-6v38-4h7w-rj9h" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-13515">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Adobe Commerce</i> 与 <i class="hl">Magento</i> 入 KEV</h3>
+<p class="sum">CISA 于 2026-10-27 把 <i class="hl kcve">CVE-2026-48356</i> 列入已知被利用漏洞目录（KEV），厂商/产品记为 <i class="hl">Adobe Commerce</i> and <i class="hl">Magento</i>，即官方确认该电商平台缺陷已在野被利用。目录要求的处置是按厂商指引应用缓解、遵循 BOD 26-04 与取证留存要求，缓解不可用时应停用该产品。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-48356</b><div class="fvers"><span class="fv"><b>受影响</b> Adobe Commerce and Magento</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是公网可达的 <i class="hl">Adobe Commerce</i> and <i class="hl">Magento</i> 站点与后台；KEV 收录把这类电商前端的未修补实例从常规补丁队列提升到需按失陷假设排查的级别，且目录点名需评估每台资产的互联网暴露面。</p></div>
+<div class="cell"><b>Action</b><p>按厂商通告（adobe.com/trust 的 apsb26-73）应用补丁与缓解，无法缓解时停用；按 BOD 26-04 清点暴露实例并按取证留存要求保留现场。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-48356" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-80917">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Apple</i> 回补已被利用的 CoreGraphics 修复</h3>
+<p class="sum"><i class="hl">Apple</i> 于周一把一处高危缺陷的修复回补到更旧的设备：<i class="hl kcve">CVE-2026-86950</i>（CVSS 8.8）是 <i class="hl">CoreGraphics</i> 的越界写，处理恶意构造的文件时可导致任意代码执行，来源确认该缺陷已在真实攻击中被利用；上月 <i class="hl">Apple</i> 已在新系统发布补丁，本次扩展到旧机型与旧 iPad。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-86950</b><b class="fct fcvss">CVSS 8.8</b><div class="fvers"><span class="fv"><b>受影响</b> older devices</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是停留在旧版本、此前拿不到修复的 iPhone 与 iPad 用户；触发条件只是打开一个精心构造的文件，回补旧设备说明这批长期未更新的终端此前处于无可修补状态。</p></div>
+<div class="cell"><b>Action</b><p>在旧款 iPhone 与 iPad 上安装 <i class="hl">Apple</i> 本次回补的安全更新；企业移动终端侧把该批设备列入本轮强制升级范围，无法升级的暂禁打开不可信来源的文件与图片内容。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/apple-backports-fix-for-exploited.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-54921">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>66</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Agno</i> field_type 被直接交给 eval</h3>
+<p class="sum">GitHub 通告 <i class="hl kcve">CVE-2026-35002</i>（CVSS 9.8，critical）：<i class="hl">Agno</i> 2.3.24 之前把 FunctionCall 输入字段的 field_type 参数直接传入 Python 内置 eval()，能影响该值的攻击者即可在 Agno 进程内执行任意 Python 代码，属 CWE-95 代码注入。修复版本 2.3.24。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-35002</b><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>受影响</b> Agno versions prior to 2.3.24</span><span class="fv"><b>修复</b> 2.3.24</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>最易被命中的是把模型输出接进工具调用的 <i class="hl">Agno</i> 智能体应用：模型可控输出本身就构成来源所说的“可影响该值”的输入，一旦命中执行发生在宿主 Python 进程内，而非沙箱侧。</p></div>
+<div class="cell"><b>Action</b><p>升级 agno 至 2.3.24；对来自模型输出的 FunctionCall 字段值做类型白名单校验，禁止任何外部可控值进入 eval 路径。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-m4w4-3r8h-jw98" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-19616">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>62</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">NeMo</i> 智能体工具包缺认证满分收录</h3>
+<p class="sum">NVD 于 2026-10-27 收录 <i class="hl kcve">CVE-2026-65145</i>，评分 10.0：<i class="hl">NVIDIA</i> NeMo Agent Toolkit 存在缺失认证问题，攻击者可借此造成代码执行、权限提升、数据篡改、拒绝服务与信息泄露。来源未给出受影响版本、修复版本，也未提及任何在野利用观测。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-65145</b><b class="fct fcvss">CVSS 10.0</b><div class="fvers"><span class="fv"><b>受影响</b> NVIDIA NeMo Agent Toolkit</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是把 NeMo Agent Toolkit 直接作为智能体执行侧对外或跨网部署的团队：缺失认证叠加满分评分，意味着默认暴露的接口即可被驱动到代码执行与数据篡改，影响范围覆盖工具包能触达的模型、数据与外部工具。</p></div>
+<div class="cell"><b>Action</b><p>核对 <i class="hl">NVIDIA</i> 通告确认受影响版本与修复版本后再升级；在此之前不要把工具包接口直接暴露到公网，置于认证、网络隔离与最小权限之下，并对智能体可调用工具做审计。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-65145" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-73228">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF low<i>60</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Tailscale</i> 称正修补十余项缺陷</h3>
+<p class="sum"><i class="hl">Tailscale</i> 安全团队正在修补接近十余个安全漏洞，来源称这些缺陷可被用于窃取凭据、使服务器崩溃、取得 root 权限等。本条摘要未给出具体 CVE 编号、受影响版本与修复发布状态，属厂商预告式披露。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是依赖 <i class="hl">Tailscale</i> 做零信任接入与 SSH 远程运维的组织；来源列出的后果类别指向凭据与 root 权限，若确为此则等于接入通道本身成为入口，但具体利用路径需等官方细节发布后才能判定。</p></div>
+<div class="cell"><b>Action</b><p>跟踪 <i class="hl">Tailscale</i> 后续安全通告与修复版本，发布后尽快升级接入节点与客户端；过渡期复核 SSH 接入范围、凭据暴露面与管理员账号登录审计。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-28 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/tailscale-warns-of-serious-ssh-flaws-allowing-root-privilege-escalation/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
