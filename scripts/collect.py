@@ -94,12 +94,12 @@ def _ioc_tags(tagstr):
     return (fams[0] if fams else ""), arch, (oses[0] if oses else "")
 
 
-def fetch(url, timeout=20, retries=2):
+def fetch(url, timeout=20, retries=2, headers=None):
     """带退避+抖动的抓取。代理由环境 HTTP(S)_PROXY 自动继承。"""
     last = None
     for attempt in range(retries + 1):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            req = urllib.request.Request(url, headers=headers or {"User-Agent": UA})
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 return r.read()
         except Exception as e:
@@ -107,6 +107,12 @@ def fetch(url, timeout=20, retries=2):
             if attempt < retries:
                 time.sleep(min(8, 1.5 * (2 ** attempt)) + (os.getuid() % 3) * 0.1)
     raise last
+
+_DIRTY_FAM = {"", "none", "null", "n/a", "na", "empty", "not found", "404: not found", "404", "unknown, unknown"}
+def clean_fam(v):
+    """IOC 家族/标签消毒：剥 <k> 富化标记、去页标题脏值、限长。脏值→unknown。"""
+    s = re.sub(r"</?k>", "", str(v or "")).strip().lower()[:40]
+    return "unknown" if s in _DIRTY_FAM else s
 
 def strip_html(s):
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", s or "")).strip()
@@ -443,9 +449,10 @@ def main():
     # ---- OpenPhish 钓鱼页狩猎（每日 feed，300 条级新 URL；落 IoC + 1 条聚合候选）----
     ph_status = "fail"
     try:
-        raw = fetch("https://openphish.com/feed.txt")
+        raw = fetch("https://openphish.com/feed.txt").decode("utf-8", "replace")
         purls = [ln.strip() for ln in raw.splitlines() if ln.strip().startswith("http")]
         from urllib.parse import urlparse as _up
+        import collections
         hosts = collections.Counter(_up(u).netloc for u in purls if _up(u).netloc)
         added_p = 0
         for u in purls:
@@ -465,7 +472,7 @@ def main():
         pp = os.path.join(DATA, "iocs", f"{run_date}-openphish.json")
         json.dump(slim_p, open(pp + ".tmp", "w"), ensure_ascii=False, indent=0)
         os.replace(pp + ".tmp", pp)
-        th = hashlib.sha256(f"openphish|{run_date}").hexdigest()[:16]
+        th = hashlib.sha256(f"openphish|{run_date}".encode()).hexdigest()[:16]
         if th not in seen:
             seen[th] = True
             top_h = "、".join(f"{h}({n})" for h, n in hosts.most_common(5))
@@ -581,7 +588,7 @@ def main():
                     fam = r.get("malware_printable") or r.get("malware") or ""
                     fams_, arch_, os_ = _ioc_tags(fam)
                     slim.append({"i": r.get("ioc"), "t": r.get("ioc_type"),
-                                 "f": fam.lower() or fams_, "tt": r.get("threat_type") or "",
+                                 "f": clean_fam(fam.lower() or fams_), "tt": r.get("threat_type") or "",
                                  "arch": arch_, "os": os_,
                                  "c": r.get("confidence_level"),
                                  "s": (r.get("first_seen") or "")[:10],
@@ -600,15 +607,15 @@ def main():
     uh_status = "fail"
     if ak:
         try:
-            req = urllib.request.Request(f"https://urlhaus-api.abuse.ch/v2/files/exports/{ak}/recent.csv",
-                                         headers={"User-Agent": "SID-Daily/1.0 (security-intelligence-daily; read-only consumer)"})
-            with urllib.request.urlopen(req, timeout=40) as r:
-                csv_text = r.read().decode("utf-8", "replace")
+            csv_text = fetch(f"https://urlhaus-api.abuse.ch/v2/files/exports/{ak}/recent.csv",
+                             timeout=40, retries=3,
+                             headers={"User-Agent": "SID-Daily/1.0 (security-intelligence-daily; read-only consumer)"}).decode("utf-8", "replace")
             import csv as _csv, io as _io
             _lines = csv_text.splitlines()
             _hi = next(i for i, ln in enumerate(_lines) if ln.startswith("# ") and "id," in ln)
             _data = [_lines[_hi][2:].strip()] + [ln for ln in _lines[_hi + 1:] if ln.strip() and not ln.startswith("#")]
             rows = list(_csv.DictReader(_data))
+            rows_s = sorted(rows, key=lambda x: (x.get("url_status") or "").lower() != "online")
             if rows:
                 import collections as _C
                 mal = _C.Counter((x.get("malware") or "unknown").lower() for x in rows)
@@ -629,14 +636,13 @@ def main():
                 results.append({"source": "urlhaus", "status": "ok", "count": len(rows)})
                 os.makedirs(os.path.join(DATA, "iocs"), exist_ok=True)
                 uh = []
-                rows_s = sorted(rows, key=lambda x: (x.get("url_status") or "").lower() != "online")
                 for x in rows_s[:800]:
                     url = (x.get("url") or "").strip()
                     if not url:
                         continue
                     fam_, arch_, os_ = _ioc_tags(x.get("tags"))
                     uh.append({"i": url, "t": "url",
-                               "f": fam_ or (x.get("tags") or "unknown").split(",")[-1].lower(),
+                               "f": clean_fam(fam_ or (x.get("tags") or "unknown").split(",")[-1].lower()),
                                "tt": x.get("threat") or "",
                                "arch": arch_, "os": os_,
                                "c": 90 if (x.get("url_status") or "").lower() == "online" else 60,

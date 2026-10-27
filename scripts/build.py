@@ -40,10 +40,13 @@ def build_iocs_page(run_date):
             if i and i not in seen_i:
                 seen_i.add(i)
                 z = r.get("z") or ""
-                f_ = (r.get("f") or "").lower()
-                tt_ = (r.get("tt") or "").lower()
-                arch_ = r.get("arch") or []
-                os_ = (r.get("os") or "").lower()
+                def _cf(v):  # 渲染层防御：剥 <k> 泄漏与页标题脏值（历史文件兼容）
+                    s = re.sub(r"</?k>", "", str(v or "")).strip().lower()[:40]
+                    return "" if s in ("none", "null", "n/a", "na", "empty", "404: not found", "404") else s
+                f_ = _cf(r.get("f"))
+                tt_ = _cf(r.get("tt"))
+                arch_ = [a for a in (_cf(x) for x in (r.get("arch") or [])) if a]
+                os_ = _cf(r.get("os"))
                 if "tt" not in r:  # 旧落盘格式兼容
                     k_ = (r.get("k") or "")
                     if z == "threatfox":
