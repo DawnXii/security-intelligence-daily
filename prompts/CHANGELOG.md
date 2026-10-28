@@ -40,6 +40,11 @@
 - 变更：字段内 <k>实体</k> 标记契约；build rich() 统一渲染（AI 标记 + 机器兜底 CVE/分数字/状态词，单一 .hl 样式）；validate.check_ktags 校验配对/长度/数量/禁入字段。
 - 风险：标签滥用破坏排版——数量与长度上限+禁入字段双层闸。
 
+## analyze-v1.7 (stable, 启用 2026-10-28)
+- 新增标题自包含可读规则：禁二字压缩动词造成的施受歧义（用户点名"低权限可升 Proxy Admin"理解性差）；英文角色名要带中文锚点。
+- 当日实例已人工修正：LiteLLM CVE-2026-114612 标题改为"LiteLLM 低权限用户可伪造凭据提权至 Proxy Admin"。
+- 同时 build.py 修复：卡片标题字段改走 rich()（此前裸 esc 渲染致 `<k>` 以 &lt;k&gt; 形式在浏览器显示为字面标签——10-28 报告页泄漏根因）。
+
 ## analyze-v1.6 (stable, 启用 2026-10-26)
 - 本版含两个增量：<k> 风险主体标记规则（先前已入 stable/v1.6）+ qu-ai-wei 中文简报去 AI 味复检（本次合并追加）。
 - 动因：用户要求优化 AI 日报文风；英文 humanizer 已在库但对中文无效，收编 qu-ai-wei (MIT, upstream SHA 1d32e80) 为 magpie skill，v1.6 增补节将其在 brief 环节接入流水线。

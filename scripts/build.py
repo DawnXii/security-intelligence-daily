@@ -334,7 +334,7 @@ def main():
                 xlab, xcls = exploit_chip(a, cat)
                 rt = risk_tier(a)
                 toc.append(f'<li><a class="toc-link" href="#{aid}"><span class="tc">{focus or "·"}</span>'
-                           f'<span class="tt">{esc(a["title_zh"])}</span>'
+                           f'<span class="tt">{rich(a["title_zh"])}</span>'
                            f'<span class="meta"><i class="rp {rt.lower()}">{rt}</i>'
                            + (f'<i class="xs {xcls}">{xlab}</i>' if xlab else "")
                            + '</span></a></li>')
