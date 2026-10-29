@@ -1,0 +1,172 @@
+---
+layout: post
+title: "安全情报日报 2026-10-30"
+date: 2026-10-30
+events: 9
+headline: "边界设备与代码托管平台同时挨打"
+dek: "入选 9 条，在野 6：KEV 新收 GitLab 的 <i class=\"hl kcve\">CVE-2026-97229</i> 与 Cisco ASA/FTD 的 <i class=\"hl kcve\">CVE-2026-76418</i>，前者已有人拿去试 Alpine 自建实例；PHP2Shell 打进 Palo Alto 管理口，还串上了内核提权。KeyDrift 抄走 SD-WAN 站点密钥，Data Domain 的 9.8 与 WS_FTP 的 10.0 则覆盖备份与文件传输两类底座。口径：KEV 项限期修，管理口先断公网。"
+brief_stats: ["9 事件", "在野 6", "PoC 0", "2 类别", "顶分 82"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">8</span></p><ol>
+<li><a class="toc-link" href="#vuln-60507"><span class="tc">★</span><span class="tt"><i class="hl">Fragnesia</i> 内核缺陷被串入 <i class="hl">PHP2Shell</i> 攻击</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-45085"><span class="tc">·</span><span class="tt"><i class="hl">ASA/FTD</i> VPN 缺陷入 <i class="hl">KEV</i> 联邦限期处置</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-93691"><span class="tc">·</span><span class="tt"><i class="hl">PHP2Shell</i> 被用于攻打公网暴露的防火墙管理口</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-08352"><span class="tc">·</span><span class="tt">跟进 2026-10-14 报道：<i class="hl">GitLab</i> 缺陷首次入 <i class="hl">KEV</i></span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-97491"><span class="tc">·</span><span class="tt"><i class="hl">Alpine</i> 自建 <i class="hl">GitLab</i> 遭 CVSS 10.0 缺陷攻击</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-17534"><span class="tc">·</span><span class="tt"><i class="hl">WS_FTP Server</i> 未认证可取管理员凭据</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-15267"><span class="tc">·</span><span class="tt"><i class="hl">Mendix SAML</i> 断言重放可绕过身份验证</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-43702"><span class="tc">·</span><span class="tt"><i class="hl">PowerProtect Data Domain</i> 硬编码加密密钥</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-malware">恶意软件与僵尸网络</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#malware-08335"><span class="tc">·</span><span class="tt"><i class="hl">UAT-11473</i> 用 <i class="hl">SD-WAN</i> 缺陷部署 <i class="hl">KeyDrift</i></span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-60507">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>82</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Fragnesia</i> 内核缺陷被串入 <i class="hl">PHP2Shell</i> 攻击</h3>
+<p class="sum"><i class="hl">CISA</i> 要求联邦机构修补一个高危 <i class="hl">Linux kernel</i> 本地提权缺陷：<i class="hl">PHP2Shell</i> 攻击者已在在野攻击中把它与 PHP 侧缺陷串联使用。来源文本未给出该内核缺陷的 CVE 编号与受影响发行版范围。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> Linux kernel</span><span class="fv"><b>修复</b> 暂无具体版本号</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>已拿到 Web 应用初始立足点的攻击者可借内核提权取得整机 root，影响承载 PHP 服务的 Ubuntu、RHEL 等服务器发行版与容器节点。</p></div>
+<div class="cell"><b>Action</b><p>按 CISA 通告口径尽快升级各发行版内核软件包；对外暴露的 PHP 宿主优先处理，并回溯 Web 进程派生的异常子进程与本地提权行为。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/cisa-warns-of-fragnesia-linux-flaw-chained-in-php2shell-attacks/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-45085">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">ASA/FTD</i> VPN 缺陷入 <i class="hl">KEV</i> 联邦限期处置</h3>
+<p class="sum"><i class="hl">CVE-2026-76418</i> 于 2026-10-29 被 <i class="hl">CISA</i> 列入 <i class="hl">KEV</i> 目录，厂商产品为 <i class="hl">ASA/FTD</i> 软件，处置口径为按厂商指引修补并按 <i class="hl">BOD 26-04</i> 执行。当日清单同事件的厂商与媒体报道称 Cisco 已发布补丁，未认证远程攻击者可借此强制防火墙重启。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-76418</b><b class="fct fout">3 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Cisco Secure Firewall ASA Software and Cisco Secure FTD Software</span><span class="fv"><b>修复</b> Cisco 已发布补丁</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>依赖 ASA/FTD SSL VPN 的远程接入边界可被远程打崩造成业务中断，且已被官方确认存在在野利用；来源文本未给出攻击方归因。</p></div>
+<div class="cell"><b>Action</b><p>升级 Cisco Secure Firewall ASA Software 与 Cisco Secure FTD Software 至厂商修复版本；核查设备异常重启与 VPN 服务日志；联邦侧按 BOD 26-04 与取证要求处置。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-76418" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-93691">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>77</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">PHP2Shell</i> 被用于攻打公网暴露的防火墙管理口</h3>
+<p class="sum"><i class="hl">Palo Alto Networks</i> 于 2026-10-29 更新通告：攻击者正在利用 <i class="hl">PHP2Shell</i> 缺陷，针对暴露到公网的管理界面已观测到在野利用。当日该条来源文本未给出具体 CVE 编号与受影响管理界面版本范围。</p>
+<div class="intel-facts"><b class="fct fout">4 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>设备管理口通常握有全网配置权限，被取得代码执行位等同于边界设备整体失守；问题根源是管理面暴露公网这一配置禁忌。</p></div>
+<div class="cell"><b>Action</b><p>立即清查可被公网访问的管理界面并收敛到管理网或 VPN 之后；升级 PHP 至修复 PHP2Shell 的版本，并按厂商通告更新设备固件。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-exploit-php2shell-flaws-in.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-08352">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>跟进 2026-10-14 报道：<i class="hl">GitLab</i> 缺陷首次入 <i class="hl">KEV</i></h3>
+<p class="sum">跟进 2026-10-14 报道的 GitLab 最高严重级缺陷 <i class="hl kcve">CVE-2026-97229</i>：2026-10-29 它首次被 <i class="hl">CISA</i> 列入已知被利用漏洞目录 <i class="hl">KEV</i>，即官方确认在野利用，处置要求为按厂商指引修补并按 <i class="hl">BOD 26-04</i> 执行。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-97229</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> GitLab Community Edition and Enterprise Edition</span><span class="fv"><b>修复</b> 按厂商指引修补</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>自建 <i class="hl">GitLab</i> 的团队面临代码托管与流水线被远程利用的风险，仓库内容与 Runner、流水线凭据是攻击者的直接目标。</p></div>
+<div class="cell"><b>Action</b><p>按 GitLab 厂商指引升级并核查资产对外暴露程度；美国联邦侧按 BOD 26-04 与取证要求限期处置，无可用缓解措施时停用该产品。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-97229" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-97491">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>74</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Alpine</i> 自建 <i class="hl">GitLab</i> 遭 CVSS 10.0 缺陷攻击</h3>
+<p class="sum"><i class="hl">Alpine Linux</i> 于 2026-10-28 披露：有攻击者在其自建 <i class="hl">GitLab</i> 服务器上尝试利用 <i class="hl">CVE-2026-97229</i>（CVSS 10.0），该缺陷可通过 CI 配置中构造的正则表达式在 GitLab 服务器上执行代码，时点在 GitLab 发布修复约一周后；未发现攻击得手证据。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-97229</b><b class="fct fcvss">CVSS 10.0</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> GitLab</span><span class="fv"><b>修复</b> GitLab 已发布修复</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>各类自建 GitLab（包括上游发行版自身的基础设施）的 CI 配置入口成为直接目标，一旦成功即可获得服务器代码执行位，波及仓库与 Runner 凭据。</p></div>
+<div class="cell"><b>Action</b><p>确认 GitLab 已升级到修复版本并复核对外暴露面；排查可疑合并请求的 CI 配置文件与 Runner 任务记录。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attacker-tried-to-exploit-alpine-linuxs.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-17534">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>68</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">WS_FTP Server</i> 未认证可取管理员凭据</h3>
+<p class="sum"><i class="hl">NVD</i> 于 2026-10-29 收录 <i class="hl">CVE-2026-84295</i>（10.0）：<i class="hl">Progress</i> 软件 <i class="hl">WS_FTP Server</i>（Windows）存在身份验证不当，未认证远程攻击者可获取含管理员凭据的敏感信息。受影响版本为 2024.0.6 与 2025.0.3 之前的版本。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-84295</b><b class="fct fcvss">CVSS 10.0</b><div class="fvers"><span class="fv"><b>受影响</b> WS_FTP Server Windows</span><span class="fv"><b>修复</b> 2024.0.6 2025.0.3</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>文件传输服务器常持有多方上传凭据与后端共享路径权限，管理员凭据泄露会把单点缺陷放大为整条传输链路失陷；来源文本未提及在野利用。</p></div>
+<div class="cell"><b>Action</b><p>将 WS_FTP Server 升级到 2024.0.6 或 2025.0.3 及以上；限制管理控制台对外暴露，并轮转其上保存的账号与凭据。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-84295" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-15267">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>67</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Mendix SAML</i> 断言重放可绕过身份验证</h3>
+<p class="sum"><i class="hl">CISA</i> 发布 ICS 通告：<i class="hl">Mendix SAML</i> 模块存在身份验证绕过，未认证远程攻击者可在 IdP-initiated 认证流程中重放有效 <i class="hl">SAML</i> 断言获取未授权访问（<i class="hl">CVE-2026-89209</i>）。西门子已为受影响版本发布更新并建议升级。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-89209</b><div class="fvers"><span class="fv"><b>受影响</b> Mendix SAML &lt;4.2.4</span><span class="fv"><b>修复</b> 4.2.4</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>以 IdP-initiated 方式接入企业门户与低代码应用的 Mendix 环境，身份验证边界可被一条重放的断言绕过；来源文本未提及在野利用。</p></div>
+<div class="cell"><b>Action</b><p>将 Mendix SAML 模块升级到 4.2.4 及以上（Mendix 9/10/11 兼容线均涉及）；同时在身份提供方侧核查断言重放检测与来源限制。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-01" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-43702">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>66</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">PowerProtect Data Domain</i> 硬编码加密密钥</h3>
+<p class="sum"><i class="hl">NVD</i> 于 2026-10-28 收录 <i class="hl">CVE-2026-86384</i>（9.8）：<i class="hl">Dell PowerProtect Data Domain</i> 使用硬编码加密密钥，具备远程访问能力的未认证攻击者可能利用，厂商描述文本在后果处截断。受影响范围含 Feature Release 7.7.1.0 through 8.8 以及 LTS2024、LTS2025、LTS2026 各线。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-86384</b><b class="fct fcvss">CVSS 9.8</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Dell PowerProtect Data Domain Feature Release 7.7.1.0 through 8.8</span><span class="fv"><b>修复</b> 暂无补丁信息</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>备份与归档存储是勒索事件中的最后防线，硬编码密钥意味着远程未认证方可能绕过数据保护边界；来源文本未提及在野利用。</p></div>
+<div class="cell"><b>Action</b><p>按 Dell 通告核对 Feature Release 7.7.1.0 through 8.8 与 LTS 各线版本并升级；收敛 Data Domain 管理面的网络可达范围，仅允许备份管理网访问。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="vuln-43702-ioc">复制</button></div><pre id="vuln-43702-ioc">7.7.1.0</pre></div>
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-86384" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-malware"><span class="n">02</span>恶意软件与僵尸网络</p>
+
+<div class="intel reveal" id="malware-08335">
+<div class="intel-head"><span class="chip">恶意软件与僵尸网络</span><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>78</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">UAT-11473</i> 用 <i class="hl">SD-WAN</i> 缺陷部署 <i class="hl">KeyDrift</i></h3>
+<p class="sum">被标记为 <i class="hl">UAT-11473</i> 的新 <i class="hl">APT</i> 团伙被观测到利用 <i class="hl">CVE-2026-20127</i>（<i class="hl">Cisco Catalyst SD-WAN</i> 控制器身份验证绕过缺陷）部署自定义恶意软件框架 <i class="hl">KeyDrift</i>。同事件的厂商侧披露称该框架用于复制站点间加密流量的密钥并留存备用。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-20127</b><b class="fct factor">UAT-11473</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Cisco Catalyst SD-WAN Controllers</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>取得 SD-WAN 控制器即掌握全网路由与站点加密材料，密钥留存使攻击者可长期被动解密分支互联流量；边界设备运维方首当其冲。</p></div>
+<div class="cell"><b>Action</b><p>核对 Catalyst SD-WAN 控制器是否已修复 <i class="hl kcve">CVE-2026-20127</i>；按披露排查控制器上的 KeyDrift 框架痕迹，并对站点间加密密钥做轮转。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-cisco-sd-wan-flaw-to-deploy-custom-keydrift-malware/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
