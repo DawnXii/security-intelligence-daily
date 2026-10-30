@@ -52,3 +52,4 @@
 - 首跑（手动）：2026-10-26 日报 pulse/headline 重写，validate 通过（含 sabotage 反证：改计数即 FAIL），已发布线上。
 - 教训：candidates/v1.6 与 stable/v1.6 命名撞车（前者基于旧 candidates/v1.5，缺 stable 已有的 <k> 节）——合并修复；未来增量必须先 diff stable 现状。
 # analyze v1.8 (2026-10-30): headline 点名纪律+HL_BAN 机械闸（修「边界设备与代码托管平台同时挨打」抽象口水标题事故）；10-30 日报 headline 已重写重发布验证
+# analyze v1.9 (2026-10-30): headline 纯事实句——删编辑归纳尾巴（用户否决「成在野共性」）；HL_BAN 扩展 共性/缩影/趋势/信号/收敛 等。同日补源 coindesk+theblock（42→44，币安 5.8B 被盗漏报根治），triage crypto 事件权重 8→12+金额信号 10，币安卡 score92 手工补分析并重发布上线。verify_sid MINQ 字符串断言修复（2} → 2,）。
