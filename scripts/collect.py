@@ -25,6 +25,8 @@ FEEDS = [
     {"id": "google", "name": "Google Safety", "url": "https://blog.google/technology/safety-security/rss/", "tags": ["general"]},
     {"id": "trailofbits", "name": "Trail of Bits", "url": "https://blog.trailofbits.com/index.xml", "tags": ["research", "supplychain"]},
     {"id": "chainalysis", "name": "Chainalysis Blog", "url": "https://www.chainalysis.com/blog/feed/", "tags": ["crypto", "web3"]},
+    {"id": "coindesk", "name": "CoinDesk", "url": "https://www.coindesk.com/arc/outboundfeeds/rss/", "tags": ["crypto", "exchange"]},
+    {"id": "theblock", "name": "The Block", "url": "https://www.theblock.co/rss.xml", "tags": ["crypto", "exchange"]},
     {"id": "rwlive", "name": "Ransomware.live", "url": "https://api.ransomware.live/rss", "tags": ["ransomware", "incident"]},
     {"id": "derp", "name": "Derp.ca Research", "url": "https://www.derp.ca/feed", "tags": ["malware", "research"]},
     {"id": "microsoft", "name": "Microsoft Security Blog", "url": "https://www.microsoft.com/en-us/security/blog/feed/", "tags": ["vendor", "vuln"]},

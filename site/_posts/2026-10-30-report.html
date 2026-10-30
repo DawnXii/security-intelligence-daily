@@ -2,10 +2,10 @@
 layout: post
 title: "安全情报日报 2026-10-30"
 date: 2026-10-30
-events: 9
-headline: "GitLab 与 Cisco ASA 进 KEV，管理口成在野共性"
-dek: "入选 9 条，在野 6：KEV 新收 GitLab 的 <i class=\"hl kcve\">CVE-2026-97229</i> 与 Cisco ASA/FTD 的 <i class=\"hl kcve\">CVE-2026-76418</i>，前者已有人拿去试 Alpine 自建实例；PHP2Shell 打进 Palo Alto 管理口，还串上了内核提权。KeyDrift 抄走 SD-WAN 站点密钥，Data Domain 的 9.8 与 WS_FTP 的 10.0 则覆盖备份与文件传输两类底座。口径：KEV 项限期修，管理口先断公网。"
-brief_stats: ["9 事件", "在野 6", "PoC 0", "2 类别", "顶分 82"]
+events: 10
+headline: "币安热钱包被转走最高 5.8 billion 美元"
+dek: "入选 10 条，在野 7：头条是币安热钱包被转出最高 5.8 billion 美元可疑资金，Tether 与 Circle 冻结 1.79 billion 美元，交易所称仍在调查；漏洞面同日有 GitLab 的 <i class=\"hl kcve\">CVE-2026-97229</i> 与 Cisco ASA/FTD 的 <i class=\"hl kcve\">CVE-2026-76418</i> 新入 KEV，前者已有人拿去试 Alpine 自建实例，PHP2Shell 打进 Palo Alto 管理口并串上内核提权，Data Domain 的 9.8 与 WS_FTP 的 10.0 覆盖备份与文件传输底座。口径：币安用户以官方赔付公告为准，KEV 项限期修，管理口先断公网。"
+brief_stats: ["10 事件", "在野 7", "PoC 0", "3 类别", "顶分 92"]
 ---
 
 <nav class="toc" id="toc" aria-label="目录">
@@ -13,7 +13,7 @@ brief_stats: ["9 事件", "在野 6", "PoC 0", "2 类别", "顶分 82"]
 <p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
 <div class="toc-scroll">
 <div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">8</span></p><ol>
-<li><a class="toc-link" href="#vuln-60507"><span class="tc">★</span><span class="tt"><i class="hl">Fragnesia</i> 内核缺陷被串入 <i class="hl">PHP2Shell</i> 攻击</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-60507"><span class="tc">·</span><span class="tt"><i class="hl">Fragnesia</i> 内核缺陷被串入 <i class="hl">PHP2Shell</i> 攻击</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
 <li><a class="toc-link" href="#vuln-45085"><span class="tc">·</span><span class="tt"><i class="hl">ASA/FTD</i> VPN 缺陷入 <i class="hl">KEV</i> 联邦限期处置</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
 <li><a class="toc-link" href="#vuln-93691"><span class="tc">·</span><span class="tt"><i class="hl">PHP2Shell</i> 被用于攻打公网暴露的防火墙管理口</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
 <li><a class="toc-link" href="#vuln-08352"><span class="tc">·</span><span class="tt">跟进 2026-10-14 报道：<i class="hl">GitLab</i> 缺陷首次入 <i class="hl">KEV</i></span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
@@ -25,6 +25,9 @@ brief_stats: ["9 事件", "在野 6", "PoC 0", "2 类别", "顶分 82"]
 <div class="grp"><p class="tg-h"><a href="#sec-malware">恶意软件与僵尸网络</a><span class="tg-c">1</span></p><ol>
 <li><a class="toc-link" href="#malware-08335"><span class="tc">·</span><span class="tt"><i class="hl">UAT-11473</i> 用 <i class="hl">SD-WAN</i> 缺陷部署 <i class="hl">KeyDrift</i></span><span class="meta"><i class="rp p1">P1</i></span></a></li>
 </ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-crypto-infra">区块链基础设施</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#crypto-infra-73426"><span class="tc">★</span><span class="tt">币安热钱包被转走最高 5.8 billion 美元资金</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+</ol></div>
 </div></nav>
 
 <div class="feed-col">
@@ -32,8 +35,8 @@ brief_stats: ["9 事件", "在野 6", "PoC 0", "2 类别", "顶分 82"]
 
 <p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
 
-<div class="intel focus reveal" id="vuln-60507">
-<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>82</i></span></div>
+<div class="intel reveal" id="vuln-60507">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>82</i></span></div>
 <div class="intel-body">
 <h3><i class="hl">Fragnesia</i> 内核缺陷被串入 <i class="hl">PHP2Shell</i> 攻击</h3>
 <p class="sum"><i class="hl">CISA</i> 要求联邦机构修补一个高危 <i class="hl">Linux kernel</i> 本地提权缺陷：<i class="hl">PHP2Shell</i> 攻击者已在在野攻击中把它与 PHP 侧缺陷串联使用。来源文本未给出该内核缺陷的 CVE 编号与受影响发行版范围。</p>
@@ -167,6 +170,24 @@ brief_stats: ["9 事件", "在野 6", "PoC 0", "2 类别", "顶分 82"]
 
 </div>
 <div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-cisco-sd-wan-flaw-to-deploy-custom-keydrift-malware/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-crypto-infra"><span class="n">03</span>区块链基础设施</p>
+
+<div class="intel focus reveal" id="crypto-infra-73426">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF medium<i>92</i></span></div>
+<div class="intel-body">
+<h3>币安热钱包被转走最高 5.8 billion 美元资金</h3>
+<p class="sum">币安（<i class="hl">Binance</i>）证实正调查一起重大安全事件：其热钱包被转出可疑资金最高达 5.8 billion 美元；<i class="hl">Tether</i> 与 <i class="hl">Circle</i> 已冻结 1.79 billion 美元的 <i class="hl">USDT</i> 与 <i class="hl">USDC</i>，阻止资金进一步外流。币安称仍在调查之中，另有报道指其表示将承担全部黑客损失。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Binance hot wallets</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>全球最大加密交易所的热钱包出现数十亿美元级异常转出，直接波及客户资产储备；稳定币发行商能在数小时内冻结近半流出，说明链上追踪有效，但余下资金的最终去向仍未公布。</p></div>
+<div class="cell"><b>Action</b><p>交易所用户关注币安官方储备与赔付公告；自营热钱包方应立即复核多签阈值、轮换密钥与提现限额链路；分析师可比对 Tether/Circle 冻结地址追踪外流路径。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(2)</em></span><button class="iocblk-c" data-copy="crypto-infra-73426-ioc">复制</button></div><pre id="crypto-infra-73426-ioc">https://www.theblock.co/news/markets/2026-10-29-binance-investigating-hack-suspicious-outflows-5-billion-432171
+https://www.coindesk.com/business/2026/10/29/live-updates-bitcoin-clings-to-usd80-000-as-strategy-s-cushion-thins-before-earnings</pre></div>
+</div>
+<div class="intel-foot"><span>2026-10-30 · SID ANALYSIS</span><a href="https://www.theblock.co/news/markets/2026-10-29-binance-investigating-hack-suspicious-outflows-5-billion-432171" target="_blank" rel="noopener">SOURCE ↗</a></div>
 </div>
 
 </div>

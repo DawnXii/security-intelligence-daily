@@ -63,7 +63,7 @@ def check_brief(run_date, analysis):
     wild = sum(1 for a in inc if a.get("exploit") == "wild")
     bad = []
     HL_BAN = ["挨打", "被打", "痛击", "挨揍", "双杀", "团灭", "沦陷", "风暴", "噩梦",
-              "来袭", "炸裂", "刷屏", "齐飞", "共振", "渡劫", "同时", "双双"]
+              "来袭", "炸裂", "刷屏", "齐飞", "共振", "渡劫", "同时", "双双", "共性", "缩影", "风向", "趋势", "注脚", "写照", "侧影", "收敛", "大战", "之战", "来袭潮", "信号"]
     hl = str(b.get("headline", ""))
     for w in HL_BAN:
         if w in hl:

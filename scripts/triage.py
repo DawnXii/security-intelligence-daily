@@ -9,7 +9,7 @@ DATA = os.path.join(BASE, "data")
 CST = timezone(timedelta(hours=8))
 MAX_ITEMS = 40
 
-SRC_W = {"cisa": 8, "ghsec": 6, "trailofbits": 5, "cloudflare": 4, "aws": 4, "google": 4,
+SRC_W = {"coindesk": 6, "theblock": 6, "cisa": 8, "ghsec": 6, "trailofbits": 5, "cloudflare": 4, "aws": 4, "google": 4,
          "bleo": 3, "thn": 3, "secaff": 3, "register": 3, "krebs": 3, "isc": 2, "chainalysis": 2, "netsec": 2,
          "kev": 9, "ghsa": 5, "rwlive": 4, "ransomlook": 6, "derp": 6, "derptelem": 8, "threatfox": 7, "urlhaus": 7, "phpnet": 6, "wpsec": 6, "nvd": 5, "x": 4, "microsoft": 7, "crowdstrike": 6, "talos": 7, "eset": 5, "kaspersky": 6, "qualys": 5, "horizon3": 7, "checkpoint": 6, "sophos": 5, "snyk": 5, "ncsc": 7, "darkreading": 3, "securityweek": 3, "malwarebytes": 4, "openphish": 5}
 PAT = [
@@ -24,6 +24,8 @@ PAT = [
     (r"breach|hack(ed|ers|ing)?|attack(er|s|ing)?|compromis|data theft|stolen", 6, "incident"),
     (r"phish|credential|social engineer|mfa bypass|session hijack|oauth", 6, "phishing"),
     (r"blockchain|wallet|validator|rpc|cryptograph|private key|exchange", 6, "crypto-infra"),
+    (r"binance|coinbase|kraken|upbit|hot wallet|custod|stablecoin|(?:crypto|exchange).{0,40}(?:hack|exploit|stolen|breach|drain)", 12, "crypto-infra"),
+    (r"(?:\$|usd ?)\s?\d+(?:\.\d+)?\s?(?:billion|bn\b)|\d+(?:\.\d+)?\s?billion\s?(?:worth|in)?\s?(?:crypto|assets|funds|dollars)", 10, "incident"),
     (r"cloud|azure|aws|gcp|kubernetes|docker|container|iam|identity", 4, "infra"),
     (r"cisa|advisory|kevc|fbi|interpol|eu ?police|sanction", 4, "gov"),
 ]

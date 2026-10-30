@@ -51,3 +51,4 @@
 - 约束：事实 token 冻结、check_brief 机械闸优先、禁假人味。
 - 首跑（手动）：2026-10-26 日报 pulse/headline 重写，validate 通过（含 sabotage 反证：改计数即 FAIL），已发布线上。
 - 教训：candidates/v1.6 与 stable/v1.6 命名撞车（前者基于旧 candidates/v1.5，缺 stable 已有的 <k> 节）——合并修复；未来增量必须先 diff stable 现状。
+# analyze v1.8 (2026-10-30): headline 点名纪律+HL_BAN 机械闸（修「边界设备与代码托管平台同时挨打」抽象口水标题事故）；10-30 日报 headline 已重写重发布验证
