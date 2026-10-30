@@ -62,6 +62,14 @@ def check_brief(run_date, analysis):
                     str(a.get("action", "")) for a in inc)
     wild = sum(1 for a in inc if a.get("exploit") == "wild")
     bad = []
+    HL_BAN = ["挨打", "被打", "痛击", "挨揍", "双杀", "团灭", "沦陷", "风暴", "噩梦",
+              "来袭", "炸裂", "刷屏", "齐飞", "共振", "渡劫", "同时", "双双"]
+    hl = str(b.get("headline", ""))
+    for w in HL_BAN:
+        if w in hl:
+            bad.append(f"headline 禁词: {w}")
+    if not re.search(r"[A-Za-z][A-Za-z0-9./+-]{2,}", hl):
+        bad.append("headline 无具体产品/组织/CVE 英文锚点（禁止纯类别概括）")
     for m in re.findall(r"CVE-\d{4}-\d+", t):
         if m not in pool:
             bad.append(f"brief CVE 越界: {m}")
