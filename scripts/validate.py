@@ -68,8 +68,9 @@ def check_brief(run_date, analysis):
     for w in HL_BAN:
         if w in hl:
             bad.append(f"headline 禁词: {w}")
-    if not re.search(r"[A-Za-z][A-Za-z0-9./+-]{2,}", hl):
-        bad.append("headline 无具体产品/组织/CVE 英文锚点（禁止纯类别概括）")
+    ZH_ANCHOR = ["币安", "蚂蚁", "支付宝", "抖音", "微信", "华为", "小米", "腾讯", "阿里", "京东", "美团"]
+    if not re.search(r"[A-Za-z][A-Za-z0-9./+-]{2,}", hl) and not any(z in hl for z in ZH_ANCHOR):
+        bad.append("headline 无具体产品/组织锚点（英文 token 或中文品牌白名单；禁止纯类别概括）")
     for m in re.findall(r"CVE-\d{4}-\d+", t):
         if m not in pool:
             bad.append(f"brief CVE 越界: {m}")
