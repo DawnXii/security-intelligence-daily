@@ -1,0 +1,199 @@
+---
+layout: post
+title: "安全情报日报 2026-11-01"
+date: 2026-11-01
+events: 10
+headline: "币安 63 亿美元被盗，起点是 DevOps 笔记本"
+dek: "入选 10 条，在野 5：头条是币安把约 6.3 billion 美元被盗与一台被控 DevOps 笔记本联系起来，分析人士归因 North Korean 黑客，机制复盘又把签名侧通道指向 EIP-7702 拦不住 HSM。边界与站点侧另有在野：Ivanti Connect Secure 两个缺陷列入 KEV 并可串成免认证 root，WordPress 一处无编号 RCE 在补丁后 24 小时内出现 63,000 次利用尝试。其余披露集中在解析不可信输入的服务：vLLM 图片入口串 Ghostscript、imgproxy ICO 溢出 9.8、Thales Sentinel Keys 9.8、Hitachi TRO600 7.5。口径：签名环境与运维终端硬隔离，KEV 与在野项限期升级，前端脚本清点加 SRI。"
+brief_stats: ["10 事件", "在野 5", "PoC 0", "4 类别", "顶分 92"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
+<li><a class="toc-link" href="#vuln-38387"><span class="tc">·</span><span class="tt"><i class="hl">Ivanti ICS</i> 缺陷列入 KEV 且可串成免认证 root</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-67160"><span class="tc">·</span><span class="tt"><i class="hl">WordPress</i> RCE 补丁后 24 小时被试 63,000 次</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-42679"><span class="tc">·</span><span class="tt"><i class="hl">Thales</i> Sentinel Keys 溢出可夺 SYSTEM 权限</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-55287"><span class="tc">·</span><span class="tt"><i class="hl">Hitachi Energy</i> TRO600 缺陷可用于 RCE 与信息泄露</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-61157"><span class="tc">·</span><span class="tt"><i class="hl">vLLM</i> 图片入口可串 <i class="hl">Ghostscript</i> 执行代码</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-25563"><span class="tc">·</span><span class="tt"><i class="hl">imgproxy</i> ICO 整数溢出可致崩溃或 RCE</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-84515"><span class="tc">·</span><span class="tt">Polymarket 被盗元凶脚本确认为 <i class="hl">DebugBear</i></span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-89072"><span class="tc">·</span><span class="tt">勒索团伙 <i class="hl">genesis</i> 七天新增 10 家受害者</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-crypto-infra">区块链基础设施</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#crypto-infra-48317"><span class="tc">★</span><span class="tt">币安 63 亿美元被盗，起点是 <i class="hl">DevOps</i> 笔记本失陷</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+<li><a class="toc-link" href="#crypto-infra-99714"><span class="tc">·</span><span class="tt">币安被盗用到 <i class="hl">EIP-7702</i>，<i class="hl">HSM</i> 未能拦截</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-38387">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Ivanti ICS</i> 缺陷列入 KEV 且可串成免认证 root</h3>
+<p class="sum"><i class="hl">CISA</i> 于周五把两个影响 <i class="hl">Ivanti Connect Secure</i>（ICS）的缺陷列入 Known Exploited Vulnerabilities（KEV）目录，理由是有在野利用；报道称攻击者把三个 ICS 缺陷串联后拿到免认证 root。清单内 <i class="hl kcve">CVE-2026-111357</i> 评分 8.8，属关键功能缺失认证类型。来源文本未给出修复版本号。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111357</b><b class="fct fcvss">CVSS 8.8</b><div class="fvers"><span class="fv"><b>受影响</b> Ivanti Connect Secure</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>承载远程接入的边界网关被无凭据取得设备最高权限，等于把进入内网的通道交给对方；已确认后果是 KEV 目录收录与在野利用。</p></div>
+<div class="cell"><b>Action</b><p>按 KEV 口径限期处置 ICS 设备：核对厂商安全公告中的修复版本并完成升级；回查设备配置改动、异常管理会话与证书替换，无法立即升级的先收敛管理面与对外暴露。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/attackers-chain-three-ivanti-connect.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-67160">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">WordPress</i> RCE 补丁后 24 小时被试 63,000 次</h3>
+<p class="sum">来源称威胁行为者在补丁发布后随即尝试利用一个 <i class="hl">WordPress</i> Core 高危 RCE 缺陷，24 小时内出现近 63,000 次利用尝试。该缺陷没有 CVE 编号，影响 WordPress Core versions 4.7 through 7.1.3，评分 8.1，修复补丁已于 10 月发布。</p>
+<div class="intel-facts"><b class="fct fcvss">CVSS 8.1</b><div class="fvers"><span class="fv"><b>受影响</b> WordPress Core versions 4.7 through 7.1.3</span><span class="fv"><b>修复</b> 补丁已于 10 月发布，来源未给具体版本号</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>已确认后果是被自动化利用尝试大规模围攻；暴露人群是尚未升级到修复版本的 WordPress 站点，一旦被打通即为远程代码执行。</p></div>
+<div class="cell"><b>Action</b><p>立即升级到厂商已发布的修复版本（来源给出的受影响区间为 4.7 至 7.1.3）；对暂不能升级的站点在反向代理与 WAF 侧拦利用请求，并回查异常 PHP 子进程、新增管理员账号与被改写的主题/插件文件。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/wordpress-rce-flaw-draws-nearly-63000.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-42679">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>78</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Thales</i> Sentinel Keys 溢出可夺 SYSTEM 权限</h3>
+<p class="sum"><i class="hl">NVD</i> 于 2026-10-30 收录 <i class="hl kcve">CVE-2026-78403</i>，评分 9.8：Windows 版 <i class="hl">Sentinel Keys Server</i> 同时存在栈缓冲区溢出与缺失授权，服务不校验 HTTP 请求第一个字段的长度，攻击者构造请求发往该服务即可能以 NT AUTHORITY 的 SYSTEM 身份远程执行代码。厂商通告给出的受影响范围未在来源文本中列全。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-78403</b><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>受影响</b> Sentinel Keys Server on Windows</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是自建许可/密钥服务的 Windows 服务器：这类服务持有授权与密钥根，一旦被打通即以系统最高权限落地；来源未提及在野利用。</p></div>
+<div class="cell"><b>Action</b><p>先把 Sentinel Keys Server 的监听面限制到可信管理网段并阻断外部 HTTP 可达；按厂商通告确认受影响版本后升级；主机侧核查以 SYSTEM 运行的异常子进程与对密钥库文件的访问。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-78403" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-55287">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Hitachi Energy</i> TRO600 缺陷可用于 RCE 与信息泄露</h3>
+<p class="sum"><i class="hl">CISA</i> 发布 ICS 通告 ICSA-26-302-02：<i class="hl">Hitachi Energy</i> 确认 TRO600 系列存在多个缺陷，可被用于远程代码执行与敏感信息泄露，CVSS v3 7.5，涉及 <i class="hl kcve">CVE-2026-10756</i> 与 <i class="hl kcve">CVE-2026-106087</i>；受影响版本含 TRO600 的 ≤9.2.1.6 与 ≤9.1.1.0、9.2.2.1、9.1.2.0 组合。缺陷类型为对通信通道未做预期端点限制与关键功能缺失认证。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-10756</b><b class="fct fcvss">CVSS 7.5</b><div class="fvers"><span class="fv"><b>受影响</b> Hitachi Energy TRO600</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>以 ICS 通告形式发布，暴露面落在关键基础设施的运维网络；已确认后果类型是可远程执行代码并读取敏感信息，来源未提及在野利用。</p></div>
+<div class="cell"><b>Action</b><p>按通告的 Recommended Immediate Actions 做缓解与修复；把 TRO600 的通信通道限制到预期端点，为关键功能补上认证；厂商修复版本以通告列出版本为准，不可升级的做网络分段与可达面收敛。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(4)</em></span><button class="iocblk-c" data-copy="vuln-55287-ioc">复制</button></div><pre id="vuln-55287-ioc">9.2.1.6
+9.1.1.0
+9.2.2.1
+9.1.2.0</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-302-02" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-61157">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">vLLM</i> 图片入口可串 <i class="hl">Ghostscript</i> 执行代码</h3>
+<p class="sum">GHSA 披露 vLLM 缺陷 <i class="hl kcve">CVE-2026-115915</i>，评分 8.1：vLLM 0.30.0 的 ImageMediaIO 把攻击者可控图片字节直接交给 Pillow 做格式自动识别且不限制可解格式，标注为 image/png 的 EPS 载荷可到达宿主机 Ghostscript；若宿主 Ghostscript 含 <i class="hl kcve">CVE-2024-29510</i>，即串出已知沙箱逃逸，造成拒绝服务或 RCE。修复版本 0.32.0。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-115915</b><b class="fct fcvss">CVSS 8.1</b><div class="fvers"><span class="fv"><b>受影响</b> vLLM 0.30.0</span><span class="fv"><b>修复</b> 0.32.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>运行 vLLM 做多模态推理的服务节点暴露在一条由图片输入通向宿主代码执行的路径上；来源未提及在野利用或公开 PoC。</p></div>
+<div class="cell"><b>Action</b><p>升级 vLLM 至 0.32.0；在推理服务入口限制可接受图片格式并禁止 EPS 类载荷；核对宿主 Ghostscript 是否已修补 <i class="hl kcve">CVE-2024-29510</i>，并把该可执行文件的可达面收敛。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-h3rc-j82p-2c3h" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-25563">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">imgproxy</i> ICO 整数溢出可致崩溃或 RCE</h3>
+<p class="sum">GHSA 通告 <i class="hl">imgproxy</i>（go 模块 github.com/imgproxy/imgproxy）ICO 加载器整数溢出，评分 9.8：加载器读取 32 位攻击者可控的 data_size 后按 data_size + BMP_FILE_HEADER_LEN 分配内存，加法在分配前回绕，随后写入 ICO 前缀并按原始声明长度从欠分配区起读取，形成堆溢出。修复版本 4.0.16，后果为拒绝服务并可能通向远程代码执行。</p>
+<div class="intel-facts"><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>受影响</b> imgproxy（go 模块 github.com/imgproxy/imgproxy）</span><span class="fv"><b>修复</b> 4.0.16</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是把 imgproxy 放在图片处理链路上、接受远端可控图片来源的服务（对象存储、CDN 回源、用户上传）；来源未提及在野利用或公开 PoC。</p></div>
+<div class="cell"><b>Action</b><p>升级到 4.0.16；对图片处理入口限制可接受格式并在网关侧拒收 ICO 类请求；无法立即升级的实例把 imgproxy 运行在最小权限与隔离容器中。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-hff9-5pqw-6w9f" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-84515">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>76</i></span></div>
+<div class="intel-body">
+<h3>Polymarket 被盗元凶脚本确认为 <i class="hl">DebugBear</i></h3>
+<p class="sum">跟进 2026-10-30 报道的 <i class="hl">Polymarket</i> 前端供应链事件，增量是把攻击载体明确到具体第三方脚本：来源称 2026 年 10 月 29 日的入侵经由 DebugBear RUM 脚本完成，并给出时间线、CSP 与 SRI 为何没能挡住以及防御建议。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>已确认后果是用户钱包被划走（前端会话被第三方脚本劫持）；暴露人群是所有通过脚本管理器注入 RUM/监控类脚本的站点，单点脚本变更即可绕过既有 CSP 与 SRI。</p></div>
+<div class="cell"><b>Action</b><p>清点站点加载的第三方脚本（含 DebugBear 这类 RUM/性能监控），能移除的移除；保留的固定具体版本并配置 SRI，收紧 CSP script-src 白名单；对前端资源做完整性与变更告警。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="supplychain-84515-ioc">复制</button></div><pre id="supplychain-84515-ioc">https://thecybersecguru.com/news/polymarket-frontend-supply-chain-attack-debugbear/</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://thecybersecguru.com/news/polymarket-frontend-supply-chain-attack-debugbear/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-89072">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>58</i></span></div>
+<div class="intel-body">
+<h3>勒索团伙 <i class="hl">genesis</i> 七天新增 10 家受害者</h3>
+<p class="sum">RansomLook 跟踪数据显示，勒索团伙 <i class="hl">genesis</i> 近 7 天在泄密站发布 10 条帖子、涉及 10 家受害者，最新发现时间 2026-10-30。被点名对象包括 A&amp;B Lab、EAS Engineering、Illinois Work Injury Resource Center (IWIRC) 等小型企业与专业服务机构。</p>
+<div class="intel-facts"><b class="fct factor">genesis</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>受害面是员工规模有限的企业与律所、工程咨询类机构，名单在泄密站公开意味着相关机构的内部资料已进入对外公布流程。</p></div>
+<div class="cell"><b>Action</b><p>名单内机构按泄密站公布情形做取证、凭据轮换与对外通知；同类中小企业核查离线备份可用性、暴露的远程接入面与邮件钓鱼防护。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/genesis" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-crypto-infra"><span class="n">04</span>区块链基础设施</p>
+
+<div class="intel focus reveal" id="crypto-infra-48317">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF medium<i>92</i></span></div>
+<div class="intel-body">
+<h3>币安 63 亿美元被盗，起点是 <i class="hl">DevOps</i> 笔记本失陷</h3>
+<p class="sum">跟进 2026-10-30 日报的可疑转账报道：币安把约 6.3 billion 美元（约合 63 亿美元）加密资产被盗与一台被入侵的 <i class="hl">DevOps</i> 笔记本联系起来，区块链分析人士把攻击归因于 North Korean 黑客。此前通报的可疑转账早期估算最高 5.8 billion 美元，一天后媒体口径上修为 6.3 billion。</p>
+<div class="intel-facts"><b class="fct factor">North Korean hackers</b><b class="fct fout">18 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>失陷入口是工程师终端而不是链上协议本身：一台被控的 DevOps 工作站足以撬动全球最大加密货币交易所的签名侧控制，用户资产损失量级已达 6.3 billion 美元。</p></div>
+<div class="cell"><b>Action</b><p>把热钱包签名环境与运维终端硬隔离（专用签名主机、跳板与人工复核，禁止运维笔记本直连签名基础设施）；清点工程师终端对密钥管理系统的可达路径与保存的凭据；用户侧赔付与恢复口径以交易所公告为准。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-48317-ioc">复制</button></div><pre id="crypto-infra-48317-ioc">https://securityaffairs.com/202119/cyber-crime/6-3-billion-stolen-from-binance-in-attack-attributed-to-north-korea.html</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://securityaffairs.com/202119/cyber-crime/6-3-billion-stolen-from-binance-in-attack-attributed-to-north-korea.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="crypto-infra-99714">
+<div class="intel-head"><span class="chip">区块链基础设施</span><span class="score">处置 <i class="rp p0">P0</i> · CONF medium<i>85</i></span></div>
+<div class="intel-body">
+<h3>币安被盗用到 <i class="hl">EIP-7702</i>，<i class="hl">HSM</i> 未能拦截</h3>
+<p class="sum">跟进 2026-10-30 报道的币安事件，增量在机制层：来源把 2026 年 10 月 29 日约 6.3 billion 美元被盗归因于攻击者滥用 <i class="hl">EIP-7702</i>，并说明为什么 HSM 没能拦住这类授权，同时列出交易所必须改动的部分。</p>
+<div class="intel-facts"><b class="fct fout">18 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>凡是把链上账户抽象/授权委托能力接入签名流程的托管方与自建热钱包运维都在同一暴露面上：已确认后果是约 6.3 billion 美元资产被转走，硬件密钥设备不是这条通道的边界。</p></div>
+<div class="cell"><b>Action</b><p>清点热钱包与签名服务是否暴露 EIP-7702 类授权写入路径，限制外部可触发的委托授权；对签名策略与账户代码变更做链上告警；按来源建议重做托管签名流程评审。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-99714-ioc">复制</button></div><pre id="crypto-infra-99714-ioc">https://thecybersecguru.com/news/binance-hack-eip-7702-crypto-custody/</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-01 · SID ANALYSIS</span><a href="https://thecybersecguru.com/news/binance-hack-eip-7702-crypto-custody/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
