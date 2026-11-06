@@ -1,0 +1,144 @@
+---
+layout: post
+title: "安全情报日报 2026-11-03"
+date: 2026-11-03
+events: 7
+headline: "GitLab 逾千台实例未修补 仍在遭在野利用"
+dek: "入选 7 条，在野 2。GitLab 一枚最高严重级漏洞仍被用于远程代码执行，公网上逾千台实例没打补丁；自托管收款软件 BTCPay 称攻击针对 2.4.1 及更早版本，官方要求商户关机。资金侧两条线：巴西 Mercado Bitcoin 至少 10 条链的钱包被清空后暂停充提，币安被盗的 $6.43 billion 中已有 $2.85 billion 冻结，对手每 25 秒新建一个钱包。勒索面 the gentlemen 一周 37 家、whitearmor 10 家。口径：先收公网暴露面，再补版本与密钥轮换。"
+brief_stats: ["7 事件", "在野 2", "PoC 0", "3 类别", "顶分 80"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#vuln-51238"><span class="tc">★</span><span class="tt"><i class="hl">GitLab</i> 未修补实例逾千台 遭在野 RCE 攻击</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-59288"><span class="tc">·</span><span class="tt"><i class="hl">pypdf</i> 修复多个拒绝服务缺陷</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#ransomware-90047"><span class="tc">·</span><span class="tt"><i class="hl">whitearmor</i> 泄密站受害者升至 10 家</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#ransomware-43181"><span class="tc">·</span><span class="tt"><i class="hl">the gentlemen</i> 一周再公布 37 家受害者</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-crypto-infra">区块链基础设施</a><span class="tg-c">3</span></p><ol>
+<li><a class="toc-link" href="#crypto-infra-90511"><span class="tc">·</span><span class="tt"><i class="hl">BTCPay</i> 热钱包遭攻击 官方令商户关机</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#crypto-infra-64908"><span class="tc">·</span><span class="tt">巴西 <i class="hl">Mercado Bitcoin</i> 被盗 暂停充提</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#crypto-infra-75895"><span class="tc">·</span><span class="tt"><i class="hl">Binance</i> 被盗资金每 25 秒换新钱包</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-51238">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">GitLab</i> 未修补实例逾千台 遭在野 RCE 攻击</h3>
+<p class="sum">Bleeping Computer 11 月 2 日报道，超过 1,000 台暴露在公网的 GitLab 服务器仍未修补一枚最高严重级（maximum-severity）漏洞，该漏洞已被攻击者用于在野远程代码执行攻击。报道未给出具体 CVE 编号、受影响版本区间与修复版本号。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露在公网的 GitLab 实例即为可直接利用的攻击面，被利用后果是代码执行——自建代码托管与流水线所在主机失陷后，源码、令牌与 CI/CD 凭据都在攻击者控制范围内。仍在被打的实例数量说明大量运维未完成补丁闭环。</p></div>
+<div class="cell"><b>Action</b><p>按厂商安全公告将 GitLab 升级到修复版本，无法立即升级的实例优先关闭公网暴露、改走 VPN/内网访问；回看 Nginx/应用访问日志中针对该漏洞入口的请求与异常进程；把公网暴露扫描结果纳入每日跟踪，确认逾千台量级是否收敛到自身清单。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-03 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/over-1-000-gitlab-servers-vulnerable-to-code-execution-attacks/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-59288">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>45</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">pypdf</i> 修复多个拒绝服务缺陷</h3>
+<p class="sum">GitHub 安全公告收录 <i class="hl">pypdf</i>（pip 生态）三个高危问题，其中 <i class="hl kcve">CVE-2026-119203</i> 为解析缺少 trailer 的残缺 PDF、在标准 xref 表处遇到 EOF 时进入无限循环，公告标注严重程度 high。三个问题统一在 6.21.4 修复，暂不能升级可套用官方 PR #4289 的改动。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-119203</b><b class="fct fout">3 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> pypdf（生态 pip）</span><span class="fv"><b>修复</b> 6.21.4</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>把 <i class="hl">pypdf</i> 用在文档解析流水线（工单附件、审计导出、上传处理）的服务，被构造 PDF 即可让解析进程陷入无限循环、服务不可用；来源未提及代码执行或凭据泄露，触发前提是打开攻击者可控文件。</p></div>
+<div class="cell"><b>Action</b><p>升级到 pypdf 6.21.4；不能立即升级的按官方 PR #4289 应用改动；对外部输入 PDF 的解析路径加超时与内存上限，并在依赖清单中确认 pip 版本。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-03 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-5849-834g-hvw5" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">02</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-90047">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>48</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">whitearmor</i> 泄密站受害者升至 10 家</h3>
+<p class="sum">跟进 2026-10-26 报道（当时 7 天 8 家）：RansomLook 数据显示勒索团伙 whitearmor 近 7 天在泄密站发布 10 条帖子，涉及受害者 10 家，最新发现时间 2026-10-31。受害者样例包含 Kucoin、Gamdom V2、KTU Shipyard、rolly.io、Echo.com 等，加密与博彩类平台占比明显。</p>
+<div class="intel-facts"><b class="fct factor">whitearmor</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>名单中的 Kucoin 为加密交易所，Gamdom V2、rolly.io、gamblinglore 为博彩类站点，泄密帖公开即意味着数据外泄后果已经发生；该团伙 7 天内保持发帖节奏，属持续活跃而非单次行动。</p></div>
+<div class="cell"><b>Action</b><p>对照 ransomlook.io/group/whitearmor 名单自查是否被公布；对备份存储、远程接入（VPN/RDP）入口做凭据轮换与 MFA 复核；核查是否收到来自 t.me/whitearmorxd 渠道的勒索接触。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-03 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/whitearmor" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="ransomware-43181">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>46</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">the gentlemen</i> 一周再公布 37 家受害者</h3>
+<p class="sum">跟进 2026-10-27 报道（当时 7 天 44 家）：满 7 天推送间隔后，RansomLook 最新窗口显示勒索团伙 <i class="hl">the gentlemen</i> 近 7 天在泄密站发布 37 条帖子，涉及受害者 37 家，最新发现时间 2026-11-02。受害者样例包含 Cherry Bekaert、Academy of the Sacred Heart、Airdrie Christian Academy、Antwerp House Dental 等，学校与小型服务商居多。</p>
+<div class="intel-facts"><b class="fct factor">the gentlemen</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>该团伙单周公布 37 家的量级未减，泄密帖公开即意味着这些机构的资料已外泄；名单以学校、诊所与承包商类中小企业为主，暴露面集中在通用远程入口而非定向突破。</p></div>
+<div class="cell"><b>Action</b><p>对照 ransomlook.io/group/the%20gentlemen 名单自查；教育与中小企业类机构优先核查 VPN/远程桌面暴露面、备份可达性与管理员凭据复用；收到接触先做取证隔离再评估处置。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-03 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/the%20gentlemen" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-crypto-infra"><span class="n">03</span>区块链基础设施</p>
+
+<div class="intel reveal" id="crypto-infra-90511">
+<div class="intel-head"><span class="chip">区块链基础设施</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">BTCPay</i> 热钱包遭攻击 官方令商户关机</h3>
+<p class="sum">自托管比特币收款软件 <i class="hl">BTCPay</i> 官方称攻击针对 2.4.1 及更早版本，并直接要求商户关停服务器；此前数天官方刚为一个严重漏洞发布紧急补丁。Decrypt 11 月 2 日报道，未披露 CVE 编号与补丁版本号。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> BTCPay 2.4.1 及更早版本</span><span class="fv"><b>修复</b> 已发紧急补丁（来源未给版本号）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是自建 <i class="hl">BTCPay</i> 收款节点的商户，运行 2.4.1 及更早版本者被直接针对；来源描述为热钱包相关攻击，官方给出的处置是关机而非仅升级，说明收款服务器与在途资金同时处于风险中。</p></div>
+<div class="cell"><b>Action</b><p>对 2.4.1 及更早版本的 <i class="hl">BTCPay</i> 实例先停机隔离、再升级到官方紧急补丁版本；先转移或冻结热钱包可动用资金，升级后核对异常收款转出记录；无公网需要的收款端应撤回公网暴露。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-90511-ioc">复制</button></div><pre id="crypto-infra-90511-ioc">https://decrypt.co/382324/btcpay-tells-merchants-to-switch-off-servers-amid-hot-wallet-attack-reports</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-03 · SID ANALYSIS</span><a href="https://decrypt.co/382324/btcpay-tells-merchants-to-switch-off-servers-amid-hot-wallet-attack-reports" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="crypto-infra-64908">
+<div class="intel-head"><span class="chip">区块链基础设施</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>66</i></span></div>
+<div class="intel-body">
+<h3>巴西 <i class="hl">Mercado Bitcoin</i> 被盗 暂停充提</h3>
+<p class="sum">CoinDesk 11 月 2 日报道，巴西交易所 Mercado Bitcoin 在至少 10 条链上的钱包被清空、损失约 $40 million 后，暂停了充值与提现；此事发生在币安 $6.3 billion 被盗案之后数日。来源未披露入侵途径与攻击者归属。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>该所用户短期内无法充提，资产被锁在暂停窗口内；被清空的钱包分布在至少 10 条链上，说明交易所侧钱包与签名环节一次性被穿透，而非单条链的孤立事故。</p></div>
+<div class="cell"><b>Action</b><p>暂缓向该所归集资金、核对自身在其上的余额与提款通道；交易所运维方应检查跨链热钱包是否共用同一组密钥/审批路径，并对多链签名网关做密钥轮换与限额；跟踪该所后续公告确认恢复时间。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-64908-ioc">复制</button></div><pre id="crypto-infra-64908-ioc">https://www.coindesk.com/business/2026-11-02/brazil-s-mercado-bitcoin-halts-withdrawals-after-usd40-million-drained-across-10-chains</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-03 · SID ANALYSIS</span><a href="https://www.coindesk.com/business/2026-11-02/brazil-s-mercado-bitcoin-halts-withdrawals-after-usd40-million-drained-across-10-chains" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="crypto-infra-75895">
+<div class="intel-head"><span class="chip">区块链基础设施</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>60</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Binance</i> 被盗资金每 25 秒换新钱包</h3>
+<p class="sum">Decrypt 11 月 3 日报道，从 Binance 盗走的 $6.43 billion 资产中已有 $2.85 billion 被冻结或查扣，Bybit 案同期冻结比例约 3%。朝鲜方面采用自动化洗钱流程，新建钱包的节奏约为每 25 秒一个，累计跨度达 12,000 个钱包。</p>
+<div class="intel-facts"><b class="fct factor">North Korea</b><b class="fct fout">17 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>冻结比例显著高于 Bybit 案，但拆散速度把协查窗口压到以小时计——交易所与合规团队面对的是自动化生成的海量新地址。对持币机构而言，币安被盗规模（$6.43 billion）也直接牵动其储备与兑付风险判断。</p></div>
+<div class="cell"><b>Action</b><p>风控与 AML 侧把高频新建钱包的混币模式纳入监控规则，收紧与被盗资产关联地址的自动出入金；对涉及交易所结算通道的大额转移设置人工复核阈值；冻结与追偿进展以链上分析平台数据为准滚动核对。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-75895-ioc">复制</button></div><pre id="crypto-infra-75895-ioc">https://decrypt.co/382355/north-korea-laundering-binance-hack-loot-new-wallet-every-25-seconds</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-03 · SID ANALYSIS</span><a href="https://decrypt.co/382355/north-korea-laundering-binance-hack-loot-new-wallet-every-25-seconds" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>

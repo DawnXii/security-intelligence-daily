@@ -1,0 +1,156 @@
+---
+layout: post
+title: "安全情报日报 2026-10-29"
+date: 2026-10-29
+events: 8
+headline: "在野利用下沉到虚拟化与内核"
+dek: "入选 8 条，在野 4：CISA 将 VMware ESX 的 <i class=\"hl kcve\">CVE-2026-41709</i> 与 Linux Kernel 的 <i class=\"hl kcve\">CVE-2026-46300</i> 同日收进 KEV，攻击面从 Web 应用下沉到虚拟化与内核底座。PHP2Shell 观测到串联内核提权攻下 25 台服务器，Oracle E-Business Suite 的 <i class=\"hl kcve\">CVE-2026-101767</i> 补丁发布数日即遭探测。处置口径：KEV 项限期修完，未认证 RCE（MLflow、Ajenti）与设备码缺陷（OAuthLib）同批复核。"
+brief_stats: ["8 事件", "在野 4", "PoC 0", "2 类别", "顶分 80"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">7</span></p><ol>
+<li><a class="toc-link" href="#vuln-42622"><span class="tc">·</span><span class="tt">攻击者开始探测 <i class="hl">Oracle</i> 业务套件高危漏洞</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-54796"><span class="tc">·</span><span class="tt"><i class="hl">VMware ESX</i> 在野利用漏洞入选 <i class="hl">KEV</i></span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-25731"><span class="tc">·</span><span class="tt"><i class="hl">Linux Kernel</i> 在野利用漏洞入选 <i class="hl">KEV</i></span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-59091"><span class="tc">·</span><span class="tt"><i class="hl">MLflow</i> 未认证服务器可被远程执行代码</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-79934"><span class="tc">·</span><span class="tt"><i class="hl">Adobe</i> 修补 Campaign Classic 8 项关键漏洞</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-24154"><span class="tc">·</span><span class="tt"><i class="hl">OAuthLib</i> 设备码流程可被冒领令牌</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-20243"><span class="tc">·</span><span class="tt"><i class="hl">Ajenti</i> 面板未认证用户可远程执行代码</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-incident">重大安全事件</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#incident-98901"><span class="tc">★</span><span class="tt"><i class="hl">PHP2Shell</i> 叠加内核提权攻陷政府关联网络</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-42622">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3>攻击者开始探测 <i class="hl">Oracle</i> 业务套件高危漏洞</h3>
+<p class="sum">跟进 2026-10-23 报道：Defused Cyber 观测到攻击者已开始探测上周补丁中修复的 <i class="hl kcve">CVE-2026-101767</i>（CVSS 9.8）。该缺陷位于 Oracle E-Business Suite 的 Oracle Application Object Library，属认证不当问题，补丁发布数日即出现针对性探测。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-101767</b><b class="fct fcvss">CVSS 9.8</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Oracle E-Business Suite（Oracle Application Object Library）</span><span class="fv"><b>修复</b> 上周补丁已发布</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>运行未修补 Oracle E-Business Suite 的企业已成为定向探测对象——这类系统承载企业核心业务流程，从探测到利用的窗口通常很短。</p></div>
+<div class="cell"><b>Action</b><p>确认上周 Oracle 补丁已覆盖 <i class="hl kcve">CVE-2026-101767</i>；收敛 E-Business Suite 对外暴露面，并检索 Web/应用日志中的探测请求。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-29 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/hackers-target-critical-oracle-e.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-54796">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">VMware ESX</i> 在野利用漏洞入选 <i class="hl">KEV</i></h3>
+<p class="sum"><i class="hl">CISA</i> 于 2026-10-28 将 Broadcom VMware ESX 的 <i class="hl kcve">CVE-2026-41709</i> 列入已知被利用漏洞目录（KEV），确认存在在野利用；处置口径为按厂商指引应用缓解措施、遵循 BOD 26-04 并按其云服务条款执行，无缓解手段则停用该产品。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-41709</b><div class="fvers"><span class="fv"><b>受影响</b> Broadcom VMware ESX</span><span class="fv"><b>修复</b> 按厂商指引缓解（BOD 26-04）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>ESX 是企业虚拟化底座，条目确认在野利用后，运行未缓解 ESX 的数据中心整体处于被攻陷风险面内；联邦侧资产须在 BOD 26-04 时限内处置并完成取证分诊要求。</p></div>
+<div class="cell"><b>Action</b><p>按 Broadcom 厂商指引为 VMware ESX 应用升级/缓解；逐台评估互联网暴露，按 BOD 26-04 口径排期修补与取证分诊。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-29 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-41709" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-25731">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>74</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Linux Kernel</i> 在野利用漏洞入选 <i class="hl">KEV</i></h3>
+<p class="sum">CISA 于 2026-10-28 将 Linux Kernel 的 <i class="hl kcve">CVE-2026-46300</i> 列入已知被利用漏洞目录（KEV），确认在野利用；要求按厂商指引应用缓解措施、遵循 BOD 26-04（含云服务条款），无缓解则停用产品，并执行取证分诊要求。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-46300</b><div class="fvers"><span class="fv"><b>受影响</b> Linux Kernel</span><span class="fv"><b>修复</b> 按厂商指引缓解（BOD 26-04）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>内核级在野利用波及所有发行版用户——Linux 主机是云上与自建机房的主要底座，未更新内核的存量机器需要按 KEV 时限优先处置。</p></div>
+<div class="cell"><b>Action</b><p>按各发行版厂商公告更新内核至修复 <i class="hl kcve">CVE-2026-46300</i> 的版本；对照 BOD 26-04 清点长尾未更新主机。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-29 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-46300" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-59091">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">MLflow</i> 未认证服务器可被远程执行代码</h3>
+<p class="sum">GitHub 安全通告披露 <i class="hl kcve">CVE-2026-116692</i>（critical，CVSS 9.8）：MLflow 在第三方 scorer 反序列化时接受请求可控的 Python 模块路径并同步导入实例化，未认证服务器上可致远程代码执行。该反序列化能力由 MLflow 3.12.0 引入，修复版本 3.17.0。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-116692</b><b class="fct fcvss">CVSS 9.8</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> mlflow（pip 生态）</span><span class="fv"><b>修复</b> 3.17.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>以未认证方式运行的 MLflow tracking server 直接暴露远程代码执行面；承载实验记录与模型工件的团队环境一旦失陷，攻击者可借调用方放置的 artifact 模块进入服务器。</p></div>
+<div class="cell"><b>Action</b><p>升级 mlflow 至 3.17.0；清查对外可达且未启用认证的 MLflow 服务，限制第三方 scorer 反序列化入口。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-29 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-26p8-2jq9-3vq9" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-79934">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>62</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Adobe</i> 修补 Campaign Classic 8 项关键漏洞</h3>
+<p class="sum">Adobe 发布补丁修复 Campaign Classic 的 8 项关键漏洞，成功利用可致任意代码执行、安全功能绕过与权限提升；清单含 <i class="hl kcve">CVE-2026-104351</i>（CVSS 9.9）代码注入缺陷，当日 NVD 另收录同产品 <i class="hl kcve">CVE-2026-105781</i>（评分 10.0）与 <i class="hl kcve">CVE-2026-104353</i>（9.9）。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-104351</b><b class="fct fcvss">CVSS 9.9</b><b class="fct fout">4 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Adobe Campaign Classic (ACC)</span><span class="fv"><b>修复</b> Adobe 已发布补丁</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Campaign Classic 是企业营销自动化后台，攻击者可由代码注入直达当前用户上下文的任意代码执行；补丁已就位，未升级实例暴露面持续存在。</p></div>
+<div class="cell"><b>Action</b><p>应用 Adobe 本轮补丁，优先覆盖 <i class="hl kcve">CVE-2026-104351</i> 等 9.9/10.0 分缺陷；核对同批 8 项 CVE 清单是否全部修复。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-29 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/adobe-fixes-8-critical-campaign-classic.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-24154">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>60</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">OAuthLib</i> 设备码流程可被冒领令牌</h3>
+<p class="sum">GitHub 通告 <i class="hl kcve">CVE-2026-49272</i>（high，CVSS 8.5）：OAuthLib 的设备授权流程中，以 grant type urn:ietf:params:oauth:grant-type:device_code 携带 bogus device_code 调用 token 端点，只要知道一个启用设备流程的有效 client ID 就能取回 bearer token，不符合 RFC 8628 第 3.4 节；修复版本 4.0.0。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-49272</b><b class="fct fcvss">CVSS 8.5</b><div class="fvers"><span class="fv"><b>受影响</b> oauthlib（pip 生态）</span><span class="fv"><b>修复</b> 4.0.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>凡以 OAuthLib 实现设备码登录的认证服务，攻击者无需任何用户交互即可冒领 bearer token，等同绕过设备码流程的授权环节。</p></div>
+<div class="cell"><b>Action</b><p>升级 oauthlib 至 4.0.0；自查依赖该库的 IdP/CLI 登录服务是否校验 device_code 归属。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-29 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-3jp2-3mrg-2vxc" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-20243">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>56</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Ajenti</i> 面板未认证用户可远程执行代码</h3>
+<p class="sum">GHSA <i class="hl kcve">CVE-2026-27975</i>（high，CVSS 9.8）：服务器管理面板 Ajenti 允许未认证用户获取服务器访问并执行任意代码，官方确认修复于 2.2.13 并建议尽快升级。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-27975</b><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>受影响</b> Ajenti</span><span class="fv"><b>修复</b> 2.2.13</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>对公网暴露的 Ajenti 管理入口相当于未授权远程代码执行通道，持有其管理的服务器全部资产面临失陷。</p></div>
+<div class="cell"><b>Action</b><p>升级 aj 至 2.2.13；同时核查 Ajenti 面板是否直接暴露于公网。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-29 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-vcw3-r3fx-j444" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-incident"><span class="n">02</span>重大安全事件</p>
+
+<div class="intel focus reveal" id="incident-98901">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>80</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">PHP2Shell</i> 叠加内核提权攻陷政府关联网络</h3>
+<p class="sum">研究者披露一起疑似 AI 辅助、归因为疑似 China-nexus 威胁组织的攻击：2026 年 10 月 25 日观测到的活动中，攻击者将 PHP2Shell 漏洞与内核提权利用串联，攻下 25 台暴露服务器并渗透进一个政府关联网络。</p>
+<div class="intel-facts"><b class="fct factor">疑似 China-nexus 威胁组织</b><b class="fct fout">7 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> 25 台暴露服务器（政府关联网络）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>这是 PHP2Shell 从扫描探测走向完整失陷链（入口漏洞+内核提权+横向）的首个公开实例细节，未修补 PHP 的公网服务器与同类 Web 栈环境均属同一目标画像。</p></div>
+<div class="cell"><b>Action</b><p>立即修补 PHP2Shell 相关版本并复核暴露面；对 10 月 25 日前后的 PHP 主机排查异常提权、持久化与外联痕迹。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-29 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/php2shell-attack-roots-25-servers.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>

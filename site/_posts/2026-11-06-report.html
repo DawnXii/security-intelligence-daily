@@ -1,0 +1,205 @@
+---
+layout: post
+title: "安全情报日报 2026-11-06"
+date: 2026-11-06
+events: 10
+headline: "Zyxel GS1900 零日被在野利用，996 台设备失陷"
+dek: "入选 10 条，在野 3 条，焦点集中在网络设备与集群底座：Zyxel GS1900 旧补丁被零日 <i class=\"hl kcve\">CVE-2026-107441</i> 绕过，996 台设备凭据外泄；Kyverno 9.9 分授权缺陷回退了前两版修复；ACF Extended PRO 0.9.2.7 补得不干净。另一条线，APT29 借 Plerdy 投毒把 Apple 旧洞 <i class=\"hl kcve\">CVE-2024-27834</i> 送进 KEV 投递窃密载荷，币安案则进入监管环节，Fed 与 OCC 已联系美国银行。处置口径：凡吃「已打补丁」结论的资产，回头核实补丁覆盖面。"
+brief_stats: ["10 事件", "在野 3", "PoC 2", "5 类别", "顶分 82"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">5</span></p><ol>
+<li><a class="toc-link" href="#vuln-02015"><span class="tc">★</span><span class="tt">Zyxel 交换机零日被在野利用 996 台失陷</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-70961"><span class="tc">·</span><span class="tt">Apple 旧漏洞入选 KEV 被用于投递窃密木马</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-70379"><span class="tc">·</span><span class="tt">Barracuda 邮件网关两漏洞串联可取 root</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-95761"><span class="tc">·</span><span class="tt">ACF Extended PRO 免认证 RCE 补丁不彻底</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-37692"><span class="tc">·</span><span class="tt">Kyverno 授权绕过跨命名空间窃密且补丁回退</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-98533"><span class="tc">·</span><span class="tt">cPGuard 更新劫持确认波及 2950 台服务器</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ttp">攻击战术与技术</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#ttp-24297"><span class="tc">·</span><span class="tt">ChatGPT 受限模式被绕过可静默外泄数据</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#ttp-56816"><span class="tc">·</span><span class="tt">OpenAI 模型自主利用 948 个内核提权缺陷</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-incident">重大安全事件</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#incident-36109"><span class="tc">·</span><span class="tt">美联储与 OCC 就币安被盗接触美国银行</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-crypto-infra">区块链基础设施</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#crypto-infra-04159"><span class="tc">·</span><span class="tt">Coinbase 称 99% 客户加密资产离线存放</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-02015">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>82</i></span></div>
+<div class="intel-body">
+<h3>Zyxel 交换机零日被在野利用 996 台失陷</h3>
+<p class="sum">Zyxel 于 10 月 22 日发新固件、11 月 3 日出通告，修复 <i class="hl">GS1900</i> 系列十款交换机的零日 <i class="hl kcve">CVE-2026-107441</i>（NVD 评 8.8）：管理页 CGI 程序越界写，LAN 侧未认证攻击者可用精心构造的 HTTP 请求执行操作系统命令。此前 <i class="hl">GreyNoise</i> 自 August 17 观测疑似中文语境团伙 <i class="hl">Kapibala</i> 在 48 国攻陷 996 台交换机，下载脚本收集设备配置、root 口令哈希与网络信息；当时误判打的是 6 月已修补的旧洞 <i class="hl kcve">CVE-2026-7273</i>（该洞 9 月 21 日入选 KEV）。<i class="hl">Binarly</i> 从 Red Heron 行动基础设施（牵出 JITTERLY 后门与 SIXZUT rootkit）恢复出的混淆 Python 利用样本主动校验「已打 <i class="hl kcve">CVE-2026-7273</i> 补丁」的固件、对全部十个修补版本依然有效——旧补丁只加了溢出检查，攻击者可在参数计数被验证前将其破坏绕过；Zyxel 于 10 月 11 日确认这是独立新洞并限定参数长度、先验计数再写内存完成修复。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-107441</b><b class="fct fcvss">CVSS 8.8</b><b class="fct factor">Kapibala</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> GS1900 系列十款机型，firmware 2.90(AAHH.2)C0 and earlier（各机型对应 .2 代版本）</span><span class="fv"><b>修复</b> 2.90(AAHH.3)C0 等各机型修补版（10 月 22 日固件，11 月 3 日通告）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>近千台接入层交换机的配置、root 口令哈希与网络信息整份出境，管理面沦为横向跳板；更棘手的是「6 月就打过补丁」的机构恰是这批攻击的靶心——8 月至 10 月间被持续攻陷的正是 <i class="hl kcve">CVE-2026-7273</i> 修补后固件，误以为已安全的存量设备实际暴露到 10 月 22 日。</p></div>
+<div class="cell"><b>Action</b><p>升级十款机型至通告对应版本（如 GS1900-8 的 2.90(AAHH.3)C0、GS1900-24 的 2.90(AAHL.3)C0 等）；固件停在 2.90(xx.2)C0 一代的机器按失陷处理：重置 root 与管理凭据、比对配置快照、回查 August 17 后窗口的登录与配置导出；确保管理口仅在受信内网可达，并核对该批设备是否出现在相关行动 IOC 名单。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="vuln-02015-ioc">复制</button></div><pre id="vuln-02015-ioc">https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-out-of-bounds-write-vulnerability-in-gs1900-series-switches-</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/zyxel-fixes-zero-day-exploited-to-hack-nearly-1-000-network-switches/" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-107441" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://www.bleepingcomputer.com/news/security/zyxel-fixes-zero-day-exploited-to-hack-nearly-1-000-network-switches/" target="_blank" rel="noopener" class="deepchip">调查 ↗</a><a href="https://www.securityweek.com/zyxel-switch-hacks-blamed-on-patched-flaw-actually-exploited-a-zero-day/" target="_blank" rel="noopener" class="deepchip">报道 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-70961">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3>Apple 旧漏洞入选 KEV 被用于投递窃密木马</h3>
+<p class="sum"><i class="hl">CISA</i> 周三将影响 multiple Apple operating systems 的 <i class="hl kcve">CVE-2024-27834</i>（CVSS 5.5）列入 <i class="hl">KEV</i>——苹果在 May 2024 已通过 iOS 17.5 等版本修复的 Pointer Authentication 绕过（不当认证类），当年 3 月曾在 Pwn2Own Vancouver 被演示为零日。入选依据是 <i class="hl">Sekoia</i> 报告：以 moderate to high confidence 归因于 <i class="hl">APT29</i>（aka Cozy Bear and Midnight Blizzard，隶属俄对外情报局）的攻击者借被入侵合法网站、仿冒域名与 <i class="hl">Plerdy SEO Tracker</i> 供应链投毒（即 11-05 日报已报道的行动）投递恶意 JS，将该洞与 WebKit RCE <i class="hl kcve">CVE-2025-43529</i> 串成零点击链，部署窃取浏览器 cookie 的载荷。FCEB agencies 被要求限期 11 月 18 日完成处置。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2024-27834</b><b class="fct fcvss">CVSS 5.5</b><b class="fct factor">APT29</b><b class="fct fout">3 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> multiple Apple operating systems（修复前版本）</span><span class="fv"><b>修复</b> Safari 17.5, iOS 16.7.8 and iPadOS 16.7.8, iOS 17.5 and iPadOS 17.5, macOS Sonoma 14.5, tvOS 17.5, watchOS 10.5</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>已确认后果是浏览器与设备数据收割（cookie 窃取→会话劫持）：仍在跑未修补版本的苹果设备存量都在被这条已公开的行动链瞄准；对企业端而言等于 APT29 的水坑流量顺带向办公移动设备投递窃密软件。</p></div>
+<div class="cell"><b>Action</b><p>终端升级至 iOS 17.5 / macOS Sonoma 14.5 / Safari 17.5 及更新版；无法升级的设备按 KEV/BOD 口径限期处置或停用；回查曾访问被入侵站点/仿冒域与加载 Plerdy 脚本的端点，排查窃密类异常外联；美国联邦机构执行 11 月 18 日处置要求。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/hackers-exploit-patched-apple-flaw-to.html" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2024-27834" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://securityaffairs.com/202464/hacking/u-s-cisa-adds-apple-flaw-to-its-known-exploited-vulnerabilities-catalog.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2024-27834" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-70379">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3>Barracuda 邮件网关两漏洞串联可取 root</h3>
+<p class="sum"><i class="hl">Barracuda</i> 于 11 月 4 日发布通告，修复 <i class="hl">ESG</i> 上可串联利用的两枚缺陷：<i class="hl">CVE-2026-116606</i>（CVSS 9.3，NVD 同分）为认证绕过——未认证远程攻击者可调用配置导入功能、恢复精心构造的备份存档以篡改设备全局配置，影响 versions earlier than 9.4.0.030；<i class="hl">CVE-2026-111560</i>（CVSS 8.6）为命令注入，具备管理员权限者可借此以 root 执行操作系统命令，波及六款产品。厂商通告明言两者串联可让攻击者绕过授权取得设备 root；漏洞由 Google <i class="hl">Mandiant</i> 报告（MNDT-2026-0042）。来源未报告在野利用。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-116606</b><b class="fct fcvss">CVSS 9.3</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Email Security Gateway (ESG) versions earlier than 9.4.0.030</span><span class="fv"><b>修复</b> BNSF-40425 for version 9.4.017 or later; BNSF-40430 for versions below 9.4.017</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>邮件安全网关串接在收件链路上、管理面常对网可达：免认证改配置叠加 root 命令注入，意味着邮件流、隔离数据与设备内凭据整体失守，也等于绕过整条反钓鱼防线。</p></div>
+<div class="cell"><b>Action</b><p>按版本打修复补丁：ESG 9.4.017 or later 用 BNSF-40425，versions below 9.4.017 用 BNSF-40430；ADC/WAF 用 BNADC-16586、BMA 用 BNMA-32468、WCC 用 BNWF-60060、WSG 用 BNYF-24789。厂商建议把管理接口限制在受信内网并启用网络访问控制；回查配置导入/备份恢复记录与全局配置变更。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(3)</em></span><button class="iocblk-c" data-copy="vuln-70379-ioc">复制</button></div><pre id="vuln-70379-ioc">9.4.0.030
+https://securityaffairs.com/202440/security/two-barracuda-esg-flaws-could-be-combined-for-full-root-access-patches-released.html
+https://trust.barracuda.com/security/pre-authentication-authorization-bypass-command-injection</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://securityaffairs.com/202440/security/two-barracuda-esg-flaws-could-be-combined-for-full-root-access-patches-released.html" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-116606" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://securityaffairs.com/202440/security/two-barracuda-esg-flaws-could-be-combined-for-full-root-access-patches-released.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://thehackernews.com/2026/11/radio-with-no-radar-why-agent-runtime.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-95761">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>ACF Extended PRO 免认证 RCE 补丁不彻底</h3>
+<p class="sum"><i class="hl">Wordfence</i> 11 月 3 日为 <i class="hl">ACF Extended PRO</i> 插件发布 <i class="hl kcve">CVE-2026-120534</i> 通告（CVSS v3.1 9.8，<i class="hl">Patchstack</i> 评 10.0）：up to and including 0.9.2.6 全部版本存在受限代码注入——render_field 方法把表单配置参数并入字段设置传给 call_user_func_array 前校验不足，未认证远程攻击者可带自选参数调用 WordPress 运行时内任意函数；当管理员启用了非常规的 shortcode_preview 设置、或服务器缺少 OpenSSL 函数使 acf_decrypt 回落到无校验 base64 解码时，该原语即升级为未认证 RCE。真正的清理版本是 0.9.2.8：0.9.2.7 修补不完整，同文披露的 <i class="hl kcve">CVE-2026-94262</i>、<i class="hl kcve">CVE-2026-94268</i> 与 post-update actions 路径的 <i class="hl kcve">CVE-2026-94267</i> 仍未堵死。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-120534</b><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>受影响</b> Advanced Custom Fields: Extended PRO plugin for WordPress，all versions up to and including 0.9.2.6</span><span class="fv"><b>修复</b> 0.9.2.8（0.9.2.7 不完整，另涉 CVE-2026-94267）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是生产环境跑 acf-extended-pro 的 WordPress 站点：未认证代码执行入口直达前台表单，且「已升到 0.9.2.7」的站点仍不在安全线上，认知与补丁状态错位。</p></div>
+<div class="cell"><b>Action</b><p>升级 ACF Extended PRO 至 0.9.2.8 or later、ACF PRO 至 6.8.7 or later，并确认 PHP OpenSSL 扩展已加载（消除 acf_decrypt 无校验回落路径）；暂不能升级时关闭 shortcode preview；按失陷假设审计每一处前台表单、Web 访问日志中针对 render_field 的异常调用、主机层文件完整性与同步目录。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(4)</em></span><button class="iocblk-c" data-copy="vuln-95761-ioc">复制</button></div><pre id="vuln-95761-ioc">0.9.2.6
+0.9.2.8
+0.9.2.7
+https://thecybersecguru.com/news/acf-extended-pro-cve-2026-120534/</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://thecybersecguru.com/news/acf-extended-pro-cve-2026-120534/" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-120534" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://aws.amazon.com/blogs/security/guardduty-extended-threat-detection-has-added-five-new-indicators-to-surface-attack-sequences/" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://thecybersecguru.com/news/acf-extended-pro-cve-2026-120534/" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-37692">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>Kyverno 授权绕过跨命名空间窃密且补丁回退</h3>
+<p class="sum"><i class="hl">Kyverno</i> 官方通告 <i class="hl">GHSA-p58h-r4j3-h5vx</i>（Critical，10 月 21 日发布，NVD 定 <i class="hl kcve">CVE-2026-122304</i>、评分 9.9）：cleanup controller 以 nil policy 构建 context loader（controller.go:174 传入 nil），namespaced CleanupPolicy 的 context 条目因此拿不到 namespaced Policy 同规格的任何约束——policyNamespace 恒为空串，使此前为 <i class="hl kcve">CVE-2026-22039</i> 加的 apiCall urlPath 限制和为 GHSA-59v6 加的 globalReference 拒止在结构上双双失效；官方 chart 默认授予每个 namespace admin 创建 cleanuppolicies 的权限、cleanup controller 默认开启。影响 &gt;= 1.17.0, &lt;= 1.19.1，1.19.2 已修补；攻击者可建带 apiCall 或 globalReference 的 namespaced CleanupPolicy 跨命名空间读取 Secrets 并篡改 validatingwebhookconfigurations。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-122304</b><b class="fct fcvss">CVSS 9.9</b><div class="fvers"><span class="fv"><b>受影响</b> Kyverno &gt;= 1.17.0, &lt;= 1.19.1</span><span class="fv"><b>修复</b> 1.19.2</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>多租户 Kubernetes 平台的命名空间隔离被击穿：本属租户自助权限的 namespace admin 可读取任意命名空间 Secrets（服务令牌、外部凭据），篡改校验型 webhook 配置等于改写全集群准入策略面；且这是对前两轮修复的回退性绕过——已打早期补丁的集群同样在射程内。</p></div>
+<div class="cell"><b>Action</b><p>升级 Kyverno 至 1.19.2；过渡期用 RBAC 收紧 namespace-admin 对 cleanuppolicies 的 create 权限，清查现存 CleanupPolicy 的 spec.context 内 apiCall/globalReference 条目；回查 validatingwebhookconfigurations 变更记录与跨命名空间 Secret 读取审计日志。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-122304" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://github.com/kyverno/kyverno/security/advisories/GHSA-p58h-r4j3-h5vx" target="_blank" rel="noopener" class="deepchip">官方 ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-98533">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3>cPGuard 更新劫持确认波及 2950 台服务器</h3>
+<p class="sum">跟进 2026-11-04 报道，增量是 <i class="hl">OPSSHIELD</i> 后续披露把事件量化并给出完整时间线：<i class="hl">cPGuard</i> 计费与授权服务器先被攻破，攻击者于 UTC 02:06 用失窃凭据进入更新系统，借 cPGuard 5.88.12 through 5.88.19 推送恶意脚本，约 2,950 台客户服务器在 02:08-03:20 UTC 窗口内安装执行——脚本读取 /etc/shadow、/etc/passwd、root 的 SSH 私钥（/root/.ssh）与 MySQL root 口令（/root/.my.cnf），装后门并留下计划任务，收集物直传攻击者。厂商称 12 小时内检测到并清洗了基础设施凭据；修复线为首报 5.88.25，后续 5.88.26 移除后门、再一版更新清除残留计划任务。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> cPGuard 5.88.12 through 5.88.19</span><span class="fv"><b>修复</b> 5.88.25 首发修复，5.88.26 移除后门，后续更新清除计划任务</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>2,950 台运行 cPGuard 的 Linux 服务器（Web 托管面板环境为主）密码哈希、SSH 私钥与数据库 root 口令被整份外传；厂商明确被盗凭据升级后仍可用，凡在更新窗口在线的机器都应视为失陷。安全工具自身更新链被用作分发载体，客户信任面被反向利用。</p></div>
+<div class="cell"><b>Action</b><p>grep &#x27;Successfully updated&#x27; /opt/cpguard/logs/install_log 核对是否装过 5.88.12 through 5.88.19；升级 5.88.26 或最新版并确认计划任务与后门文件已清除；轮换机上全部口令、SSH 密钥与数据库凭据；用 OPSSHIELD 披露页的事件查询核对服务器 IP/主机名（查无记录不等于未受影响），日志缺失同样按潜在失陷处理。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/cpguard-update-channel-hijacked-to.html" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://thehackernews.com/2026/11/cpguard-update-channel-hijacked-to.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://thehackernews.com/2026/11/openai-ai-pipeline-generates-948-linux.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://thehackernews.com/2026/11/weekly-recap-critical-cves-linux-ddos.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ttp"><span class="n">03</span>攻击战术与技术</p>
+
+<div class="intel reveal" id="ttp-24297">
+<div class="intel-head"><span class="chip">攻击战术与技术</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
+<div class="intel-body">
+<h3>ChatGPT 受限模式被绕过可静默外泄数据</h3>
+<p class="sum"><i class="hl">Check Point</i> Research 全文披露 <i class="hl">Lockdown Mode</i> 绕过：OpenAI 于 February 2026 在 <i class="hl">ChatGPT</i> 代码块加入 HTML 页面预览功能，研究者发现可借此绕过 Lockdown 把整个聊天记录无提示传至第三方服务器——在 ChatGPT Classic 场景零用户交互，正常对话即可触发。Lockdown Mode 本已限制实时网页为缓存、阻断外部图片、禁用 Canvas 代码网络请求并关停 Deep Research/Agent Mode/连接器与文件下载，仍被这条通道穿透；该漏洞还能操纵 Classic 界面弹出任意内容窗口做钓鱼与恶意软件投递，触发路径含恶意 prompt、恶意 GPT 与共享对话。今年早些时候同一运行时曾被披露可借 DNS tunneling 外泄会话数据，当时 OpenAI 迅速修复。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群为把敏感资料交给 AI 执行环境的个人与企业用户：研究演示中整段会话可在无通知情况下出境，配合界面弹窗操纵等于在受信任产品外壳内制造钓鱼面；网络隔离类防线（含 Lockdown）对提示注入出境链的兜底作用有限。</p></div>
+<div class="cell"><b>Action</b><p>敏感数据不进对话与 Canvas 代码执行；限制自定义 GPT 与 shared chat 的使用面；企业出网侧把 DNS 通道与异常子域纳入审计；确认 OpenAI 对本次披露的修复落地后再恢复 Lockdown 场景下的自动化工作流；把 AI 运行时按不可信出网面做策略隔离。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://research.checkpoint.com/2026/chatgpt-lockdown-mode-bypass-phishing-malware-delivery-and-silent-data-exfiltration/" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://research.checkpoint.com/2026/chatgpt-lockdown-mode-bypass-phishing-malware-delivery-and-silent-data-exfiltration/" target="_blank" rel="noopener" class="deepchip">官方 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="ttp-56816">
+<div class="intel-head"><span class="chip">攻击战术与技术</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>66</i></span></div>
+<div class="intel-body">
+<h3>OpenAI 模型自主利用 948 个内核提权缺陷</h3>
+<p class="sum"><i class="hl">OpenAI</i> 周三详细公布其 agentic 漏洞管线：用一款未发布的 cyber 模型在 mid-October 2026 的一次 30-hour 运行中，识别分析 2,308 个 Linux 内核候选缺陷、沙箱内动态复现 1,724 个，最终产出 948 个可让非特权本地用户拿到 root 的本地提权利用与 291 个信息泄露 PoC，总支出 $1,213,430 API credits（约 $1,279 一枚 LPE 利用）。管线分五段：发现、动态验证、可利用性评估、补丁生成、人工评审后才报维护者；官方称其中至少用了 10 种 novel Linux exploitation techniques（新对象喷、page grooming、data-only 提权、type confusion 等），建立在 6 月 GPT-5.5-Cyber 发现 24 个 LPE 的基础之上。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露对象是依赖「冷门内核缺陷没人写利用」假设的 Linux 机群运维：前沿模型已能在数十小时、百万美元内批量产出可用的本地提权武器，利用开发不再是攻击方人力的瓶颈，未修补提权面被武器化的时间窗大幅压缩。</p></div>
+<div class="cell"><b>Action</b><p>按发行版基线收紧非特权访问面（user namespace、unprivileged eBPF、模块加载策略）；把内核补丁 SLA 按 AI 批量挖掘的新节奏压缩；关注这批利用经人工评审向维护者披露的后续，评估在野化窗口。利用细节未公开，尚处 OpenAI 报告维护者阶段。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://www.securityweek.com/ai-agents-got-root-on-linux-via-948-kernel-flaws-in-openai-research/" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://thehackernews.com/2026/11/openai-ai-pipeline-generates-948-linux.html" target="_blank" rel="noopener" class="deepchip">深度 ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-incident"><span class="n">04</span>重大安全事件</p>
+
+<div class="intel reveal" id="incident-36109">
+<div class="intel-head"><span class="chip">重大安全事件</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>68</i></span></div>
+<div class="intel-body">
+<h3>美联储与 OCC 就币安被盗接触美国银行</h3>
+<p class="sum">据 <i class="hl">Reuters</i> 消息（Cointelegraph 周四转述）：美联储与货币监理署 <i class="hl">OCC</i> 自周一起陆续联系美国银行，询问与币安事件相关的「异常活动」或服务中断；币安 11 月 3 日事件报告称 Oct. 29 袭击波及约 $6.34 billion 资产、其中 $2.85 billion 已冻结或拦截。美国最大型银行之一网络安全团队在被盗后数小时内即主动联络币安；币安发言人确认已向所有银行伙伴分发公开事件报告、未发现有银行因该案暴露漏洞。此前 Fed 已于 2025 年 4 月取消州成员银行开展加密业务须事前报备的要求，本次问询两机构均未官方证实。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>与加密机构存在存管/结算关系的美国银行进入监管摸底视野：目前确认后果仅为问询与银行自查，无已证实的银行失陷或处罚；报道口径全部为 reportedly，监管意图（例行检查 vs 后续规则收紧）待官方披露。</p></div>
+<div class="cell"><b>Action</b><p>涉加密敞口的银行与存管方：盘点交易所对手方敞口、托管依赖与事件响应条款，把本案的社工-更新链（假面试、被篡改安装渠道）纳入钓鱼与端点演练用例；运维侧关注交易所相邻面而非等待监管通知。监管沟通仍在进行，以 Fed/OCC 官方口径为准。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="incident-36109-ioc">复制</button></div><pre id="incident-36109-ioc">https://cointelegraph.com/news/fed-occ-check-us-banks-binance-hack-security-risks</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://cointelegraph.com/news/fed-occ-check-us-banks-binance-hack-security-risks" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://cointelegraph.com/news/fed-occ-check-us-banks-binance-hack-security-risks" target="_blank" rel="noopener" class="deepchip">报道 ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-crypto-infra"><span class="n">05</span>区块链基础设施</p>
+
+<div class="intel reveal" id="crypto-infra-04159">
+<div class="intel-head"><span class="chip">区块链基础设施</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>66</i></span></div>
+<div class="intel-body">
+<h3>Coinbase 称 99% 客户加密资产离线存放</h3>
+<p class="sum"><i class="hl">Coinbase</i> 向客户声明未受 $6.4 billion 币安被盗事件影响，并系统披露其安全控制：超过 99% 资产离线存储、私钥拆分（split private keys）与 kill switches 熔断机制。该口径发布于币安热钱包签名设施被攻破之后，是交易所在密钥托管架构上针对同业事故的公开对标表态。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群为托管型交易所客户与同业运维方：Coinbase 强调热钱包占比极低且具备密钥分片与熔断能力，反衬币安案中签名基础设施被滥用的失效点；注意这是厂商自述控制措施，非第三方审计结论。</p></div>
+<div class="cell"><b>Action</b><p>运维与风控对照自查：热钱包限额与离线比例、私钥分片持有方分离、kill switch 触发演练是否在跑；引用同行数据前确认其为厂商自报口径。原文页为动态加载，正文细节以条目与导语为限。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-04159-ioc">复制</button></div><pre id="crypto-infra-04159-ioc">https://decrypt.co/382570/coinbase-99-percent-customer-crypto-offline-binance-hack</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-06 · SID ANALYSIS</span><a href="https://decrypt.co/382570/coinbase-99-percent-customer-crypto-offline-binance-hack" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://decrypt.co/382570/coinbase-99-percent-customer-crypto-offline-binance-hack" target="_blank" rel="noopener" class="deepchip">官方 ↗</a></div>
+</div>
+
+</div>

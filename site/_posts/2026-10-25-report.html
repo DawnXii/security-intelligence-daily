@@ -1,0 +1,192 @@
+---
+layout: post
+title: "安全情报日报 2026-10-25"
+date: 2026-10-25
+events: 10
+headline: "暴露管理面与信任链同日起火"
+dek: "今日入选 10 条，在野 4：KEV 连收 2 款媒体与协作服务器漏洞（Plex、Collabora），Horizon3 同日公开 Splunk Enterprise 与 FortiSIEM 的未认证通道细节，面向网络的管理端口是当前最集中的突破口；另一条线是信任链，LiteLLM 1.107.0 投毒与 eMudhra 中间 CA 私钥缺陷都要求清点依赖与证书。处置口径：先收敛公网暴露，再按 KEV 与厂商公告限期更新。"
+brief_stats: ["10 事件", "在野 4", "PoC 1", "3 类别", "顶分 85"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">7</span></p><ol>
+<li><a class="toc-link" href="#vuln-24021"><span class="tc">·</span><span class="tt">Collabora 缺陷入选 KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-75723"><span class="tc">·</span><span class="tt">Plex 第二枚漏洞入 KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-02096"><span class="tc">·</span><span class="tt">Pillow 帧切换复用旧缓冲区</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-60165"><span class="tc">·</span><span class="tt">HPE 一次修 72 项缺陷</span><span class="meta"><i class="rp p1">P1</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-97567"><span class="tc">·</span><span class="tt">Splunk 未认证可执行系统命令</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-60667"><span class="tc">·</span><span class="tt">FortiSIEM 利用链细节公开</span><span class="meta"><i class="rp p2">P2</i><i class="xs xp">PoC 公开</i></span></a></li>
+<li><a class="toc-link" href="#vuln-03897"><span class="tc">·</span><span class="tt">西门子Edge发布器可RCE</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#supplychain-74470"><span class="tc">★</span><span class="tt">微软拆解 LiteLLM 投毒</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+<li><a class="toc-link" href="#supplychain-72765"><span class="tc">·</span><span class="tt">eMudhra 中间CA私钥可还原</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-malware">恶意软件与僵尸网络</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#malware-71871"><span class="tc">·</span><span class="tt">Mythic后门借mesh藏C2</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-24021">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3>Collabora 缺陷入选 KEV</h3>
+<p class="sum">跟进 2026-10-17 报道（黑客利用 <i class="hl">Collabora</i> RCE 给 Nextcloud 服务器植后门）：<i class="hl">CVE-2026-110447</i> 于 2026-10-23 由 CISA 列入 KEV（dateAdded 2026-10-23），官方确认在野利用，并按 BOD 26-04 要求限期处置。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-110447</b><div class="fvers"><span class="fv"><b>受影响</b> Collabora Online – Built-in CODE Server</span><span class="fv"><b>修复</b> 按 vendor instructions 更新（备注列出 GHSA-g3vx-3m76-fghh 通告）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>自托管 Nextcloud/Collabora 协作服务多数直接暴露公网；KEV 收录说明利用已非定向个案，联邦机构之外的高价值文档平台同样应视为在攻击者射程内。</p></div>
+<div class="cell"><b>Action</b><p>按厂商通告（备注含 GHSA-g3vx-3m76-fghh 与 Nextcloud 更新公告）立即升级 Collabora Online – Built-in CODE Server；对已暴露实例执行 Forensics Triage 排查后门痕迹。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-110447" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-75723">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>Plex 第二枚漏洞入 KEV</h3>
+<p class="sum"><i class="hl">Plex Media Server</i> <i class="hl kcve">CVE-2026-96655</i> 于 2026-10-20 入选 CISA KEV（dateAdded 2026-10-20，官方确认在野利用），与 10-21 报道过的 <i class="hl kcve">CVE-2026-96656</i> 属同一厂商公告批次；备注论坛链接为 v1-43-2-and-earlier 安全更新公告。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-96655</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Plex Media Server</span><span class="fv"><b>修复</b> v1-43-2-and-earlier 论坛安全更新公告（升级至其后版本）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Plex 用户量大且普遍直接暴露公网（DLNA/远程访问）；同一产品在 KEV 同时占两个 CVE，说明利用流量已成规模，家庭与中小企业媒体主机可被直接接管。</p></div>
+<div class="cell"><b>Action</b><p>按 Plex 论坛安全更新公告立即升级 Plex Media Server（覆盖 v1-43-2 及更早版本）；公网暴露实例参照 BOD 26-04 口径限期处置并做取证排查。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-96655" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-02096">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>Pillow 帧切换复用旧缓冲区</h3>
+<p class="sum">GHSA 通告 <i class="hl kcve">CVE-2026-96639</i>：<i class="hl">Pillow</i> 多帧图像加载器可能在帧间 mode 切换（如窄模式 L 切到 RGB/CMYK）时复用旧帧分配的原生 ImagingCore 存储，把更宽像素解码进不匹配的缓冲区。严重程度 critical、CVSS 9.8，修复版本 13.0.0。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-96639</b><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>受影响</b> Pillow（pip 生态，13.0.0 之前版本）</span><span class="fv"><b>修复</b> 13.0.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Pillow 是 Python 图像处理事实标准，被海量 Web 服务、上传流水线与缩略图工具链依赖；这种内存布局错配属内存破坏类缺陷，凡解析用户上传多帧图像的进程都在暴露面内。</p></div>
+<div class="cell"><b>Action</b><p>将 Pillow 升级至 13.0.0；优先覆盖解析用户上传图像的推理/网关/缩略图服务。来源除修复版本外未给出缓解措施。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-v9pv-5gc8-w2m6" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-60165">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>HPE 一次修 72 项缺陷</h3>
+<p class="sum">HPE 发布安全更新，修复 <i class="hl">Aruba Operating System</i>（ArubaOS）72 个漏洞，其中八个为最高严重级的认证绕过与代码执行问题。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> Aruba Operating System (ArubaOS)</span><span class="fv"><b>修复</b> HPE released security updates（覆盖 72 个漏洞）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>ArubaOS 驱动企业无线控制器与边缘网络设备，认证绕过与 RCE 同批出现意味着单个可达管理端口就可能完全接管网络基础设施，波及其后全部无线用户。</p></div>
+<div class="cell"><b>Action</b><p>尽快将 ArubaOS 升级至 HPE 对应修复版本；优先处理面向用户网络和公网暴露的管理/隧道接口，升级前收敛可达性。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/hpe-patches-eight-max-severity-rce-and-auth-bypass-aos-flaws/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-97567">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>74</i></span></div>
+<div class="intel-body">
+<h3>Splunk 未认证可执行系统命令</h3>
+<p class="sum">Horizon3 公布 <i class="hl">Splunk Enterprise</i> <i class="hl kcve">CVE-2026-76268</i>：Patroni REST API 缺少认证，具备网络访问权限的未认证攻击者可执行操作系统命令；Horizon3 同步提供 NodeZero Rapid Response 测试供团队验证自身暴露。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-76268</b><div class="fvers"><span class="fv"><b>受影响</b> Splunk Enterprise（Patroni REST API）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>自建 <i class="hl">Splunk Enterprise</i> 平台（Patroni 管理端口暴露在内网或公网的部署）等于多了一条未认证拿系统命令的通道；日志平台失陷还会直接削弱溯源能力。</p></div>
+<div class="cell"><b>Action</b><p>收敛 Patroni REST API 的网络暴露；用 Horizon3 的 NodeZero Rapid Response 测试验证受影响面，并跟进厂商修复。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://horizon3.ai/attack-research/vulnerabilities/cve-2026-76268/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-60667">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3>FortiSIEM 利用链细节公开</h3>
+<p class="sum">跟进 2026-10-21 报道（<i class="hl kcve">CVE-2026-106173</i> 公开 PoC）：Horizon3 此次发布深度剖析，说明未认证 gRPC 服务如何借路径穿越与 null 字节处理实现任意文件写入并最终远程执行代码，同时给出供防守方使用的 IOC 指标。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-106173</b><div class="fvers"><span class="fv"><b>受影响</b> Fortinet FortiSIEM（未认证 gRPC 服务）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露在网络中的 <i class="hl">FortiSIEM</i> 实例风险最高：未认证即可写文件、执行代码，SIEM 主机一旦失陷，攻击者可先毁掉防守方最依赖的日志视图。</p></div>
+<div class="cell"><b>Action</b><p>按 Horizon3 报告中的 IOC 排查 gRPC 服务上的异常文件写入；限制 FortiSIEM gRPC 端口网络暴露，并跟进厂商修复状态。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://horizon3.ai/attack-research/cve-2026-106173-deep-dive-fortisiem-grpc-path-traversal-file-write-rce/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-03897">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>64</i></span></div>
+<div class="intel-body">
+<h3>西门子Edge发布器可RCE</h3>
+<p class="sum">CISA 发布 ICSA-26-295-02：<i class="hl">Industrial Edge App Publisher</i> 存在证书校验不当与后端响应数据未转义两条缺陷（<i class="hl kcve">CVE-2026-78556</i>、<i class="hl kcve">CVE-2026-78557</i>，CVSS 8.3），链接后可让网络内攻击者冒充管理服务器，借 Node.js 集成在本地机器执行任意代码；影响 1.27.9 之前版本，Siemens 已发布更新。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-78556</b><b class="fct fcvss">CVSS 8.3</b><div class="fvers"><span class="fv"><b>受影响</b> Industrial Edge App Publisher 1.27.9 之前版本</span><span class="fv"><b>修复</b> Siemens has released an update（已发布更新，建议升至最新版）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p><i class="hl">Industrial Edge</i> 部署是 OT 环境的应用分发通道：管理服务器被冒充后，攻击者可经由 App Publisher 把恶意内容推向边缘设备，污染整条分发链。</p></div>
+<div class="cell"><b>Action</b><p>将 Industrial Edge App Publisher 升级至 1.27.9 以上最新版；梳理本地网络中可冒充管理服务器响应通道的接入点。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-02" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel focus reveal" id="supplychain-74470">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
+<div class="intel-body">
+<h3>微软拆解 LiteLLM 投毒</h3>
+<p class="sum">Microsoft Threat Intelligence 发布 <i class="hl">LiteLLM</i> 1.107.0 供应链失陷分析：恶意版本借 Python startup hooks 在解释器启动阶段执行，窃取凭据并远程加载代码，微软同步给出 detections 与 mitigations。同清单内 Register 亦以「附带 RAT」跟进同事件。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> LiteLLM 1.107.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>LiteLLM 是大量 AI 网关与 LLM 编排栈的直接依赖，装上 1.107.0 即可能向攻击者交出 API key 与环境凭据，并把远程代码加载通道带进 CI/CD 与推理服务——相当于对 AI 运维基础设施的一次成规模凭据收割。</p></div>
+<div class="cell"><b>Action</b><p>排查环境内是否存在 LiteLLM 1.107.0 的安装与运行痕迹；按微软给出的 detections 狩猎 Python startup hooks 异常加载；下线该版本、改用可信发布并轮换可能暴露的密钥。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://www.microsoft.com/en-us/security/blog/2026-10-23/inside-the-litellm-1-107-0-supply-chain-compromise-credential-theft-through-python-startup-hooks/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="supplychain-72765">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>82</i></span></div>
+<div class="intel-body">
+<h3>eMudhra 中间CA私钥可还原</h3>
+<p class="sum"><i class="hl">Qualys</i> 发文指导识别已失陷的 <i class="hl">eMudhra</i> 证书：2026-10-17 披露的 CA 事件波及 eight eMudhra intermediate CA certificates，密钥生成流程缺陷可让攻击者还原私钥、签发欺诈 TLS 或代码签名证书（<i class="hl kcve">CVE-2026-111943</i>、<i class="hl kcve">CVE-2026-111944</i>）。涉事中间证书已被吊销，Chrome、Mozilla、Apple 等主要平台厂商已阻断。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111943</b><div class="fvers"><span class="fv"><b>受影响</b> eight eMudhra intermediate CA certificates</span><span class="fv"><b>修复</b> affected intermediates have been revoked（并被 Chrome、Mozilla、Apple 等阻断）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>凡信任链经过 eMudhra 中间 CA 的 TLS 站点与代码签名产物都受波及：私钥可还原意味着伪造证书能通过校验、恶意签名可信；平台侧阻断又让未及时替换的旧链在到期前后集中出现兼容与信任故障。</p></div>
+<div class="cell"><b>Action</b><p>按 Qualys 方法清点资产中仍在使用或信任的 eMudhra 中间证书并替换；复核代码签名与 TLS 证书链，移除已吊销的八张中间证书并核对平台阻断状态。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://blog.qualys.com/product-tech/2026-10-23/how-to-identify-compromised-emudhra-certificates-with-qualys-cve-2026-111943-and-cve-2026-111944" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-malware"><span class="n">03</span>恶意软件与僵尸网络</p>
+
+<div class="intel reveal" id="malware-71871">
+<div class="intel-head"><span class="chip">恶意软件与僵尸网络</span><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>78</i></span></div>
+<div class="intel-body">
+<h3>Mythic后门借mesh藏C2</h3>
+<p class="sum">ESET 披露此前未知的 Go 后门 <i class="hl">MythicRatatoskr</i>：把 C&amp;C 服务器藏进 <i class="hl">Yggdrasil</i> mesh 网络以隐蔽通信，该后门为此前针对一家乌克兰粮食企业的破坏性攻击铺路；ESET 将其归因于 UAC-0099 与 Sandworm 的协作。</p>
+<div class="intel-facts"><b class="fct factor">UAC-0099</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>高价值目标（乌克兰及其供应链方向）面临新失陷通道：C2 寄生在合法 IPv6 覆盖网络里，基于 IP/域名的封禁与常规威胁情报对这类通道基本失效，破坏性攻击前的驻留更难被发现。</p></div>
+<div class="cell"><b>Action</b><p>排查终端上异常 Yggdrasil 节点与不明 Go 二进制落地；对 mesh 覆盖网络出口流量建立检测基线，结合破坏性攻击前兆核查备份与网络分段。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-25 · SID ANALYSIS</span><a href="https://www.welivesecurity.com/en/eset-research/mythicratatoskr-yggdrasil-enabled-backdoor-deployed-uac0099-sandworm-collaboration/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>

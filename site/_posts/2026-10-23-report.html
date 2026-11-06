@@ -1,0 +1,160 @@
+---
+layout: post
+title: "安全情报日报 2026-10-23"
+date: 2026-10-23
+events: 8
+headline: "在野利用集中涌向运维基础设施面"
+dek: "今日四条在野利用全部指向运维与开发基础设施：<i class=\"hl\">PHP2Shell</i> 已现攻击流量且可读走 PHP 内存机密；<i class=\"hl\">VeloCloud Orchestrator</i> 零日让只读账号升至 operator；<i class=\"hl\">LiteLLM</i> 投毒疑因 GitHub token 泄露；<i class=\"hl\">SafePay</i> 攻击 600 余家组织获 FBI/CISA 联合定性。补丁侧次焦点为 <i class=\"hl\">Oracle EBS</i> 9.8 注入与 <i class=\"hl\">BlueHammer</i> 提权研究。今日入选 8 条、在野 4 条：优先收敛 PHP、SD-WAN 与软件发布通道。"
+brief_stats: ["8 事件", "在野 4", "PoC 2", "3 类别", "顶分 88"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">6</span></p><ol>
+<li><a class="toc-link" href="#vuln-09056"><span class="tc">★</span><span class="tt">PHP核心PHP2Shell可窃内存且现攻击流量</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-33644"><span class="tc">·</span><span class="tt">Arista VCO零日SQL注入遭在野利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-78081"><span class="tc">·</span><span class="tt">Oracle EBS严重注入可远程执行代码</span><span class="meta"><i class="rp p2">P2</i><i class="xs xp">PoC 公开</i></span></a></li>
+<li><a class="toc-link" href="#vuln-57746"><span class="tc">·</span><span class="tt">Linux KSMBD两枚9.0高危RCE尚无补丁</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-07175"><span class="tc">·</span><span class="tt">&lt;k&gt;BlueHammer&lt;/k&gt;八段链可提权至SYSTEM</span><span class="meta"><i class="rp p2">P2</i><i class="xs xp">PoC 公开</i></span></a></li>
+<li><a class="toc-link" href="#vuln-95844"><span class="tc">·</span><span class="tt">西门子Software Center加载缺陷遭利用</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-61651"><span class="tc">·</span><span class="tt">LiteLLM疑因GitHub令牌泄露遭投毒</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-48014"><span class="tc">·</span><span class="tt">六机构联合警告SafePay攻击600余家</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel focus reveal" id="vuln-09056">
+<div class="intel-head"><span class="chip">今日焦点</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
+<div class="intel-body">
+<h3>PHP核心PHP2Shell可窃内存且现攻击流量</h3>
+<p class="sum">Qualys 对 <i class="hl">PHP2Shell</i>（<i class="hl kcve">CVE-2026-109618</i> 与 <i class="hl kcve">CVE-2026-109619</i>，CVSS v4.0 9.2）发出分析：两枚严重缺陷可在对外提供 Web 请求的 PHP 安装上实现未认证远程代码执行；研究人员还演示了未认证的 PHP worker 内存泄露，可暴露密码、认证令牌与 API key。Cloudflare 已报告攻击流量，包括规避检测的尝试。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-109618</b><b class="fct fcvss">CVSS 9.2</b><b class="fct fout">7 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> PHP installations serving web requests</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>凡是以 PHP 服务公网 Web 请求的站点均在暴露范围，未升级即同时面临 RCE 与内存中机密泄露两重后果；已观测到的攻击流量说明扫描与利用尝试已经发生。</p></div>
+<div class="cell"><b>Action</b><p>立即升级 PHP 至官方紧急安全发版后的修复版本；无法即时升级的按 Qualys 指南先行检测与缓解（WAF 侧拦截规避变体的规则需同步）；鉴于内存可被读取，事后应轮换可能暴露的密码、认证令牌与 API key。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-23 · SID ANALYSIS</span><a href="https://blog.qualys.com/vulnerabilities-threat-research/2026-10-20/php-announces-critical-security-release-for-two-vulnerabilities" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-33644">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3>Arista VCO零日SQL注入遭在野利用</h3>
+<p class="sum">The Hacker News 报道：攻击者正在利用 <i class="hl">Arista</i> VeloCloud Orchestrator（VCO，VeloCloud SD-WAN 网络的集中管理系统）中的一枚零日 SQL 注入，Arista 已于 10 月 22 日发布通告。缺陷使任何能登录编排器的人——哪怕只读客户账号——都能取得 operator 级最高控制权限。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> VeloCloud Orchestrator (VCO)</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是所有互联网可达或平坦网络中部署 VCO 的 SD-WAN 运维体系：单点编排器失陷意味着全网分支设备配置与控制面可被操纵。</p></div>
+<div class="cell"><b>Action</b><p>按 Arista 10 月 22 日通告升级 VCO 至修复版本；审计编排器登录与会话日志，重点排查只读/客户角色账号异常提权至 operator 的记录；收敛 VCO 管理面公网暴露。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-23 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/arista-warns-of-critical-velocloud-sql.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-78081">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
+<div class="intel-body">
+<h3>Oracle EBS严重注入可远程执行代码</h3>
+<p class="sum">Horizon3.ai 披露 <i class="hl">Oracle E-Business Suite</i> 严重漏洞 <i class="hl kcve">CVE-2026-101767</i>（CVSS 9.8）：影响 EBS 12.2.3–12.2.15 的未认证 SQL 注入，研究团队梳理出经由 TCF servlet 达成远程代码执行的完整攻击链。Oracle 已在 2026 年 10 月补丁集中修复。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-101767</b><b class="fct fcvss">CVSS 9.8</b><div class="fvers"><span class="fv"><b>受影响</b> Oracle E-Business Suite 12.2.3–12.2.15</span><span class="fv"><b>修复</b> October 2026 补丁集</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>面向公网或内网平坦可达的 EBS 实例是 ERP 核心，承载财务与供应链数据；未认证即可注入并升级为 RCE，属高危入口。当日来源未提及在野利用。</p></div>
+<div class="cell"><b>Action</b><p>尽快应用 Oracle October 2026 补丁；打补丁前限制 TCF servlet 的网络可达性；可用 Horizon3 的 NodeZero Rapid Response 内容验证受影响主机。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-23 · SID ANALYSIS</span><a href="https://horizon3.ai/attack-research/vulnerabilities/cve-2026-101767/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-57746">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
+<div class="intel-body">
+<h3>Linux KSMBD两枚9.0高危RCE尚无补丁</h3>
+<p class="sum">The Hacker News 报道：Linux 内核内置 SMB 服务器 <i class="hl">KSMBD</i> 存在两枚被公开到邮件列表的 RCE 缺陷，经 Trend Micro ZDI 评级 CVSS 9.0，mainline kernel 尚无修复。其中 ZDI-CAN-33774 在通过网络完成任何认证之前即可触发，另一枚 ZDI-CAN-33549 需 SMB Direct 传输与 RDMA 网络。</p>
+<div class="intel-facts"><b class="fct fcvss">CVSS 9.0</b><div class="fvers"><span class="fv"><b>受影响</b> Linux 内核 KSMBD 内置 SMB 服务器</span><span class="fv"><b>修复</b> 无补丁（mainline kernel 尚未修复）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是启用 KSMBD 直接对外提供 SMB 的 Linux 服务器；前一枚为预认证触发面，未修复期间属被动裸奔状态。文件服务器、NAS 类部署尤需关注。</p></div>
+<div class="cell"><b>Action</b><p>无补丁期间优先禁用 ksmbd 内核模块或收敛其网络暴露，禁用/隔离 RDMA 承载面（针对 ZDI-CAN-33549）；跟踪内核主线修复进度后再恢复。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-23 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/two-cvss-90-linux-ksmbd-rce-flaws.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-07175">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xp">PoC 公开</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>62</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">BlueHammer</i>八段链可提权至SYSTEM</h3>
+<p class="sum">Qualys 公布代号 <i class="hl">BlueHammer</i>（<i class="hl kcve">CVE-2026-33825</i>）的漏洞研究：一条八阶段本地提权链，目标为 4.18.26030.3011 之前版本的 Windows Defender Antimalware Platform。它不提供初始访问，需先获得标准用户代码执行；实验室内可升至 NT AUTHORITY\SYSTEM，从 LSASS 恢复域管理员凭据，并经 pass-the-hash 横向移动。非内存破坏类缺陷，官方修复已就位。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-33825</b><div class="fvers"><span class="fv"><b>受影响</b> Windows Defender Antimalware Platform 4.18.26030.3011 之前版本</span><span class="fv"><b>修复</b> 4.18.26030.3011</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群是允许标准用户代码执行的企业 Windows 终端与域环境：一旦立足，域管理员凭据可被读取并横向扩散。目前仅在实验室内复现，无在野利用证据。</p></div>
+<div class="cell"><b>Action</b><p>将 Windows Defender Antimalware Platform 更新至 4.18.26030.3011 及以上；复核标准用户终端的 LSASS 保护与本地权限基线；参考 Qualys 检测指南开展威胁狩猎。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-23 · SID ANALYSIS</span><a href="https://blog.qualys.com/product-tech/2026-10-21/bluehammer-cve-2026-33825-windows-defender-privilege-escalation" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-95844">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>58</i></span></div>
+<div class="intel-body">
+<h3>西门子Software Center加载缺陷遭利用</h3>
+<p class="sum">跟进 10-21 报道（ClickFix 投递 RAT）：CISA ICS 通告 ICSA-26-295-03 正式确认 <i class="hl">Siemens Software Center</i> 的 DLL 非受控搜索路径缺陷可被本地放置特制 DLL 达成任意代码执行，并指引读者查看其博客中关于当前已知主动利用与检测方法的说明。Siemens 已发布新版本。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> Siemens Software Center</span><span class="fv"><b>修复</b> 厂商已发布新版本（update to the latest version）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>沿用旧版 Software Center 的西门子工业软件部署环境暴露；通告明确提及已知主动利用，说明该加载缺陷已出现在真实攻击路径中。</p></div>
+<div class="cell"><b>Action</b><p>升级 Siemens Software Center 至厂商最新版本；按 Siemens 博客给出的检测方式排查已有利用痕迹；限制对安装目录的本地写入权限以封堵 DLL 投放。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-23 · SID ANALYSIS</span><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-295-03" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-61651">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>78</i></span></div>
+<div class="intel-body">
+<h3>LiteLLM疑因GitHub令牌泄露遭投毒</h3>
+<p class="sum">跟进 10-21/10-22 报道：LiteLLM 于本周披露 10 月 21 日供应链事件的初步根因——发布管道约 4:00 a.m. 被攻陷时，攻击者疑似从 AI 网关日志中拿到 GitHub token，并突破多重独立安全控制，推送含凭据窃取器与后门的恶意版本 1.107.0 至 PyPI 与 Docker Hub。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> LiteLLM Python 包 1.107.0（PyPI 与 Docker Hub 分发）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>已安装或拉取 1.107.0（PyPI wheel 或 Docker 镜像）的部署可能已植入后门并外泄凭据；GitHub token 外泄还将影响源码仓库与 CI/CD 链路本身。</p></div>
+<div class="cell"><b>Action</b><p>冻结/回滚 LiteLLM 1.107.0 并从干净通道重装；轮换网关与发布环境可触达的全部密钥、吊销并重建 GitHub token；审计 10 月 21 日 4:00 前后仓库推送、Actions 运行与网关日志访问记录。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-10-23 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/litellm-suspects-github-token-leak-in.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-48014">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>66</i></span></div>
+<div class="intel-body">
+<h3>六机构联合警告SafePay攻击600余家</h3>
+<p class="sum">跟进 10-21 报道的 CISA SafePay 通告：本周 FBI、CISA、美国特勤局、德国莱茵兰-普法尔茨州刑事警察局及两家英国执法机构联合发布告警，Security Affairs 统计 <i class="hl">SafePay</i> 自 2024 年以来已攻击 600+ 家组织，主要经窃取/猜测口令、VPN 与钓鱼进入网络，再以双重勒索施压。</p>
+<div class="intel-facts"><b class="fct factor">SafePay</b><b class="fct fout">2 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>北美、南美、欧洲与澳洲的企业与关键基础设施均在受害范围内；联合执法背书表明受害规模与跨国影响已获多方确认。</p></div>
+<div class="cell"><b>Action</b><p>对照联合通告自查入口面：重置可能泄露/弱口令、VPN 强制 MFA 与访问日志审查、排查钓鱼投递与初始立足点；对未确认凭据暴露的备份与远程工具链做完整性核验。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="ransomware-48014-ioc">复制</button></div><pre id="ransomware-48014-ioc">https://securityaffairs.com/201464/cyber-crime/fbi-and-cisa-warn-of-safepay-ransomware-attacks-on-600-organizations.html</pre></div>
+</div>
+<div class="intel-foot"><span>2026-10-23 · SID ANALYSIS</span><a href="https://securityaffairs.com/201464/cyber-crime/fbi-and-cisa-warn-of-safepay-ransomware-attacks-on-600-organizations.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>

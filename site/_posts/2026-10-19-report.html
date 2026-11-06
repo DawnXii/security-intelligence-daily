@@ -1,0 +1,126 @@
+---
+layout: post
+title: "安全情报日报 2026-10-19"
+date: 2026-10-19
+events: 6
+headline: "ConnectWise 供应链攻击波及 M365"
+dek: "今日入选 6 条 · 4 条确认在野利用，类别分布：供应链 / CI-CD×2、漏洞与在野利用×2、重大安全事件×1。"
+brief_stats: ["6 事件", "在野 4", "PoC 0", "4 类别", "顶分 81"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#vuln-95400"><span class="tc">·</span><span class="tt">BeyondTrust 零日入选 CISA KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-02922"><span class="tc">·</span><span class="tt">SiteGuard WAF 漏洞在野可获 root</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">在野利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#supplychain-52964"><span class="tc">★</span><span class="tt">ConnectWise 供应链攻击波及 M365</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+<li><a class="toc-link" href="#supplychain-58683"><span class="tc">·</span><span class="tt">npm 投毒包 imgdecode 藏加载器</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-55152"><span class="tc">·</span><span class="tt">勒索团伙 the gentlemen 新增37名受害者</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-incident">重大安全事件</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#incident-92832"><span class="tc">·</span><span class="tt">澳洲逮捕两名 TeamPCP 嫌疑人</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-95400">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>BeyondTrust 零日入选 CISA KEV</h3>
+<p class="sum">跟进 10-18 报道：BeyondTrust Remote Support 漏洞 CVE-2026-102764 已被 CISA 列入已知被利用漏洞目录（KEV），dateAdded 2026-10-16，新增处置要求为按 BOD 26-04 完成修复或停用。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-102764</b><b class="fct fout">3 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> BeyondTrust Remote Support</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>远程支持工具在野利用意味着运维被接管通道持续存在，且已触发联邦机构强制修复时限。</p></div>
+<div class="cell"><b>Action</b><p>立即升级 BeyondTrust Remote Support 至修复版本，按厂商指引完成缓解并按 BOD 26-04 留痕。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-102764" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-02922">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>62</i></span></div>
+<div class="intel-body">
+<h3>SiteGuard WAF 漏洞在野可获 root</h3>
+<p class="sum">攻击者正利用 SiteGuard Server Edition 的操作系统命令注入漏洞，在受影响服务器上以 root 或 SYSTEM 权限执行命令。该产品为韩国厂商的 WAF/服务器安全套件。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> SiteGuard Server Edition</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>安全设备自身被 RCE 即防御面被穿透，受影响服务器完全失陷。</p></div>
+<div class="cell"><b>Action</b><p>核查 SiteGuard 版本并按厂商通告修复，对暴露的管理面做访问限制并回溯入侵痕迹。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/hackers-exploit-siteguard-waf-flaw-to-run-commands-as-system-root/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel focus reveal" id="supplychain-52964">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>81</i></span></div>
+<div class="intel-body">
+<h3>ConnectWise 供应链攻击波及 M365</h3>
+<p class="sum">ConnectWise 在攻击者利用应用身份入侵其 Cloud Backup（原 SkyKick）服务并危及 Microsoft 365 租户后，已关停客户对该备份云的访问。属第三方服务信任链被滥用的重大供应链事件。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> ConnectWise Cloud Backup（原 SkyKick Cloud Backup）客户</span><span class="fv"><b>修复</b> 服务访问已关停</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>备份服务的应用身份成为跳板，M365 租户的邮件与数据通道面临批量泄露风险。</p></div>
+<div class="cell"><b>Action</b><p>使用 ConnectWise/SkyKick Cloud Backup 的组织应排查租户异常登录与 OAuth 授权，暂停受影响集成并轮换凭据。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/hackers-breach-microsoft-365-tenants-via-connectwise-supply-chain-attack/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="supplychain-58683">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>71</i></span></div>
+<div class="intel-body">
+<h3>npm 投毒包 imgdecode 藏加载器</h3>
+<p class="sum">npm 包 imgdecode 属近期披露的 MALFEX 供应链攻击活动，2026-09-30 由用户 malfexteste8 上传，在 Windows 原生插件中隐藏 shellcode 加载器，已被下载 979 次且披露时仍在上架。</p>
+<div class="intel-facts"><b class="fct factor">MALFEX</b><div class="fvers"><span class="fv"><b>受影响</b> npm 包 imgdecode</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>被安装即可能执行恶意加载器，开发机与 CI 构建环境都是受害面。</p></div>
+<div class="cell"><b>Action</b><p>审计依赖是否含 imgdecode 及同期可疑包，移除并轮换构建环境凭据，启用安装期包审查与锁文件策略。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/10/malfex-npm-package-imgdecode-hides.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-55152">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>58</i></span></div>
+<div class="intel-body">
+<h3>勒索团伙 the gentlemen 新增37名受害者</h3>
+<p class="sum">RansomLook 数据显示，勒索团伙 the gentlemen 近 7 天在泄密站发布 37 条受害者帖子，最新发现时间 2026-10-16，受害者覆盖物流、工程与执法机构（含厄瓜多尔国家警察）。</p>
+<div class="intel-facts"><b class="fct factor">the gentlemen</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>新勒索组织高强度活跃，中小企业与政府机构均为攻击面，双重勒索泄密风险上升。</p></div>
+<div class="cell"><b>Action</b><p>关注该团伙 TTP 与泄密站动态；对备份与终端防护做勒索专项加固，收紧对外暴露面。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/the%20gentlemen" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-incident"><span class="n">04</span>重大安全事件</p>
+
+<div class="intel reveal" id="incident-92832">
+<div class="intel-head"><span class="chip">重大安全事件</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>63</i></span></div>
+<div class="intel-body">
+<h3>澳洲逮捕两名 TeamPCP 嫌疑人</h3>
+<p class="sum">澳大利亚联邦警察逮捕两名 21 岁和 23 岁的西澳嫌疑人，指称其为 TeamPCP 团伙成员——该团伙被认为是迄今持续时间最长的软件供应链攻击系列的实施者。</p>
+<div class="intel-facts"><b class="fct factor">TeamPCP</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>对长期危害开源生态的供应链犯罪团伙形成执法震慑，但同类威胁者仍会填补真空。</p></div>
+<div class="cell"><b>Action</b><p>借此复盘依赖投毒检测面：新包监控、maintainer 账号风险与 CI 安装钩子审查。</p></div>
+</div>
+</div>
+<div class="intel-foot"><span>2026-10-19 · SID ANALYSIS</span><a href="https://krebsonsecurity.com/2026/08/two-alleged-teampcp-hackers-arrested-in-australia/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>

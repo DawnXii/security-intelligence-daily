@@ -1,0 +1,31 @@
+---
+layout: default
+title: 首页
+---
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">Security Intelligence Daily</p>
+    <!--TODAY_START-->
+<p class="td-date">2026-11-06（周五）</p>
+<h1 class="td-h">Zyxel GS1900 零日被在野利用，996 台设备失陷</h1>
+<p class="td-pulse">入选 10 条，在野 3 条，焦点集中在网络设备与集群底座：Zyxel GS1900 旧补丁被零日 <i class="hl kcve">CVE-2026-107441</i> 绕过，996 台设备凭据外泄；Kyverno 9.9 分授权缺陷回退了前两版修复；ACF Extended PRO 0.9.2.7 补得不干净。另一条线，APT29 借 Plerdy 投毒把 Apple 旧洞 <i class="hl kcve">CVE-2024-27834</i> 送进 KEV 投递窃密载荷，币安案则进入监管环节，Fed 与 OCC 已联系美国银行。处置口径：凡吃「已打补丁」结论的资产，回头核实补丁覆盖面。</p>
+<div class="td-stats"><div class="stat"><b>10</b><span>今日事件</span></div><div class="stat"><b>3</b><span>在野利用</span></div><div class="stat"><b>5</b><span>类别数</span></div><div class="stat"><b>82</b><span>顶分</span></div></div>
+<a class="td-cta" href="{{ '/2026-11-06/report.html' | relative_url }}">阅读今日完整简报 →</a>
+<!--TODAY_END-->
+    <p class="td-foot"><a href="{{ '/sources/' | relative_url }}">47 个信源</a> · 每日约 600 条候选 · AI 分析后逐条证据机械校验 · 跨天指纹去重，旧闻不重推</p>
+  </div>
+</section>
+
+<div class="wrap">
+<p class="section-label issues-gap" id="issues">Latest Issues</p>
+<div class="ilist">
+{% for post in site.posts %}
+<a class="irow reveal" href="{{ post.url | relative_url }}">
+  <span class="idate">{{ post.date | date: "%m·%d" }}</span>
+  <span class="ititle">{{ post.headline | default: post.title }}</span>
+  {% if post.events %}<span class="iev">{{ post.events }} 条</span>{% endif %}
+  <span class="iarr">→</span>
+</a>
+{% endfor %}
+</div>
+</div>

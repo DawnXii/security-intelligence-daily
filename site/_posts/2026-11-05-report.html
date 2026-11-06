@@ -1,0 +1,185 @@
+---
+layout: post
+title: "安全情报日报 2026-11-05"
+date: 2026-11-05
+events: 9
+headline: "币安发布被盗案报告，98%受影响资产已补足"
+dek: "入选 9 条，在野 3。主线是币安首份事件报告：$6.34 billion 被盗被还原为长达数月的定向攻击——假面试、被篡改的 Homebrew 包、内部 AI 工具与签名服务接连被夺控，FBI 则归因朝鲜 TraderTraitor。次线是补丁欠账：WordPress <i class=\"hl kcve\">CVE-2026-119977</i> 入 KEV 且升级窗口即可被植码，Synology 旧版 DSM 仍在被勒索复用 2024 年修复；APT29 借 Plerdy 脚本投递移动 N-day、NIKKE 启动器 CDN 遭投毒，第三方分发链完整性成了共同缺口。口径：先清 KEV 与在野面，再管住招聘投递与更新通道。"
+brief_stats: ["9 事件", "在野 3", "PoC 0", "5 类别", "顶分 92"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">4</span></p><ol>
+<li><a class="toc-link" href="#vuln-22410"><span class="tc">·</span><span class="tt">WordPress升级窗口RCE入选KEV已在野利用</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-49205"><span class="tc">·</span><span class="tt">Langflow两严重漏洞未认证可执行代码</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-28263"><span class="tc">·</span><span class="tt">SonicWall拒修EoL版GMS两项高危漏洞</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-17347"><span class="tc">·</span><span class="tt">Android曝免交互远程执行代码严重漏洞</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#supplychain-04586"><span class="tc">·</span><span class="tt">APT29借Plerdy脚本投毒向移动端投递N-day</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+<li><a class="toc-link" href="#supplychain-90409"><span class="tc">·</span><span class="tt">NIKKE启动器CDN脚本被投毒植入远控</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-85529"><span class="tc">·</span><span class="tt">Synology警告旧版DSM的NAS遭勒索利用</span><span class="meta"><i class="rp p2">P2</i><i class="xs xw">活跃攻击</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-malware">恶意软件与僵尸网络</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#malware-21624"><span class="tc">·</span><span class="tt">Gorbag借WinRAR漏洞攻击乌克兰目标窃密</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-crypto-infra">区块链基础设施</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#crypto-infra-91871"><span class="tc">★</span><span class="tt">币安公布63.4亿美元被盗案首份报告</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-22410">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3>WordPress升级窗口RCE入选KEV已在野利用</h3>
+<p class="sum"><i class="hl">CISA</i> 于 2026-11-03 将 <i class="hl">WordPress</i> Core 的 <i class="hl kcve">CVE-2026-119977</i> 列入已知被利用漏洞目录（<i class="hl">KEV</i>）并确认在野利用。NVD 官方记录：该漏洞影响 4.7 through 7.1.3 的未认证远程代码执行，成因是整包核心升级使用可预测、web 可直接访问的暂存路径，攻击者可在升级窗口内向服务器落地代码（TOCTOU 竞态，Wordfence 作为 CVE 编号授权方评 8.1）；Xint 研究把这一升级竞态追溯到 WordPress 2.7 时代，并指出未打补丁站点&#x27;安装 7.1.4 的第一次更新&#x27;这一过程本身仍可被暴露——旧更新器会把修复包解包到可预测的 web 可访问路径。官方已于 10 月 28 日发布 7.1.4 安全版本，官方公告明确该修复即&#x27;升级过程中可导致升级窗口内远程代码执行的弱点&#x27;，并回植到 4.7 起所有仍受安全支持的分支。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-119977</b><b class="fct fcvss">CVSS 8.1</b><b class="fct fout">3 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> WordPress Core 4.7 through 7.1.3</span><span class="fv"><b>修复</b> WordPress 7.1.4</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>全球 WordPress 站点都可能在&#x27;点更新&#x27;这一日常动作中受害：升级窗口内暂存路径可被预测访问，意味着未认证攻击者可借更新过程植入代码；KEV 收录后联邦机构须按 BOD 26-04 处置，暴露公网的老旧站点风险最高，7.1.4 修复完成前的一次更新流程本身仍是攻击面。</p></div>
+<div class="cell"><b>Action</b><p>升级到 WordPress 7.1.4（10 月 28 日安全版本，修复回植 4.7 起受支持分支）；老站点首次升级建议避开裸窗口——用 WAF/访问控制保护升级期间的 staging 路径，升级后核查 wp-admin 暂存目录是否多出异常文件；按 KEV 要求依据厂商指引应用缓解、评估每台资产互联网暴露，无法缓解则停用并按 Forensics Triage Requirements 留证。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-119977" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-119977" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://www.cyberkendra.com/2026/11/cve-2026-119977-wordpress-core-update-race-rce.html" target="_blank" rel="noopener" class="deepchip">调查 ↗</a><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-119977" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-49205">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>66</i></span></div>
+<div class="intel-body">
+<h3>Langflow两严重漏洞未认证可执行代码</h3>
+<p class="sum">IBM 披露开源 AI agent 与工作流构建工具 <i class="hl">Langflow</i> 的两个严重漏洞：无账号的远程攻击者可绕过认证或在服务器上执行任意代码。1.0.0 至 1.12.8 的所有发布版本均受影响，唯一修复版本为 1.13.0；两漏洞截至报道均未列入 CISA KEV。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> Langflow 1.0.0 through 1.12.8</span><span class="fv"><b>修复</b> 1.13.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>公网暴露 Langflow 实例的团队直接面临未认证远程代码执行与认证绕过；厂商报告未提及在野利用，也未给出被控后的进一步后果。</p></div>
+<div class="cell"><b>Action</b><p>升级 Langflow 至 1.13.0（1.0.0 through 1.12.8 全部受影响，无中间绕过版本）；暂无法升级的实例不得暴露公网，并回溯核查是否有未认证访问痕迹。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/critical-langflow-flaws-could-let.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-28263">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>64</i></span></div>
+<div class="intel-body">
+<h3>SonicWall拒修EoL版GMS两项高危漏洞</h3>
+<p class="sum"><i class="hl">SonicWall</i> 警告影响已停止维护（end-of-life）Global Management System（<i class="hl">GMS</i>）的两个漏洞将不会获得补丁：其中 <i class="hl kcve">CVE-2026-109593</i>（CVSS 9.1）为未认证文件读取漏洞，具有网络可达性的攻击者可读取 GMS 内部文件；另一漏洞可篡改数据库记录。两者均影响 SonicWall GMS 9.5.2 and earlier versions。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-109593</b><b class="fct fcvss">CVSS 9.1</b><div class="fvers"><span class="fv"><b>受影响</b> SonicWall GMS 9.5.2 and earlier versions</span><span class="fv"><b>修复</b> will not be patched</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>仍在运行 EoL GMS 的组织管理面完全暴露：未认证即可读取内部文件、篡改数据库记录，且厂商明确不再出补丁——风险无法通过打补丁消除，只能下线、迁移或切断网络可达。</p></div>
+<div class="cell"><b>Action</b><p>厂商口径：will not be patched（end-of-life 不再修复）。处置：GMS 9.5.2 及更早版本迁移至受支持产品或直接退役；无法立即下线的实例严禁管理口暴露公网，按最小可达收紧防火墙策略并监控异常文件读取与数据库改动。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/sonicwall-wont-patch-eol-gms-flaws-that.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-17347">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>60</i></span></div>
+<div class="intel-body">
+<h3>Android曝免交互远程执行代码严重漏洞</h3>
+<p class="sum">Google 在 11 月安全公告中修复 <i class="hl">Android</i> 严重漏洞 <i class="hl kcve">CVE-2026-58868</i>：攻击者可在无任何用户操作的情况下远程在手机上执行代码，影响 Android 14 through 17；修复随 security patch level 2026-11-01 or later 由手机厂商与运营商按各自节奏推送。Security Affairs 补充技术成因：FrameDecoder.cpp 中 onOutputReceived 函数的堆缓冲区溢出。截至 11 月 4 日，Google 公告未报告该漏洞在野利用。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-58868</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Android 14 through 17</span><span class="fv"><b>修复</b> security patch level 2026-11-01 or later</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>Android 14 至 17 的设备用户构成大面积暴露面，免交互远程执行代码的严重级漏洞一旦武器化即难靠用户行为防护；厂商与运营商推送节奏不一，长尾旧设备会落后数月，是企业移动资产管理（MDM）需要主动清点的一批。</p></div>
+<div class="cell"><b>Action</b><p>设备侧：升级至 security patch level 2026-11-01 或更高；企业侧按 Google November security bulletin 清点未达标设备并跟踪厂商推送；暂无在野利用报告，可按常规优先级排产但勿拖过下个补丁周期。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/google-patches-critical-android-flaw.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-04586">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF medium<i>78</i></span></div>
+<div class="intel-body">
+<h3>APT29借Plerdy脚本投毒向移动端投递N-day</h3>
+<p class="sum">法国 <i class="hl">Sekoia</i> 于 2026 年 10 月中旬发现代号 <i class="hl">Poisoned Source</i> 的大规模水坑行动，归因俄罗斯背景的 <i class="hl">APT29</i>（报道口径为&#x27;与 APT29 关联&#x27;）。行动有三条感染链：入侵合法网站注入 JavaScript；伪装成美国/乌克兰/捷克/保加利亚高关注站点的仿冒域名（如 america250[.]holiday）；以及对乌克兰网站分析服务 <i class="hl">Plerdy SEO Tracker</i> 的供应链投毒——2026 年 8 月 27 日至 9 月 3 日间，恶意代码被注入其脚本分发路径 a.plerdy[.]com/public/js/click/main.js。注入脚本先收集浏览器与设备属性，再由分发基础设施针对 iOS 或 Android 分别投递平台特定的 N-day 利用链，载荷目标是窃取浏览器 cookies，部分场景可拿到 Wi-Fi 口令乃至整机移动数据。</p>
+<div class="intel-facts"><b class="fct factor">APT29</b><div class="fvers"><span class="fv"><b>受影响</b> Plerdy SEO Tracker</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>8 月 27 日至 9 月 3 日窗口内访问任何嵌入 Plerdy 统计代码站点的访客、以及命中仿冒域名的移动用户都是暴露人群；第三方分析脚本成为面向 iOS/Android 的武器化投递通道，被投毒的是&#x27;所有加载该脚本的合法网站&#x27;这一整层，而非单个站点。载荷可收 Wi-Fi 口令与整机数据，对个人与企业终端都是深度失陷。</p></div>
+<div class="cell"><b>Action</b><p>站点方核查 8 月 27 日至 9 月 3 日 间 Plerdy 嵌入内容，比对 a.plerdy.com/public/js/click/main.js 当前与历史副本、上线 SRI 校验；访客侧（含员工浏览器）按 Sekoia 披露的仿冒域名与 IOC 在出口/DNS 层阻断（如 america250[.]holiday）；移动端优先修补已知（N-day）漏洞并升级浏览器，高风险角色避免从非常规链接进入资讯站点。具体 IOC 清单以 Sekoia 技术报告为准。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/apt29-linked-hackers-hijack-web.html" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://thehackernews.com/2026/11/apt29-linked-hackers-hijack-web.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://securityaffairs.com/202414/mobile-2/cve-2026-58868-critical-android-bug-could-let-attackers-run-remote-code.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://thehackernews.com/2026/11/weekly-recap-critical-cves-linux-ddos.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="supplychain-90409">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3>NIKKE启动器CDN脚本被投毒植入远控</h3>
+<p class="sum">Goddess of Victory: <i class="hl">NIKKE</i>（Shift Up 开发、腾讯系 <i class="hl">Level Infinite</i> 发行，2022 年上线以来下载量超 4500 万次）开发商确认 PC 启动器脚本遭第三方篡改。独立研究者 MotherSphere 的调查报告显示：自 2026 年 9 月 27 日起，Level Infinite 官方 CDN 上 4 个官方 JavaScript 文件含攻击者代码，玩家打开启动器即被从 insightjs[.]com / insightjs[.]org 拉取二段脚本，并借启动器自身的下载功能执行 Lua 远控工具——可执行任意命令、截屏，窃取游戏登录态、浏览器密码、会话 cookies、SSH 私钥、API 令牌及加密货币钱包扩展数据，Windows 上还会装一枚 Chrome 加载的 DLL 实现持久化；最早有记录的执行时间为 10 月 23 日。Level Infinite 已于 11 月 4 日约 02:30 (UTC+9) 推送客户端修复并声明调查影响范围；MotherSphere 复核称修复后部分 CDN 节点仍短暂下发被改副本，攻击者服务器至 11 月 3 日 18:31 GMT 才失联。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> Goddess of Victory: NIKKE PC launcher</span><span class="fv"><b>修复</b> client fixes and an update were implemented on November 4 at approximately 02:30 (UTC+9)</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>9 月 27 日至 11 月 4 日 间打开过该 PC 启动器的玩家终端都可能装有远控代理：攻击者可任意执行命令、读取任何文件，窃密目标明确包含浏览器口令、SSH 密钥、API 令牌与钱包扩展数据——对&#x27;游戏机=钱包机&#x27;重叠的用户群是直接资金风险。CDN 被改而非安装包被改，意味着官方分发通道全程无可信性可依赖；已中毒终端不会因文件修复而自愈。</p></div>
+<div class="cell"><b>Action</b><p>玩家：重新打开启动器前先删除缓存目录 %APPDATA%\nikke_launcher\tbs_cache（缓存仍可能含被改文件，Proton 前缀内同理），并用 MotherSphere 发布的 NIKKE Launcher Check 工具查 Windows/Linux/macOS 感染痕迹；重置游戏账号、浏览器保存口令及钱包相关凭据；企业侧出口 DNS 阻断 insightjs[.]com 与 insightjs[.]org。发行方：核查 CDN 写入权限来源（攻击者如何拿到 CDN 写权限，报告称仍不清楚）并公布完整 IOC。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://www.bleepingcomputer.com/news/security/nikke-pc-game-launcher-hacked-to-spread-remote-access-data-stealing-malware/" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://www.bleepingcomputer.com/news/security/nikke-pc-game-launcher-hacked-to-spread-remote-access-data-stealing-malware/" target="_blank" rel="noopener" class="deepchip">调查 ↗</a><a href="https://www.bleepingcomputer.com/news/security/nikke-pc-game-launcher-hacked-to-spread-remote-access-data-stealing-malware/" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a><a href="https://gist.github.com/MotherSphere/d6c049a09ba8ac3085c51ee9df24a4e5" target="_blank" rel="noopener" class="deepchip">深度 ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-85529">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><i class="xs xw">活跃攻击</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>72</i></span></div>
+<div class="intel-body">
+<h3>Synology警告旧版DSM的NAS遭勒索利用</h3>
+<p class="sum"><i class="hl">Synology</i> 警告勒索软件攻击者正在利用一个 2024 年已修复的漏洞，针对仍运行 outdated versions of DiskStation Manager (DSM) 的 NAS 设备发起攻击，厂商敦促立即更新 DSM——这条 2024 年的修复两年后仍是 Synology NAS 勒索攻击的中心入口。</p>
+<div class="intel-facts"><div class="fvers"><span class="fv"><b>受影响</b> outdated versions of DiskStation Manager (DSM)</span><span class="fv"><b>修复</b> A security fix released in 2024</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>NAS 上的文件是被直接索取赎金的目标，仍在跑旧版 DSM 且可被触达的设备用户是受害人群；这也说明&#x27;厂商已出修复但没人装&#x27;的存量设备是勒索攻击者最稳定的入口之一。</p></div>
+<div class="cell"><b>Action</b><p>升级到含 2024 年安全修复的 DSM 版本（厂商口径：立即更新）；清点仍在运行 outdated DSM 的设备并收敛 NAS 的网络暴露（不直连公网、关远程访问端口）；核查备份完整性与离线副本。来源未给出具体 CVE 号与最低修复版本号。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="ransomware-85529-ioc">复制</button></div><pre id="ransomware-85529-ioc">https://securityaffairs.com/202343/security/synology-warns-of-ransomware-attacks-targeting-nas-devices-running-outdated-dsm-versions.html</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://securityaffairs.com/202343/security/synology-warns-of-ransomware-attacks-targeting-nas-devices-running-outdated-dsm-versions.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-malware"><span class="n">04</span>恶意软件与僵尸网络</p>
+
+<div class="intel reveal" id="malware-21624">
+<div class="intel-head"><span class="chip">恶意软件与僵尸网络</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>58</i></span></div>
+<div class="intel-body">
+<h3>Gorbag借WinRAR漏洞攻击乌克兰目标窃密</h3>
+<p class="sum">ESET 研究员观察到俄罗斯背景威胁组织 <i class="hl">Gorbag</i> 在针对乌克兰组织的攻击中投放简易窃密恶意软件，并借助 <i class="hl">WinRAR</i> 漏洞完成投递。ESET 称该组织至少自 2025 年 2 月活跃，目标几乎全部集中于乌克兰的执法与司法机构、前线附近地方行政部门及国防部门。</p>
+<div class="intel-facts"><b class="fct factor">Gorbag</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>乌克兰执法、司法、前线地方政府与国防部门终端已实际遭遇窃密恶意软件投放；WinRAR 这类高装机率桌面工具被定向武器化，对同区域及同类目标的供应链与终端策略有直接预警价值。</p></div>
+<div class="cell"><b>Action</b><p>按 ESET 披露口径处置：将 WinRAR 升级至修复该投递漏洞的版本；乌克兰相关机构在 VPN/邮件网关回溯窃密软件连接特征；对执法、司法、国防条线终端核查异常凭据外传。来源未给出具体 CVE 与受害规模数字。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/russia-aligned-gorbag-hackers-exploit.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-crypto-infra"><span class="n">05</span>区块链基础设施</p>
+
+<div class="intel focus reveal" id="crypto-infra-91871">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>92</i></span></div>
+<div class="intel-body">
+<h3>币安公布63.4亿美元被盗案首份报告</h3>
+<p class="sum"><i class="hl">Binance</i> 11 月 3 日发布首份事件报告《29 October 2026 Binance Security Incident: Initial Findings and Response Update》，把 10 月 29 日约 $6.34 billion（FBI 口径 $6.43 billion）被盗还原为长达数月的多阶段定向攻击：6 月一名钱包 DevOps 工程师搜索 AI 编程工具时下载到被篡改的 Homebrew 包首次失陷；9 月第二名工程师经真实求职平台被伪造面试链条钓住，按&#x27;面试官&#x27;指示在工作机下载含恶意代码仓库的&#x27;作业&#x27;，安装阶段执行的恶意软件绕过终端防护、换掉合法开发工具组件；10 月 20 日攻击者借被窃终端夺取内部 AI 工具控制并拿到容器部署权限令牌，10 月 29 日部署容器运行恶意脚本后，利用内部钱包签名服务的越权访问在 20:05-20:09 UTC 动用五个热钱包，提现冻结后仍借以太坊 EIP-7702 特性继续转出资金。FBI 会同 USSS、IRS-CI 将行动归因朝鲜精英团伙 <i class="hl">TraderTraitor</i>（亦称 Jade Sleet、Slow Pisces、UNC4899 等），点名 Over 600 个洗钱钱包地址，赃款主要换成 ETH 后经 DeFi 与即时兑换服务分层清洗；币安称截至 10 月 31 日 98% 受影响代币资产已补足，第一阶段提现已恢复，调查仍在进行。</p>
+<div class="intel-facts"><b class="fct factor">TraderTraitor</b><b class="fct fout">11 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Binance hot wallets / wallet signing service</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>创纪录规模的加密资产失窃：交易所内部签名服务被夺控、五个热钱包数分钟内被动用、客户提现一度暂停，赃款已进入分层清洗；对运维层的警示是——热钱包签名、内部 AI 工具与自动化部署通道组成的&#x27;内控链&#x27;整条被证明可被数月期定向攻击穿透，招聘/求职资料、经搜索分发的开发工具都是有效入口。</p></div>
+<div class="cell"><b>Action</b><p>对照报告链自查：候选人&#x27;作业/代码仓库&#x27;与面试聊天软件投递一律在隔离环境执行；校验经搜索引擎分发的 Homebrew/开发工具包签名与来源；轮换钱包基础设施凭据并收紧内部 AI 工具的权限与部署令牌可达范围；排查 EIP-7702 委托交易的异常签名；交易所核对 FBI 公布的洗钱钱包地址清单、拦截流入；员工求职平台资料做最小化。币安口径：调查仍在进行，部分技术细节暂不公开，结论将交独立复核。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(2)</em></span><button class="iocblk-c" data-copy="crypto-infra-91871-ioc">复制</button></div><pre id="crypto-infra-91871-ioc">https://securityaffairs.com/202369/cyber-crime/binance-hack-how-fake-job-interviews-and-ai-abuse-led-to-a-6-34-billion-attack.html
+https://www.bitcoininsider.org/article/binance-incident-report-fake-interview-signing-service</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-05 · SID ANALYSIS</span><a href="https://securityaffairs.com/202369/cyber-crime/binance-hack-how-fake-job-interviews-and-ai-abuse-led-to-a-6-34-billion-attack.html" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://thehackernews.com/2026/11/fbi-links-north-koreas-tradertraitor-to.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://thehackernews.com/2026/11/binance-reveals-how-fake-job-interviews.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://securityaffairs.com/202369/cyber-crime/binance-hack-how-fake-job-interviews-and-ai-abuse-led-to-a-6-34-billion-attack.html" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a></div>
+</div>
+
+</div>

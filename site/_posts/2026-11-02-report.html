@@ -1,0 +1,200 @@
+---
+layout: post
+title: "安全情报日报 2026-11-02"
+date: 2026-11-02
+events: 10
+headline: "FBI 归因 TraderTraitor 币安盗案"
+dek: "入选 10 条，在野 2。币安案由官方归因定调：FBI 把逾 6 billion 美元资产被盗记到 TraderTraitor 名下（亦被记作 Jade Sleet、UNC4899），提现自 bitcoin 起分阶段重启，技术复盘指向热钱包签名基础设施失守。Ivanti Connect Secure 两枚缺陷列入 KEV 并确认在野，互联网暴露的 VPN 设备要限期处置。披露面还有 LXD/MicroCloud 免私钥冒充受信任客户端、Polymarket 外链提速脚本遭劫持后赔付 726 个钱包、AdminNeo 转发头注入 cookie 属性。口径：KEV 项最优先补齐，前端外链脚本清点配合 SRI，签名环境与运维终端硬隔离。"
+brief_stats: ["10 事件", "在野 2", "PoC 0", "5 类别", "顶分 88"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">5</span></p><ol>
+<li><a class="toc-link" href="#vuln-03897"><span class="tc">·</span><span class="tt"><i class="hl">Ivanti Connect Secure</i> 列入 KEV 确认在野</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-65467"><span class="tc">·</span><span class="tt">Ivanti 第二枚缺陷同日入 KEV</span><span class="meta"><i class="rp p1">P1</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-80495"><span class="tc">·</span><span class="tt"><i class="hl">LXD</i> 免私钥冒充受信任客户端</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-77311"><span class="tc">·</span><span class="tt"><i class="hl">AdminNeo</i> 存在 Cookie 属性注入</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-83508"><span class="tc">·</span><span class="tt">畸形 DICOM 可静默篡改 <i class="hl">MONAILabel</i> 推理</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-69188"><span class="tc">·</span><span class="tt"><i class="hl">Polymarket</i> 外链脚本被劫持盗卖仓位</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-99177"><span class="tc">·</span><span class="tt">勒索团伙 <i class="hl">direwolf</i> 七日新增 3 家受害者</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-incident">重大安全事件</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#incident-73047"><span class="tc">★</span><span class="tt">FBI 指认 <i class="hl">TraderTraitor</i> 盗取币安资产</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-crypto-infra">区块链基础设施</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#crypto-infra-08310"><span class="tc">·</span><span class="tt"><i class="hl">币安</i>热钱包签名基础设施被攻破</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+<li><a class="toc-link" href="#crypto-infra-07075"><span class="tc">·</span><span class="tt"><i class="hl">币安</i>分阶段重启提现 比特币先行</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-03897">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>78</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Ivanti Connect Secure</i> 列入 KEV 确认在野</h3>
+<p class="sum">CISA 于 2026-10-30 将 <i class="hl">Ivanti Connect Secure</i> 的 <i class="hl kcve">CVE-2026-118527</i> 列入已知被利用漏洞目录（KEV），确认存在在野利用。处置要求：按厂商指引应用缓解措施、遵循 BOD 26-04 风险优先补丁与取证分诊要求，无可用缓解措施时停用产品。此前 10-14/10-17 日报报道的是该产品的另一在野缺陷，本枚 CVE 系首次入 KEV。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-118527</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Ivanti Connect Secure</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>面向互联网暴露的 Connect Secure 边界 VPN 设备构成即时失陷通道；KEV 认定在野意味着攻击者已掌握可用手段，属必须限期处置项。</p></div>
+<div class="cell"><b>Action</b><p>按 KEV/BOD 26-04 时限处置：应用 Ivanti 补丁或厂商缓解措施，无法缓解即下线；对暴露资产做取证分诊，排查既有入侵痕迹。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-118527" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-65467">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>77</i></span></div>
+<div class="intel-body">
+<h3>Ivanti 第二枚缺陷同日入 KEV</h3>
+<p class="sum">跟进 2026-11-01 关于三枚 Connect Secure 缺陷被串成免认证 root 攻击链的报道：<i class="hl kcve">CVE-2026-111357</i> 已于 2026-10-30 被 CISA 单独列入 KEV 并确认在野利用，处置要求同为按厂商指引缓解、遵循 BOD 26-04 与取证分诊，无缓解措施则停用。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-111357</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Ivanti Connect Secure</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>与 <i class="hl kcve">CVE-2026-118527</i> 同日入 KEV，说明 Connect Secure 暴露面正被成组利用；边界 VPN 一旦失守即成为内网入口。</p></div>
+<div class="cell"><b>Action</b><p>对 Ivanti Connect Secure 按 KEV 时限完成两枚 CVE 的补丁/缓解闭环，云侧遵循 BOD 26-04 云指南；无法缓解的实例停用并做取证排查。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-111357" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-80495">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>68</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">LXD</i> 免私钥冒充受信任客户端</h3>
+<p class="sum">Canonical 的 <i class="hl">LXD</i> 与 <i class="hl">MicroCloud</i> 曝出 CVSS 10.0 严重缺陷：攻击者只要网络可达其 HTTPS API 并持有受信任客户端的公开证书，无需对方私钥即可登录为该客户端，进入集群并操作其中的虚拟机。来源未给出 CVE 编号、修复版本与在野利用情况。</p>
+<div class="intel-facts"><b class="fct fcvss">CVSS 10.0</b><div class="fvers"><span class="fv"><b>受影响</b> Canonical LXD and MicroCloud</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>网络暴露 LXD/MicroCloud 管理 API 的私有云与虚拟化集群面临整簇失守风险——被冒充客户端拥有什么权限，攻击者就拿到什么权限。</p></div>
+<div class="cell"><b>Action</b><p>盘点 LXD/MicroCloud 部署的 HTTPS API 暴露面与客户端证书清单，收紧可达性并轮换证书；跟踪 Canonical 安全通告及时升级（本条未含修复版本号）。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/critical-lxd-and-microcloud-flaw-cvss.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-77311">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>58</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">AdminNeo</i> 存在 Cookie 属性注入</h3>
+<p class="sum">GitHub 安全公告披露 <i class="hl">AdminNeo</i> 4.6.0 至至少 5.5.0 存在 Cookie 属性注入（CVSS 8.2）：未净化的 X-Forwarded-Prefix 请求头可被写入 Set-Cookie，能影响该头的攻击方（透传客户端该头的反向代理、被控上游代理或中间人位置）可注入 Domain、Path、Secure 等任意 cookie 属性。修复版本 5.5.1。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-96631</b><b class="fct fcvss">CVSS 8.2</b><div class="fvers"><span class="fv"><b>受影响</b> adminneo-org/adminneo 4.6.0 through at least 5.5.0</span><span class="fv"><b>修复</b> 5.5.1</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露于第三方透传头场景的 AdminNeo 部署首当其冲；注入 Domain 属性会改变 cookie 生效范围，削弱会话边界保护。</p></div>
+<div class="cell"><b>Action</b><p>升级 adminneo 至 5.5.1；在入口代理过滤或覆写 X-Forwarded-Prefix 请求头，不让客户端值直接透传。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-79wv-8rh2-9vp2" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-83508">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>56</i></span></div>
+<div class="intel-body">
+<h3>畸形 DICOM 可静默篡改 <i class="hl">MONAILabel</i> 推理</h3>
+<p class="sum">GitHub 公告披露 <i class="hl">MONAILabel</i> 服务端缺陷（<i class="hl kcve">CVE-2026-48705</i>，CVSS 9.3）：未经认证的远程攻击者经 REST API 上传单个约 132 KB 的畸形 DICOM 文件，即可使服务崩溃，或静默破坏其医疗 AI 推理结果。根因是 pydicom 未校验 DS/IS 值表示，NaN 与无穷值得以穿透。修复版本 1.6.1。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-48705</b><b class="fct fcvss">CVSS 9.3</b><div class="fvers"><span class="fv"><b>受影响</b> MONAILabel server（pip 生态 monai）</span><span class="fv"><b>修复</b> 1.6.1</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>运行 MONAILabel 的医疗影像 AI 环境暴露：除服务可用性受损外，推理结果被静默篡改难以察觉，可能直接影响辅助诊断判断。</p></div>
+<div class="cell"><b>Action</b><p>升级 monai 至 1.6.1；对未认证的 REST API 入口加访问控制，入库 DICOM 校验 DS/IS 字段的数值合法性。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-6hp3-vr39-rqw8" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-69188">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">Polymarket</i> 外链脚本被劫持盗卖仓位</h3>
+<p class="sum">10 月 29 日，预测市场 <i class="hl">Polymarket</i> 页面上的恶意代码把部分登录中用户的仓位卖出、资金转入攻击者手中；该代码替换了站点从外部公司 DebugBear 加载的页面提速脚本。Polymarket 称向 726 个受影响钱包退还约 2.7 million 美元，链上记录显示约 2.64 million 美元到达攻击者侧。</p>
+<div class="intel-facts"><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Polymarket（页面外链 DebugBear 提速脚本）</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>面向所有登录状态下访问 Polymarket 的交易者：会话被劫持即仓位被变现，属前端供应链投毒造成的直接资金损失，平台已确认并赔付。</p></div>
+<div class="cell"><b>Action</b><p>站点方清点 DebugBear 等第三方前端脚本，启用 SRI 与脚本来源白名单；交易者核对 10-29 前后异常平仓记录，走官方退款通道。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/hackers-steal-about-27-million-from.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-99177">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>52</i></span></div>
+<div class="intel-body">
+<h3>勒索团伙 <i class="hl">direwolf</i> 七日新增 3 家受害者</h3>
+<p class="sum">RansomLook 跟踪数据显示，勒索团伙 <i class="hl">direwolf</i> 近 7 天在泄密站发布 3 条帖子，涉及受害者 3 家，最新发现时间 2026-11-01。受害者样例包括 GRUPO PETROIL、My Cloud Grocer、USClaims。</p>
+<div class="intel-facts"><b class="fct factor">direwolf</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>三家被点名机构的资料已上泄密站公示，双重勒索进入对外公布阶段；该团伙体量不大但处于持续开张期。</p></div>
+<div class="cell"><b>Action</b><p>名单内机构按泄密情形启动取证、凭据轮换与对外通知；同类中小企业核查离线备份可用性、暴露的远程接入面与邮件钓鱼防护。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/direwolf" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-incident"><span class="n">04</span>重大安全事件</p>
+
+<div class="intel focus reveal" id="incident-73047">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
+<div class="intel-body">
+<h3>FBI 指认 <i class="hl">TraderTraitor</i> 盗取币安资产</h3>
+<p class="sum">FBI 正式把逾 6 billion 美元虚拟资产被盗归因于亲朝鲜精英黑客组织 <i class="hl">TraderTraitor</i>——该组织亦被追踪方记作 Jade Sleet、Pressure Chollima、PUKCHONG、Slow Pisces、UNC4899。通报由 FBI 联同美国特勤局（USSS）与国税局刑事调查处（IRS-CI）共同发出，案件规模创加密盗窃纪录。</p>
+<div class="intel-facts"><b class="fct factor">TraderTraitor</b><b class="fct fout">17 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Binance</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>执法口径坐实史上最大加密盗窃案的国家行为体背景，被盗资金地址进入全网拦截视野，对交易所与 DeFi 中间层的合规筛查与资金拦截构成直接压力。</p></div>
+<div class="cell"><b>Action</b><p>交易所、DeFi 前端与桥/兑换服务对照官方公布的关联地址名单加拦截规则；机构更新朝鲜系组织（Jade Sleet 等标签）威胁狩猎基线与出口流量监测。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/fbi-links-north-koreas-tradertraitor-to.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-crypto-infra"><span class="n">05</span>区块链基础设施</p>
+
+<div class="intel reveal" id="crypto-infra-08310">
+<div class="intel-head"><span class="chip">区块链基础设施</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>74</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">币安</i>热钱包签名基础设施被攻破</h3>
+<p class="sum">The Block 复盘这起 6B 美元级最大加密盗窃案：调查者将其与 North Korea 关联，还原热钱包签名基础设施（hot-wallet signing infrastructure）如何被攻破以及资金去向。</p>
+<div class="intel-facts"><b class="fct factor">North Korea</b><b class="fct fout">17 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> Binance</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>指向交易所密钥签名环节运维环境失守——签名基础设施被控即可驱动热钱包非授权划转，对交易所与自托管运维都是同一暴露面。</p></div>
+<div class="cell"><b>Action</b><p>复核热钱包签名链路：签名器与业务网络分离、HSM/多方人工多重签核、签名策略审计与异常划转实时告警；对照官方通报排查签名侧账号。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-08310-ioc">复制</button></div><pre id="crypto-infra-08310-ioc">https://www.theblock.co/news/business/2026-10-30-binance-hack-largest-crypto-hack-north-korea-432225</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://www.theblock.co/news/business/2026-10-30-binance-hack-largest-crypto-hack-north-korea-432225" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="crypto-infra-07075">
+<div class="intel-head"><span class="chip">区块链基础设施</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>72</i></span></div>
+<div class="intel-body">
+<h3><i class="hl">币安</i>分阶段重启提现 比特币先行</h3>
+<p class="sum">在创纪录的 6.3 billion 美元被盗事件后，<i class="hl">币安</i>开始分阶段恢复客户加密提现，第一阶段以 bitcoin 领先。该条目为 11-01 的最新恢复状态。</p>
+<div class="intel-facts"><b class="fct fout">17 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>提现通道恢复直接关系交易所客户资金流动性；全量暂停期间的挤兑与核对压力集中在这家全球最大交易所。</p></div>
+<div class="cell"><b>Action</b><p>客户按官方分阶段公告逐步提现（先比特币后其他资产）；机构留存暂停窗口期内交易与出入库凭证，按恢复节奏调整资金调度。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-07075-ioc">复制</button></div><pre id="crypto-infra-07075-ioc">https://www.coindesk.com/markets/2026-11-01/binance-opens-crypto-withdrawals-in-phases-starting-with-bitcoin-following-usd6-3-billion-hack</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-02 · SID ANALYSIS</span><a href="https://www.coindesk.com/markets/2026-11-01/binance-opens-crypto-withdrawals-in-phases-starting-with-bitcoin-following-usd6-3-billion-hack" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
